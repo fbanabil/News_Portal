@@ -7,7 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Samples\application_roles.json" />
+    <Content Remove="Samples\application_users.json" />
+    <Content Remove="Samples\comments.json" />
+    <Content Remove="Samples\images.json" />
+    <Content Remove="Samples\news.json" />
+    <Content Remove="Samples\user_roles.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Samples\application_roles.json" />
+    <None Include="Samples\application_users.json" />
+    <None Include="Samples\comments.json" />
+    <None Include="Samples\images.json" />
+    <None Include="Samples\news.json" />
+    <None Include="Samples\user_roles.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.18.1" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
@@ -15,6 +34,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>

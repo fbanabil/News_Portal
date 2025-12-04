@@ -126,6 +126,97 @@ namespace News_Portal.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", "News_Portal");
                 });
 
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.Comments", b =>
+                {
+                    b.Property<Guid>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CommentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("NewsId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments", "News_Portal");
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.Images", b =>
+                {
+                    b.Property<Guid>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("NewsId");
+
+                    b.ToTable("Images", "News_Portal");
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.News", b =>
+                {
+                    b.Property<Guid>("NewsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NewsContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NewsPriority")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewsStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NewsTitle")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NewsType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PublishedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TotalViews")
+                        .HasColumnType("int");
+
+                    b.HasKey("NewsId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("News", "News_Portal");
+                });
+
             modelBuilder.Entity("News_Portal.Core.Domain.IdentityEntities.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -191,8 +282,15 @@ namespace News_Portal.Infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PersonImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("PersonName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -272,6 +370,54 @@ namespace News_Portal.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.Comments", b =>
+                {
+                    b.HasOne("News_Portal.Core.Domain.Entities.News", "News")
+                        .WithMany("Comments")
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("News_Portal.Core.Domain.IdentityEntities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("News");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.Images", b =>
+                {
+                    b.HasOne("News_Portal.Core.Domain.Entities.News", "News")
+                        .WithMany("Images")
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("News");
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.News", b =>
+                {
+                    b.HasOne("News_Portal.Core.Domain.IdentityEntities.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.News", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

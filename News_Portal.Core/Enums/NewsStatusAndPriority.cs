@@ -14,4 +14,9 @@ namespace News_Portal.Core.Enums
     {
         Low, Medium, High, Urgent
     }
+
+    public enum NewsType
+    {
+        General, Sports, Politics, Technology, Entertainment, Health, Business, Science, World
+    }
 }

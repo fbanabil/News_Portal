@@ -1,0 +1,28 @@
+﻿/* Scoped (optional) */
+.news-card { border-radius: .75rem; overflow:hidden; }
+.news-card {
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1.2rem rgba(0,0,0,.25);
+}
+.news-card .card-title {
+    font-weight: 600;
+}
+.news-card img {
+    transition: transform .5s ease;
+}
+.news-card:hover img {
+    transform: scale(1.06);
+}
+.news-card .badge {
+    vertical-align: middle;
+}
+.news-card .card-text {
+    overflow: hidden;
+}
+@media (max-width: 576px){
+    .news-card .card-text { display:none; }
+}

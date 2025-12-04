@@ -1,0 +1,100 @@
+﻿@model RegisterDTO
+@{
+    ViewData["Title"] = "Register";
+    ViewBag.PresentButton = "Register";
+}
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-lg-5">
+                <h1 class="h4 mb-1 text-center">Create your account</h1>
+                <p class="text-muted text-center mb-4">Fill in the details to get started</p>
+
+                <form asp-area="Identity"
+                      asp-controller="Account"
+                      asp-action="Register"
+                      method="post"
+                      enctype="multipart/form-data"
+                      >
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email"
+                               class="form-control"
+                               autocomplete="email"
+                               placeholder="you@example.com" />
+                        <span asp-validation-for="Email" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PersonName" class="form-label">Full name</label>
+                        <input asp-for="PersonName"
+                               class="form-control"
+                               autocomplete="name"
+                               placeholder="John Doe" />
+                        <span asp-validation-for="PersonName" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone number</label>
+                        <input asp-for="PhoneNumber"
+                               class="form-control"
+                               inputmode="numeric"
+                               pattern="[0-9]*"
+                               placeholder="0123456789" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password"
+                               class="form-control"
+                               autocomplete="new-password"
+                               placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm password</label>
+                        <input asp-for="ConfirmPassword"
+                               class="form-control"
+                               autocomplete="new-password"
+                               placeholder="••••••••" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProfileImage" class="form-label">Profile image</label>
+                        <input asp-for="ProfileImage"
+                               class="form-control"
+                               accept="image/*" />
+                        <span asp-validation-for="ProfileImage" class="text-danger d-block"></span>
+                        <small class="text-muted">PNG or JPG recommended.</small>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <a asp-area="Identity"
+                           asp-controller="Account"
+                           asp-action="AuthLogin"
+                           class="small text-decoration-none">Already have an account? Login</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="small text-decoration-none">Back to Home</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

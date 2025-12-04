@@ -1,0 +1,8 @@
+﻿@model List<HomePageNewsToShowDTO>
+
+<div class="row g-3 justify-content-center">
+    @foreach (var news in Model)
+    {
+        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageNewsCard .cshtml", news)
+    }
+</div>

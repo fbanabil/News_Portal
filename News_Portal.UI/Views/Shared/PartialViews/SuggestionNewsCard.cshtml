@@ -1,0 +1,39 @@
+﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
+
+@{
+    var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)
+        ? "https://via.placeholder.com/300x200?text=News"
+        : Model.TitleImageUrl;
+}
+
+<a asp-controller="Home"
+   asp-action="Details"
+   asp-route-newsId="@Model.NewsId"
+   class="card suggestion-card text-reset text-decoration-none shadow-sm">
+    <div class="row g-0 align-items-stretch">
+        <div class="col-4 col-md-3">
+            <div class="suggestion-thumb">
+                <img src="@imgSrc"
+                     alt="@Model.NewsTitle"
+                     loading="lazy"
+                     class="suggestion-img" />
+            </div>
+        </div>
+        <div class="col-8 col-md-9">
+            <div class="card-body py-2 py-md-3">
+                <h6 class="card-title mb-1 text-truncate" title="@Model.NewsTitle">
+                    @Model.NewsTitle
+                </h6>
+                <p class="small text-muted mb-1">
+                    <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                    <span class="badge bg-secondary">@Model.NewsType</span>
+                </p>
+                <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">
+                    @((Model.NewsContent ?? string.Empty).Length > 140
+                        ? Model.NewsContent!.Substring(0, 140) + "…"
+                        : Model.NewsContent)
+                </p>
+            </div>
+        </div>
+    </div>
+</a>

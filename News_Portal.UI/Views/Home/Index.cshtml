@@ -1,8 +1,212 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewBag.Title = "General";
+    ViewBag.NewsType = NewsType.General;
 }
 
+@* ~\Shared\Components\Carousel\CarouselViewComponent.cshtml *@
 
-<h1>Home</h1>
+@* Top news in carousel *@
+
+<div class="news-heading" aria-label="Top News carousel heading">
+    <h2 class="carousel-heading">
+        <span class="heading-icon" aria-hidden="true">📰</span>
+        Top News
+    </h2>
+    <div class="heading-accent" role="presentation"></div>
+</div>
+
+@await Component.InvokeAsync("Carousel") 
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Politics section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Politics
+        </h2>
+    </div>
+    <a asp-area=""
+       asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Politics
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+
+@await Component.InvokeAsync("OtherNews", NewsType.Politics)
+
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Sports section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Sports
+        </h2>
+    </div>
+    <a asp-area=""
+       asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Sports
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+
+@await Component.InvokeAsync("OtherNews", NewsType.Sports)
+
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Technology section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Technology
+        </h2>
+    </div>
+    <a asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Technology
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+@await Component.InvokeAsync("OtherNews", NewsType.Technology)
+
+
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Entertainment section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Entertainment
+        </h2>
+    </div>
+    <a asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Entertainment
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+@await Component.InvokeAsync("OtherNews", NewsType.Entertainment)
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Health section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Health
+        </h2>
+    </div>
+    <a asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Health
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+@await Component.InvokeAsync("OtherNews", NewsType.Health)
+
+
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Business section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Business
+        </h2>
+    </div>
+    <a asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Business
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+@await Component.InvokeAsync("OtherNews", NewsType.Business)
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="Science section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            Science
+        </h2>
+    </div>
+    <a asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.Science
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+@await Component.InvokeAsync("OtherNews", NewsType.Science)
+
+
+
+
+
+
+<div class="news-heading d-flex align-items-center justify-content-between" aria-label="World section heading">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="carousel-heading mb-0">
+            <span class="heading-icon" aria-hidden="true">📰</span>
+            World
+        </h2>
+    </div>
+    <a asp-controller="Home"
+       asp-action="GetNews"
+       asp-route-newsType=@NewsType.World
+       asp-route-pageNo="1"
+       asp-route-pageSize="18"
+       class="btn btn-sm btn-outline-primary see-all-btn">
+        See all
+    </a>
+</div>
+<div class="heading-accent mb-2" role="presentation"></div>
+@await Component.InvokeAsync("OtherNews", NewsType.World)

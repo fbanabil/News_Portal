@@ -23,12 +23,14 @@ namespace News_Portal.Core.DTO.News
         [Required(ErrorMessage = "News content cant't be empty")]
         public string? NewsContent { get; set; }
 
+        [Required]
+        public NewsType NewsType { get; set; }
 
         [Required]
-        public NewsStatus NewsStatus { get; set; } = NewsStatus.Pending;
+        public NewsStatus NewsStatus { get; set; }
 
         [Required]
-        public NewsPriority NewsPriority { get; set; } = NewsPriority.Medium;
+        public NewsPriority NewsPriority { get; set; }
 
         public List<IFormFile>? Images { get; set; }
 

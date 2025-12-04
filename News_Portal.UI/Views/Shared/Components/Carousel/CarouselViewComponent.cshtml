@@ -1,0 +1,48 @@
+﻿@model List<HomePageNewsToShowDTO>
+
+@{
+    // items per slide
+    int chunkSize = 3;
+    var chunks = Model
+        .Select((item, index) => new { item, index })
+        .GroupBy(x => x.index / chunkSize)
+        .Select(g => g.Select(x => x.item).ToList())
+        .ToList();
+}
+
+<div id="homeNewsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < chunks.Count; i++)
+        {
+            <button type="button"
+                    data-bs-target="#homeNewsCarousel"
+                    data-bs-slide-to="@i"
+                    class="@(i == 0 ? "active" : "")"
+                    aria-current="@(i == 0 ? "true" : "false")"
+                    aria-label="Slide @(i + 1)"></button>
+        }
+    </div>
+
+    <div class="carousel-inner">
+        @for (int s = 0; s < chunks.Count; s++)
+        {
+            <div class="carousel-item @(s == 0 ? "active" : "")">
+                <div class="row g-3 justify-content-center">
+                    @foreach (var news in chunks[s])
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/CarouselCard.cshtml", news)
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#homeNewsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#homeNewsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

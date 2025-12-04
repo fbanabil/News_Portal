@@ -24,6 +24,9 @@ namespace News_Portal.Core.Domain.Entities
         public string? NewsContent { get; set; }
 
         [Required]
+        public NewsType NewsType { get; set; }
+
+        [Required]
         public DateTime PublishedDate { get; set; }
 
         [Required]
@@ -45,7 +48,5 @@ namespace News_Portal.Core.Domain.Entities
 
         public virtual ICollection<Images>? Images { get; set; }
         public virtual ICollection<Comments>? Comments { get; set; }
-
-
     }
 }

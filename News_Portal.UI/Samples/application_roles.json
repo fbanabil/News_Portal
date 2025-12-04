@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "f4c3b0e9-b34d-42ab-a517-d24c192071da",
+    "Name": "User",
+    "NormalizedName": "USER",
+    "ConcurrencyStamp": "3648082c-fbe4-45c8-b64d-09764155ab91"
+  },
+  {
+    "Id": "fe21c474-cb69-4358-b570-85093239b166",
+    "Name": "Author",
+    "NormalizedName": "AUTHOR",
+    "ConcurrencyStamp": "3e9ba3ae-4ca4-4e87-9ef2-c964e7832289"
+  },
+  {
+    "Id": "ebf9614e-bb17-4fc4-9293-a538ecd4395d",
+    "Name": "Admin",
+    "NormalizedName": "ADMIN",
+    "ConcurrencyStamp": "4bee54e2-3f47-4fb4-ab75-4a9a5d60aa3e"
+  }
+]

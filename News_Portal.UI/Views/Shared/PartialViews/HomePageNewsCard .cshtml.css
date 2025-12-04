@@ -1,0 +1,19 @@
+﻿/* Scoped (optional) */
+.news-card { border-radius: .75rem; overflow:hidden; }
+.news-card {
+    cursor: pointer;
+    transition: transform .25s, box-shadow .25s;
+}
+
+    .news-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 .6rem 1.2rem rgba(0,0,0,.25);
+    }
+
+    .news-card img {
+        transition: transform .5s;
+    }
+
+    .news-card:hover img {
+        transform: scale(1.06);
+    }

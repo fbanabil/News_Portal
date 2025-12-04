@@ -1,0 +1,101 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string presentButton = (ViewBag.PresentButton as string ?? "").Trim();
+    bool isLoginPresent = string.Equals(presentButton, "Login", StringComparison.OrdinalIgnoreCase);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/News_Portal.UI.styles.css" asp-append-version="true" />
+
+    <style>
+        body { background: transparent; }
+
+        .identity-actions-box {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;              
+            background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%); /* gray-white bg */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+        .identity-actions {
+            display: flex;
+            justify-content: center;
+            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+
+        .btn-min {
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #fff;
+            color: #0f172a;
+            transition: all .12s ease;
+        }
+        .btn-min:hover {
+            border-color: rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-present {
+            border-color: rgba(13,110,253,.35);
+            color: #0b5ed7;
+            background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+            box-shadow: 0 3px 10px rgba(13,110,253,.10);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="identity-actions">
+            <div class="identity-actions-box">
+                @if (isLoginPresent)
+                {
+                    <a class="btn-min btn-present"
+                       asp-area="Identity"
+                       asp-controller="Account"
+                       asp-action="AuthLogin">Login</a>
+                    <a class="btn-min"
+                       asp-area="Identity"
+                       asp-controller="Account"
+                       asp-action="AuthRegister">Register</a>
+                }
+                else
+                {
+                    <a class="btn-min"
+                       asp-area="Identity"
+                       asp-controller="Account"
+                       asp-action="AuthLogin">Login</a>
+                    <a class="btn-min btn-present"
+                       asp-area="Identity"
+                       asp-controller="Account"
+                       asp-action="AuthRegister">Register</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <main class="mt-2">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

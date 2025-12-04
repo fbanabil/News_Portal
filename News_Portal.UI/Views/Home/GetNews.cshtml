@@ -1,0 +1,84 @@
+﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
+@using News_Portal.Core.Enums
+@{
+    ViewBag.Title = ViewBag.NewsType?.ToString() ?? "News";
+    var title = ViewBag.NewsType?.ToString() ?? "News";
+    int pageNo = ViewBag.PageNo is int p ? p : 1;
+    int pageSize = ViewBag.PageSize is int ps ? ps : 18;
+    int pageCount = ViewBag.PageCount is int pc ? pc : 1;
+}
+
+<div class="container-lg my-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 class="h4 mb-0">@title</h1>
+        <div class="text-muted small">Page @pageNo of @pageCount</div>
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-light border">No news available.</div>
+    }
+    else
+    {
+        <!-- 16 items in 4 rows (Bootstrap grid: responsive) -->
+        <div class="row g-3 justify-content-center">
+            @foreach (var news in Model)
+            {
+                @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageNewsCard .cshtml", news)
+            }
+        </div>
+    }
+
+    <!-- Pagination -->
+    <nav class="mt-4" aria-label="Pagination">
+        <ul class="pagination justify-content-center flex-wrap">
+            @{
+                bool hasPrev = pageNo > 1;
+                bool hasNext = pageNo < pageCount;
+                var routeType = (NewsType)ViewBag.NewsType;
+            }
+
+            <li class="page-item @(hasPrev ? "" : "disabled")">
+                <a class="page-link"
+                   asp-controller="Home"
+                   asp-action="GetNews"
+                   asp-route-newsType="@routeType"
+                   asp-route-pageNo="@(pageNo - 1)"
+                   asp-route-pageSize="@pageSize">Previous</a>
+            </li>
+
+            @for (int i = Math.Max(1, pageNo - 2); i <= Math.Min(pageCount, pageNo + 2); i++)
+            {
+                <li class="page-item @(i == pageNo ? "active" : "")">
+                    <a class="page-link"
+                       asp-controller="Home"
+                       asp-action="GetNews"
+                       asp-route-newsType="@routeType"
+                       asp-route-pageNo="@i"
+                       asp-route-pageSize="@pageSize">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(hasNext ? "" : "disabled")">
+                <a class="page-link"
+                   asp-controller="Home"
+                   asp-action="GetNews"
+                   asp-route-newsType="@routeType"
+                   asp-route-pageNo="@(pageNo + 1)"
+                   asp-route-pageSize="@pageSize">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<style>
+    /* Design polish */
+    .pagination .page-link { min-width: 42px; text-align: center; }
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+    }
+</style>
+
+

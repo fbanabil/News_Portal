@@ -1,0 +1,42 @@
+﻿@model List<HomePageNewsToShowDTO>
+
+@{
+    var items = (Model ?? new List<HomePageNewsToShowDTO>()).Take(6).ToList();
+}
+
+<div class="suggestion-header d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="h5 mb-0 suggestion-title">
+            <span class="heading-icon" aria-hidden="true">💡</span>
+            Suggested for you
+        </h2>
+    </div>
+    @if (items.Count > 0)
+    {
+        <span class="small text-muted">Showing @items.Count items</span>
+    }
+</div>
+<div class="suggestion-accent" role="presentation"></div>
+
+@if (items.Count == 0)
+{
+    <div class="alert alert-light border mb-0 mt-2">No suggestions available.</div>
+}
+else
+{
+    @for (int row = 0; row < 2; row++)
+    {
+        var rowItems = items.Skip(row * 3).Take(3).ToList();
+        if (!rowItems.Any()) { break; }
+
+        <div class="row g-2 g-md-3 mb-2">
+            @foreach (var news in rowItems)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/SuggestionNewsCard.cshtml", news)
+                </div>
+            }
+        </div>
+    }
+}
+

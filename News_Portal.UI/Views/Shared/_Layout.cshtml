@@ -3,16 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - News_Portal.UI</title>
+    <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/News_Portal.UI.styles.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">News_Portal.UI</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">News_Portal</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,11 +21,105 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">General</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Politics
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Politics</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Sports
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Sports</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Technology
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Technology</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Entertainment
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Entertainment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Health
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Health</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Business
+
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Buisness</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.Science
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">Science</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType=@NewsType.World
+                               asp-route-pageNo="1"
+                               asp-route-pageSize="18">World</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto">
+                        @if ((ViewBag.Title == "Login" || ViewBag.Title == "Register")){}
+                        else if (!(User?.Identity?.IsAuthenticated ?? false))
+                        {
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-primary"
+                                   asp-area="Identity"
+                                   asp-controller="Account"
+                                   asp-action="AuthLogin">Login/Register</a>
+                            </li>
+                            
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <div class="d-flex align-items-center" style="min-width: 160px;">
+                                    <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-primary">Logout</button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -38,7 +133,16 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - News_Portal.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - News_Portal. - 
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">General</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Politics</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Sports</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Technology</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Entertainment</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Health</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Business</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Science</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">World</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

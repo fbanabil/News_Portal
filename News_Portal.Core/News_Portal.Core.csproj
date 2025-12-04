@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.18.1" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.3.0" />
@@ -14,10 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\RepositoryContracts\" />
     <Folder Include="Helpers\" />
-    <Folder Include="ServiceContracts\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
