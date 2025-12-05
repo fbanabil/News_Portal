@@ -1,15 +1,19 @@
-using System.Diagnostics;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
+using News_Portal.UI.Filters;
 using News_Portal.UI.Samples;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 
 namespace News_Portal.UI.Controllers
 {
     [Route("[controller]/[action]")]
+    [TypeFilter(typeof(ModelStateValidationFilter))]
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,6 +26,8 @@ namespace News_Portal.UI.Controllers
             _newsService = newsService;
             _updateSample = updateSample;
         }
+
+        [HttpGet]
 
         public async Task<IActionResult> Index()
         {

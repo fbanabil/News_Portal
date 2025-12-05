@@ -13,6 +13,7 @@ using News_Portal.Infrastructure.DbContext;
 using News_Portal.Infrastructure.Repositories;
 using News_Portal.UI.Samples;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace News_Portal.UI.StartupExtensions
 {
@@ -63,7 +64,7 @@ namespace News_Portal.UI.StartupExtensions
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -80,15 +81,19 @@ namespace News_Portal.UI.StartupExtensions
                 ;
 
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
-            //        .Build();
-            //});
+            builder.Services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                });
+
+
+            services.AddAuthorization();
 
             services.ConfigureApplicationCookie(options =>
             {
-                //options.LoginPath="/Account/Login";
+                options.LoginPath= "/Identity/Account/AuthLogin";
             });
 
         }

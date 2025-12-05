@@ -13,7 +13,7 @@ namespace News_Portal.Core.DTO.Account
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [DataType(DataType.EmailAddress)]
-        [Remote(action: "IsEmailRegistered", controller: "Account",areaName:"Identity", ErrorMessage = "Email not registered/\nVerify for Registration attempt")]
+        [Remote(action: "IsEmailRegistered", controller: "Account",areaName:"Identity", ErrorMessage = "Not registered or verified")]
         public string? Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]

@@ -1,0 +1,299 @@
+﻿@model ProfileToShowDTO
+@{
+    ViewBag.Title = "Profile Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .border-3 {
+        border-width: 3px !important;
+    }
+    
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .bg-primary-subtle {
+        background-color: rgba(13, 110, 253, 0.1) !important;
+    }
+    
+    .bg-warning-subtle {
+        background-color: rgba(255, 193, 7, 0.1) !important;
+    }
+    
+    .bg-info-subtle {
+        background-color: rgba(13, 202, 240, 0.1) !important;
+    }
+    
+    .bg-success-subtle {
+        background-color: rgba(25, 135, 84, 0.1) !important;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header Section -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1">Profile Details</h1>
+                    <p class="text-muted mb-0">Manage your account information and preferences</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Index", "Home", new { area = "" })" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="position-relative d-inline-block mb-3">
+                        <img src="@(Model.ProfileImageUrl ?? "https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg")"
+                             alt="Profile Picture"
+                             class="rounded-circle border"
+                             style="width: 120px; height: 120px; object-fit: cover;"
+                             onerror="this.src='https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg'" />
+                        <div class="position-absolute bottom-0 end-0">
+                            <a href="#" class="btn btn-primary btn-sm rounded-circle" 
+                               data-bs-toggle="modal" 
+                               data-bs-target="#profilePictureModal"
+                               title="Change Profile Picture">
+                                <i class="bi bi-camera-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <h4 class="mb-1">@(Model.PersonName ?? "User Name")</h4>
+                    <p class="text-muted mb-3">@(Model.Email ?? "user@example.com")</p>
+                    
+                    <!-- Status Badge -->
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                        <i class="bi bi-check-circle-fill me-1"></i>Verified Account
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="col-lg-8">
+            <div class="row">
+                <!-- Personal Information Card -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-person-circle me-2 text-primary"></i>Personal Information
+                                </h5>
+                                <a href="@Url.Action("EditProfile", "Profile", new { area = "Identity" })" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil-square me-1"></i>Edit Profile
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="border-start border-primary border-3 ps-3">
+                                        <small class="text-muted text-uppercase fw-bold">Full Name</small>
+                                        <div class="fw-medium">@(Model.PersonName ?? "Not provided")</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border-start border-info border-3 ps-3">
+                                        <small class="text-muted text-uppercase fw-bold">Email Address</small>
+                                        <div class="fw-medium">@(Model.Email ?? "Not provided")</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border-start border-success border-3 ps-3">
+                                        <small class="text-muted text-uppercase fw-bold">Phone Number</small>
+                                        <div class="fw-medium">@(Model.PhoneNumber ?? "Not provided")</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border-start border-warning border-3 ps-3">
+                                        <small class="text-muted text-uppercase fw-bold">Member Since</small>
+                                        <div class="fw-medium">@DateTime.Now.ToString("MMMM yyyy")</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Card -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-gear-fill me-2 text-primary"></i>Account Settings
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="@Url.Action("EditProfile", "Profile", new { area = "Identity" })" 
+                                       class="card text-decoration-none border-0 bg-primary-subtle h-100">
+                                        <div class="card-body text-center p-3">
+                                            <i class="bi bi-person-gear display-6 text-primary mb-2"></i>
+                                            <h6 class="card-title text-primary mb-1">Edit Profile</h6>
+                                            <small class="text-muted">Update your personal information</small>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="@Url.Action("ChangePassword", "Profile", new { area = "Identity" })" 
+                                       class="card text-decoration-none border-0 bg-warning-subtle h-100">
+                                        <div class="card-body text-center p-3">
+                                            <i class="bi bi-shield-lock display-6 text-warning mb-2"></i>
+                                            <h6 class="card-title text-warning mb-1">Change Password</h6>
+                                            <small class="text-muted">Update your account password</small>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="@Url.Action("SecuritySettings", "Profile", new { area = "Identity" })" 
+                                       class="card text-decoration-none border-0 bg-info-subtle h-100">
+                                        <div class="card-body text-center p-3">
+                                            <i class="bi bi-shield-check display-6 text-info mb-2"></i>
+                                            <h6 class="card-title text-info mb-1">Security Settings</h6>
+                                            <small class="text-muted">Manage your account security</small>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="@Url.Action("ManageNotifications", "Profile", new { area = "Identity" })" 
+                                       class="card text-decoration-none border-0 bg-success-subtle h-100">
+                                        <div class="card-body text-center p-3">
+                                            <i class="bi bi-bell display-6 text-success mb-2"></i>
+                                            <h6 class="card-title text-success mb-1">Notifications</h6>
+                                            <small class="text-muted">Configure your preferences</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Summary Card -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-activity me-2 text-primary"></i>Account Activity
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <div class="display-6 text-primary mb-1">
+                                            <i class="bi bi-newspaper"></i>
+                                        </div>
+                                        <h4 class="mb-1">0</h4>
+                                        <small class="text-muted">Articles Read</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <div class="display-6 text-success mb-1">
+                                            <i class="bi bi-chat-dots"></i>
+                                        </div>
+                                        <h4 class="mb-1">0</h4>
+                                        <small class="text-muted">Comments Made</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="display-6 text-info mb-1">
+                                        <i class="bi bi-heart"></i>
+                                    </div>
+                                    <h4 class="mb-1">0</h4>
+                                    <small class="text-muted">Articles Liked</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Actions -->
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-tools me-2 text-primary"></i>Additional Options
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="@Url.Action("DownloadData", "Profile", new { area = "Identity" })" 
+                                   class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-download me-1"></i>Download My Data
+                                </a>
+                                <a href="@Url.Action("PrivacySettings", "Profile", new { area = "Identity" })" 
+                                   class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-shield-lock me-1"></i>Privacy Settings
+                                </a>
+                                <a href="@Url.Action("DeleteAccount", "Profile", new { area = "Identity" })" 
+                                   class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash me-1"></i>Delete Account
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Picture Modal -->
+<div class="modal fade" id="profilePictureModal" tabindex="-1" aria-labelledby="profilePictureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profilePictureModalLabel">
+                    <i class="bi bi-camera me-2"></i>Change Profile Picture
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-area="Identity" asp-controller="Profile" asp-action="UpdateProfilePicture" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="profileImage" class="form-label">Select New Profile Picture</label>
+                        <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*" required />
+                        <small class="text-muted">Recommended: JPG, PNG. Max size: 5MB</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-upload me-1"></i>Upload Picture
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Handle profile picture modal (simplified since we're using data-bs-toggle)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal is handled by Bootstrap's data attributes
+            console.log('ProfileDetails page loaded successfully');
+        });
+    </script>
+}
+
