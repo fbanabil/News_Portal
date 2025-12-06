@@ -1,12 +1,12 @@
 ﻿using News_Portal.Core.Domain.IdentityEntities;
-using News_Portal.Core.DTO.Account;
+using News_Portal.Core.DTO.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace News_Portal.Core.DTO.Account
+namespace News_Portal.Core.DTO.Profile
 {
     public class ProfileToShowDTO
     {

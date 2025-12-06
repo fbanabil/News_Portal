@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using News_Portal.Core.Domain.IdentityEntities;
+using News_Portal.Core.DTO.Comment;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
@@ -18,13 +21,17 @@ namespace News_Portal.UI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly INewsService _newsService;
+        private readonly ICommentService _commentService;
         private readonly IUpdateSample _updateSample;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, INewsService newsService, IUpdateSample updateSample)
+        public HomeController(ILogger<HomeController> logger, INewsService newsService, IUpdateSample updateSample, UserManager<ApplicationUser> userManager, ICommentService commentService)
         {
             _logger = logger;
             _newsService = newsService;
             _updateSample = updateSample;
+            _userManager = userManager;
+            _commentService = commentService;
         }
 
         [HttpGet]
@@ -39,6 +46,8 @@ namespace News_Portal.UI.Controllers
         public async Task<IActionResult> Details([FromRoute] Guid newsId)
         {
             DetailedNewsToShowDTO detailedNewsToShowDTOs = await _newsService.GetDetailedNewsToShowDTOsByNewsId(newsId);
+            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
+            ViewBag.PresentUserName = user?.PersonName ?? "Unknown";
             return View(detailedNewsToShowDTOs);
         }
 
@@ -66,6 +75,16 @@ namespace News_Portal.UI.Controllers
 
             ViewBag.PageCount = (int)Math.Ceiling((double)totalOfThisType / ps);
             return View(NewsByType);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(CommentToAddDTO commentToAddDTO)
+        {
+            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
+            CommentToShowDTO commentToShowDTO = await _commentService.AddCommentAsync(commentToAddDTO,user.Id);
+            return PartialView("~/Views/Shared/PartialViews/_Comment.cshtml",commentToShowDTO);
         }
     }
 }

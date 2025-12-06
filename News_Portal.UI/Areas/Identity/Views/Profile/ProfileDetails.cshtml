@@ -1,39 +1,28 @@
-﻿@model ProfileToShowDTO
+﻿@using News_Portal.Core.DTO.Profile
+@model ProfileToShowDTO
 @{
     ViewBag.Title = "Profile Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .border-3 {
-        border-width: 3px !important;
-    }
-    
-    .card {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-    
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-    
-    .bg-primary-subtle {
-        background-color: rgba(13, 110, 253, 0.1) !important;
-    }
-    
-    .bg-warning-subtle {
-        background-color: rgba(255, 193, 7, 0.1) !important;
-    }
-    
-    .bg-info-subtle {
-        background-color: rgba(13, 202, 240, 0.1) !important;
-    }
-    
-    .bg-success-subtle {
-        background-color: rgba(25, 135, 84, 0.1) !important;
-    }
-</style>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <div class="container py-4">
     <div class="row">
@@ -64,14 +53,14 @@
                              class="rounded-circle border"
                              style="width: 120px; height: 120px; object-fit: cover;"
                              onerror="this.src='https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg'" />
-                        <div class="position-absolute bottom-0 end-0">
+                        @* <div class="position-absolute bottom-0 end-0">
                             <a href="#" class="btn btn-primary btn-sm rounded-circle" 
                                data-bs-toggle="modal" 
                                data-bs-target="#profilePictureModal"
                                title="Change Profile Picture">
-                                <i class="bi bi-camera-fill"></i>
+                                
                             </a>
-                        </div>
+                        </div> *@
                     </div>
                     <h4 class="mb-1">@(Model.PersonName ?? "User Name")</h4>
                     <p class="text-muted mb-3">@(Model.Email ?? "user@example.com")</p>
@@ -163,92 +152,25 @@
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="@Url.Action("SecuritySettings", "Profile", new { area = "Identity" })" 
-                                       class="card text-decoration-none border-0 bg-info-subtle h-100">
+                                    <a href="#" onclick="resetPassword()" 
+                                       class="card text-decoration-none border-0 bg-secondary-subtle h-100">
                                         <div class="card-body text-center p-3">
-                                            <i class="bi bi-shield-check display-6 text-info mb-2"></i>
-                                            <h6 class="card-title text-info mb-1">Security Settings</h6>
-                                            <small class="text-muted">Manage your account security</small>
+                                            <i class="bi bi-key display-6 text-secondary mb-2"></i>
+                                            <h6 class="card-title text-secondary mb-1">Reset Password</h6>
+                                            <small class="text-muted">Send password reset email</small>
                                         </div>
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="@Url.Action("ManageNotifications", "Profile", new { area = "Identity" })" 
-                                       class="card text-decoration-none border-0 bg-success-subtle h-100">
+                                    <a href="#" onclick="deleteAccount()" 
+                                       class="card text-decoration-none border-0 bg-danger-subtle h-100">
                                         <div class="card-body text-center p-3">
-                                            <i class="bi bi-bell display-6 text-success mb-2"></i>
-                                            <h6 class="card-title text-success mb-1">Notifications</h6>
-                                            <small class="text-muted">Configure your preferences</small>
+                                            <i class="bi bi-trash display-6 text-danger mb-2"></i>
+                                            <h6 class="card-title text-danger mb-1">Delete Account</h6>
+                                            <small class="text-muted">Permanently delete your account</small>
                                         </div>
                                     </a>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Activity Summary Card -->
-                <div class="col-12 mb-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h5 class="mb-0">
-                                <i class="bi bi-activity me-2 text-primary"></i>Account Activity
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row text-center">
-                                <div class="col-4">
-                                    <div class="border-end">
-                                        <div class="display-6 text-primary mb-1">
-                                            <i class="bi bi-newspaper"></i>
-                                        </div>
-                                        <h4 class="mb-1">0</h4>
-                                        <small class="text-muted">Articles Read</small>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="border-end">
-                                        <div class="display-6 text-success mb-1">
-                                            <i class="bi bi-chat-dots"></i>
-                                        </div>
-                                        <h4 class="mb-1">0</h4>
-                                        <small class="text-muted">Comments Made</small>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="display-6 text-info mb-1">
-                                        <i class="bi bi-heart"></i>
-                                    </div>
-                                    <h4 class="mb-1">0</h4>
-                                    <small class="text-muted">Articles Liked</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional Actions -->
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h5 class="mb-0">
-                                <i class="bi bi-tools me-2 text-primary"></i>Additional Options
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex flex-wrap gap-2">
-                                <a href="@Url.Action("DownloadData", "Profile", new { area = "Identity" })" 
-                                   class="btn btn-outline-info btn-sm">
-                                    <i class="bi bi-download me-1"></i>Download My Data
-                                </a>
-                                <a href="@Url.Action("PrivacySettings", "Profile", new { area = "Identity" })" 
-                                   class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-shield-lock me-1"></i>Privacy Settings
-                                </a>
-                                <a href="@Url.Action("DeleteAccount", "Profile", new { area = "Identity" })" 
-                                   class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-trash me-1"></i>Delete Account
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -287,13 +209,248 @@
     </div>
 </div>
 
+<!-- Reset Password Confirmation Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordModalLabel">
+                    <i class="bi bi-key me-2"></i>Reset Password
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Password Reset Request</strong><br>
+                    Are you sure you want to reset your password? A password reset link will be sent to your email address: <strong>@Model.Email</strong>
+                </div>
+                <p class="text-muted small">
+                    You will receive an email with instructions to create a new password. This action will not immediately change your current password.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmResetPassword()">
+                    <i class="bi bi-send me-1"></i>Send Reset Email
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Confirmation Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteAccountModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Delete Account
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>WARNING: This action is irreversible!</strong>
+                </div>
+                <p class="mb-3">
+                    Are you absolutely sure you want to delete your account? This will permanently:
+                </p>
+                <ul class="text-danger">
+                    <li>Delete all your personal information</li>
+                    <li>Remove all your comments and posts</li>
+                    <li>Cancel any subscriptions or preferences</li>
+                    <li>Make your profile inaccessible</li>
+                </ul>
+                <div class="form-group mt-3">
+                    <label for="confirmationText" class="form-label">
+                        Type <strong>"DELETE MY ACCOUNT"</strong> to confirm:
+                    </label>
+                    <input type="text" id="confirmationText" class="form-control" placeholder="Type confirmation text here">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn" disabled onclick="confirmDeleteAccount()">
+                    <i class="bi bi-trash me-1"></i>Delete My Account
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        // Handle profile picture modal (simplified since we're using data-bs-toggle)
+        // Handle profile picture modal
         document.addEventListener('DOMContentLoaded', function() {
-            // Modal is handled by Bootstrap's data attributes
             console.log('ProfileDetails page loaded successfully');
+            
+            // Handle delete confirmation text validation
+            const confirmationInput = document.getElementById('confirmationText');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            if (confirmationInput && confirmDeleteBtn) {
+                confirmationInput.addEventListener('input', function() {
+                    const isValid = this.value.trim().toUpperCase() === 'DELETE MY ACCOUNT';
+                    confirmDeleteBtn.disabled = !isValid;
+                    
+                    if (isValid) {
+                        confirmDeleteBtn.classList.remove('btn-outline-danger');
+                        confirmDeleteBtn.classList.add('btn-danger');
+                    } else {
+                        confirmDeleteBtn.classList.remove('btn-danger');
+                        confirmDeleteBtn.classList.add('btn-outline-danger');
+                    }
+                });
+            }
         });
+
+        // Reset password functionality
+        function resetPassword() {
+            const resetModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+            resetModal.show();
+        }
+
+        function confirmResetPassword() {
+            // Show loading state
+            const confirmBtn = document.querySelector('#resetPasswordModal .btn-danger');
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Sending...';
+            confirmBtn.disabled = true;
+
+            // Make AJAX request to reset password
+            fetch('@Url.Action("ResetPassword", "Profile", new { area = "Identity" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    email: '@Model.Email'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Close modal first
+                    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                    modalInstance.hide();
+                    
+                    // Wait for modal to fully close before showing alert
+                    document.getElementById('resetPasswordModal').addEventListener('hidden.bs.modal', function() {
+                        setTimeout(() => {
+                            showAlert('success', 'Password reset email sent successfully! Please check your email.');
+                        }, 100);
+                    }, { once: true }); // Use once: true to ensure this only fires once
+                } else {
+                    showAlert('danger', data.message || 'Failed to send reset email. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', 'An error occurred. Please try again later.');
+            })
+            .finally(() => {
+                // Restore button state
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+            });
+        }
+
+        // Delete account functionality
+        function deleteAccount() {
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+            deleteModal.show();
+            
+            // Reset the confirmation input and button state
+            document.getElementById('confirmationText').value = '';
+            document.getElementById('confirmDeleteBtn').disabled = true;
+        }
+
+        function confirmDeleteAccount() {
+            // Show loading state
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
+            confirmBtn.disabled = true;
+
+            // Make AJAX request to delete account
+            fetch('@Url.Action("DeleteAccount", "Profile", new { area = "Identity" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Close modal first
+                    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
+                    modalInstance.hide();
+                    
+                    // Wait for modal to fully close before showing alert
+                    document.getElementById('deleteAccountModal').addEventListener('hidden.bs.modal', function() {
+                        setTimeout(() => {
+                            showAlert('success', 'Account deleted successfully. Redirecting...', false);
+                            
+                            // Redirect to home after 3 seconds
+                            setTimeout(() => {
+                                window.location.href = '@Url.Action("Index", "Home", new { area = "" })';
+                            }, 3000);
+                        }, 100);
+                    }, { once: true }); // Use once: true to ensure this only fires once
+                } else {
+                    showAlert('danger', data.message || 'Failed to delete account. Please try again.');
+                    // Restore button state
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', 'An error occurred. Please try again later.');
+                // Restore button state
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+            });
+        }
+
+        function showAlert(type, message, autoDismiss = true) {
+            // Remove any existing alerts first
+            const existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert" style="margin-bottom: 1rem;">
+                    <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+            
+            // Insert alert at the top of the container
+            const container = document.querySelector('.container');
+            container.insertAdjacentHTML('afterbegin', alertHtml);
+            
+            // Scroll to top to ensure visibility
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Auto-dismiss after 5 seconds if enabled
+            if (autoDismiss) {
+                setTimeout(() => {
+                    const alert = container.querySelector('.alert');
+                    if (alert) {
+                        const alertInstance = bootstrap.Alert.getInstance(alert);
+                        if (alertInstance) {
+                            alertInstance.close();
+                        } else {
+                            alert.remove();
+                        }
+                    }
+                }, 5000);
+            }
+        }
     </script>
 }
 

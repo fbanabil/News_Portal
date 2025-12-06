@@ -1,5 +1,6 @@
 ﻿using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.RepositoryContracts;
+using News_Portal.Core.DTO.Comment;
 using News_Portal.Infrastructure.DbContext;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,12 @@ namespace News_Portal.Infrastructure.Repositories
         public async Task AddComment(Comments comment)
         {
             await _dbContext.Comments.AddAsync(comment);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddCommentAsync(Comments commentToAddDTO)
+        {
+            await _dbContext.Comments.AddAsync(commentToAddDTO);
             await _dbContext.SaveChangesAsync();
         }
 

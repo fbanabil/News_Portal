@@ -29,7 +29,7 @@ public static class CommentExtension
             CommentId = comment.CommentId,
             CommentText = comment.CommentText,
             CommentDate = comment.CommentDate,
-            UserName = comment.User?.UserName
+            UserName = comment.User?.PersonName
         };
     }
 

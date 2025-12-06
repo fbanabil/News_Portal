@@ -12,7 +12,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 {
     [Area("Identity")]
     [Route("[area]/[controller]/[action]")]
-    [TypeFilter(typeof(ModelStateValidationFilter))]  
+    [TypeFilter(typeof(ModelStateValidationFilter))]
     public class AccountController : Controller
     {
 
@@ -68,7 +68,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
             if (user.EmailConfirmed == false)
             {
-                ModelState.AddModelError(string.Empty, "Email not confirmed. Please confirm your email before logging in.");
+                //ModelState.AddModelError(string.Empty, "Email not confirmed. Please confirm your email before logging in.");
+                TempData["Error"] = "Email not confirmed. Please confirm your email before logging in.";
                 ViewBag.PresentButton = "Login";
                 return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", loginDTO);
             }
@@ -77,7 +78,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Wrong Password");
+                //ModelState.AddModelError(string.Empty, "Wrong Password");
+                TempData["Error"] = "Wrong Password";
                 ViewBag.PresentButton = "Login";
                 return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", loginDTO);
             }
@@ -169,6 +171,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            TempData["Message"] = "You have been logged out successfully.";
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
@@ -206,7 +209,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLogin(string provider, string returnUrl = null)
         {
-            string redirectUrl = Request.Scheme.ToString()+"://"+Request.Host.ToString()+"/Identity/Account/ExternalLoginCallback";
+            string redirectUrl = Request.Scheme.ToString() + "://" + Request.Host.ToString() + "/Identity/Account/ExternalLoginCallback";
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
@@ -217,7 +220,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         {
             returnUrl ??= Url.Content("~/");
 
-            if(remoteError != null)
+            if (remoteError != null)
             {
                 ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
                 ViewBag.PresentButton = "Login";
@@ -225,17 +228,19 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             }
 
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            
-            if(info == null)
+
+            if (info == null)
             {
                 ModelState.AddModelError(string.Empty, "Error loading external login information.");
                 ViewBag.PresentButton = "Login";
                 return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", new LoginDTO());
             }
 
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor : true);
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
+
             if (signInResult.Succeeded)
             {
+                TempData["Message"] = "Logged in successfully!";
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
@@ -263,7 +268,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                     .Select(_ => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"[Random.Shared.Next(68)])
                     .ToArray());
                 _logger.LogInformation(randomPassword);
-                IdentityResult res = await _userManager.CreateAsync(user,randomPassword);
+                IdentityResult res = await _userManager.CreateAsync(user, randomPassword);
 
                 if (!res.Succeeded)
                 {
@@ -271,10 +276,10 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                     ViewBag.PresentButton = "Login";
                     return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", new LoginDTO());
                 }
-
+                TempData["Message"] = "Account created successfully using " + info.LoginProvider + " provider. Please reset you password from profile section.";
                 await _userManager.AddToRoleAsync(user, UserTypes.User.ToString());
             }
-            if(user.EmailConfirmed==false)
+            if (user.EmailConfirmed == false)
             {
                 user.EmailConfirmed = true;
                 await _userManager.UpdateAsync(user);
@@ -282,10 +287,85 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
             await _userManager.AddLoginAsync(user, info);
             await _signInManager.SignInAsync(user, isPersistent: false);
-
+            TempData["Message"] = "Logged in successfully!";
             return RedirectToAction("Index", "Home", new { area = "" });
 
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> ForgotPassword()
+        {
+            return View(new ForgotPasswordDTO());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPasswordReset(ForgotPasswordDTO forgotPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+            {
+                TempData["Error"] = "Invalid Request";
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action("ResetPassword", "Account", new { token = token, email = forgotPasswordDto.Email }, Request.Scheme);
+            _logger.LogInformation("Password reset link: {ResetLink}", resetLink);
+            TempData["Message"] = "Password reset link has been sent to your email.";
+            return RedirectToAction(nameof(ForgotPassword));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string token, string email)
+        {
+            ForgotPasswordResetDTO forgotPasswordResetDTO = new ForgotPasswordResetDTO()
+            {
+                Email = email,
+                Token = token
+            };
+            return View(forgotPasswordResetDTO);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmResetPassword(ForgotPasswordResetDTO forgotPasswordResetDTO)
+        {
+            if (string.IsNullOrEmpty(forgotPasswordResetDTO.Email) || string.IsNullOrEmpty(forgotPasswordResetDTO.Token))
+            {
+                TempData["Error"] = "Invalid password reset request.";
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            if (forgotPasswordResetDTO.NewPassword != forgotPasswordResetDTO.ConfirmNewPassword)
+            {
+                TempData["Error"] = "New password and confirmation do not match.";
+                return View("ResetPassword", forgotPasswordResetDTO);
+            }
+
+            var user = await _userManager.FindByEmailAsync(forgotPasswordResetDTO.Email);
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, forgotPasswordResetDTO.Token, forgotPasswordResetDTO.NewPassword);
+
+            if (result.Succeeded)
+            {
+                TempData["Message"] = "Your password has been reset successfully. You can now log in with your new password.";
+                return RedirectToAction(nameof(AuthLogin));
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View("ResetPassword", forgotPasswordResetDTO);
+            }
+        }
     }
 }

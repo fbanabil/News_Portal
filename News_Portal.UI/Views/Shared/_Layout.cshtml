@@ -3,153 +3,136 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title - News Portal</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/News_Portal.UI.styles.css" asp-append-version="true" />
+    
 
+    @await RenderSectionAsync("Styles", required: false)
+    
+    <style>
+        /* Enhanced navigation */
+       
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">News_Portal</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-newspaper me-2"></i>News Portal
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" 
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">General</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house me-1"></i>General
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Politics
+                               asp-route-newsType="@NewsType.Politics"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Politics</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-bank me-1"></i>Politics
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Sports
+                               asp-route-newsType="@NewsType.Sports"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Sports</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-trophy me-1"></i>Sports
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Technology
+                               asp-route-newsType="@NewsType.Technology"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Technology</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-cpu me-1"></i>Technology
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Entertainment
+                               asp-route-newsType="@NewsType.Entertainment"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Entertainment</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-film me-1"></i>Entertainment
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Health
+                               asp-route-newsType="@NewsType.Health"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Health</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-heart-pulse me-1"></i>Health
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Business
-
+                               asp-route-newsType="@NewsType.Business"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Buisness</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-briefcase me-1"></i>Business
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Science
+                               asp-route-newsType="@NewsType.Science"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">Science</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-flask me-1"></i>Science
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-area=""
                                asp-controller="Home"
                                asp-action="GetNews"
-                               asp-route-newsType=@NewsType.World
+                               asp-route-newsType="@NewsType.World"
                                asp-route-pageNo="1"
-                               asp-route-pageSize="18">World</a>
+                               asp-route-pageSize="18">
+                                <i class="bi bi-globe me-1"></i>World
+                            </a>
                         </li>
-                    </ul>
-
-                    <ul class="navbar-nav ms-auto">
-                        @if ((ViewBag.Title == "Login" || ViewBag.Title == "Register")){}
-                        else if (!(User?.Identity?.IsAuthenticated ?? false))
-                        {
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary"
-                                   asp-area="Identity"
-                                   asp-controller="Account"
-                                   asp-action="AuthLogin">Login/Register</a>
-                            </li>
-                            
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <div class="d-flex align-items-center" style="width: auto;">
-                                    @await Component.InvokeAsync("UserProfile")
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <div class="d-flex align-items-center" style="min-width: 160px;">
-                                    <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-outline-primary">Logout</button>
-                                    </form>
-                                </div>
-                            </li>
-                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - News_Portal. - 
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">General</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Politics</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Sports</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Technology</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Entertainment</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Health</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Business</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Science</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">World</a>
-        </div>
-    </footer>
+    <main>
+        @RenderBody()
+    </main>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
