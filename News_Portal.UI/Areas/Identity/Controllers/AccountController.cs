@@ -105,7 +105,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 PersonName = registerDTO.PersonName,
                 PhoneNumber = registerDTO.PhoneNumber,
                 EmailConfirmed = false,
-                PersonImageUrl = "https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg"
+                PersonImageUrl = await _imageService.GetDefaultProfileImageUrl()
             };
             IdentityResult result = await _userManager.CreateAsync(newUser, registerDTO.Password);
 
@@ -262,7 +262,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                     UserName = email,
                     Email = email,
                     EmailConfirmed = true,
-                    PersonImageUrl = "https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg"
+                    PersonImageUrl = await _imageService.GetDefaultProfileImageUrl()
                 };
                 string randomPassword = new string(Enumerable.Range(0, 10)
                     .Select(_ => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"[Random.Shared.Next(68)])

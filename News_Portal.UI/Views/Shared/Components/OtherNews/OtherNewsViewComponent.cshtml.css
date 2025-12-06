@@ -1,0 +1,189 @@
+﻿body {
+}
+
+/* Container styling with gradient background */
+.row {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 2rem 1rem;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add subtle pattern overlay */
+.row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Enhanced news card styling */
+.news-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: none !important;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+/* Hover effects for news cards */
+.news-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 8px 20px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 1);
+}
+
+/* Card glow effect on hover */
+.news-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 16px;
+}
+
+.news-card:hover::after {
+    opacity: 1;
+}
+
+/* Enhanced image styling */
+.news-card img {
+    transition: transform 0.4s ease;
+    border-radius: 12px 12px 0 0;
+}
+
+.news-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Card body enhancements */
+.news-card .card-body {
+    position: relative;
+    z-index: 2;
+    padding: 1.25rem;
+}
+
+/* Title styling with gradient text */
+.news-card .card-title {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+/* Date and views styling */
+.news-card .text-muted {
+    color: #6c757d !important;
+    font-weight: 500;
+}
+
+/* Content text enhancement */
+.news-card .card-text {
+    color: #495057;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+/* Views counter with icon-like styling */
+.news-card .card-body > span.text-muted:last-of-type {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .row {
+        padding: 1.5rem 0.75rem;
+        margin: 0.5rem 0;
+        border-radius: 16px;
+    }
+    
+    .news-card {
+        border-radius: 12px;
+    }
+    
+    .news-card .card-body {
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .row {
+        padding: 2.5rem 1.5rem;
+        border-radius: 24px;
+    }
+    
+    .news-card:hover {
+        transform: translateY(-10px) scale(1.03);
+    }
+}
+
+/* Loading animation for images */
+.news-card img[loading="lazy"] {
+    opacity: 0;
+    animation: fadeInImage 0.6s ease forwards;
+}
+
+@keyframes fadeInImage {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Subtle entrance animation for cards */
+.news-card {
+    animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Stagger animation delay for multiple cards */
+.col-10:nth-child(2) .news-card { animation-delay: 0.1s; }
+.col-10:nth-child(3) .news-card { animation-delay: 0.2s; }
+.col-10:nth-child(4) .news-card { animation-delay: 0.3s; }
+.col-10:nth-child(5) .news-card { animation-delay: 0.4s; }
+.col-10:nth-child(6) .news-card { animation-delay: 0.5s; }

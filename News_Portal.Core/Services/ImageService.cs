@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using News_Portal.Core.ServiceContracts;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,14 @@ namespace News_Portal.Core.Services
     public class ImageService : IImageService
     {
         private readonly Cloudinary _cloudinary;
-        private readonly string _defaultImageUrl = "https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg";
-
-        public ImageService(Cloudinary cloudinary)
+        private readonly string _defaultImageUrl;
+        private readonly IConfiguration _configuration;
+        public ImageService(Cloudinary cloudinary, IConfiguration configuration)
         {
             _cloudinary = cloudinary;
+            _configuration = configuration;
+            _defaultImageUrl = _configuration["DefaultValues:DefaultProfileImageUrl"]
+                ?? "https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg";
         }
 
         public async Task<string> UploadToCloudinary(IFormFile profileImage)
@@ -138,6 +142,11 @@ namespace News_Portal.Core.Services
             {
                 return string.Empty;
             }
+        }
+
+        public async Task<string> GetDefaultProfileImageUrl()
+        {
+            return _defaultImageUrl;
         }
     }
 }

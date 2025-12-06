@@ -12,5 +12,6 @@ namespace News_Portal.Core.ServiceContracts
         Task<string> UploadToCloudinary(IFormFile profileImage);
         Task<bool> DeleteFromCloudinary(string imageUrl);
         Task<bool> DeleteFromCloudinaryByPublicId(string publicId);
+        Task<string> GetDefaultProfileImageUrl();
     }
 }

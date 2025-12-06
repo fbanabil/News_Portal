@@ -37,6 +37,11 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 TempData["Error"] = "User not found. Please login again.";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
+            string DefaultImageUrl = await _imageService.GetDefaultProfileImageUrl();
+
+            ViewBag.DefaultImageUrl = DefaultImageUrl;
+            _logger.LogInformation("Default profile image url {0}: " ,DefaultImageUrl);
+
             return View(user.ToProfileToShowDTO());
         }
 
@@ -51,6 +56,10 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 TempData["Error"] = "User not found. Please login again.";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
+
+            string DefaultImageUrl = await _imageService.GetDefaultProfileImageUrl();
+            ViewBag.DefaultImageUrl = DefaultImageUrl;
+
             return View(user.ToProfileToUpdateDTO());
         }
     

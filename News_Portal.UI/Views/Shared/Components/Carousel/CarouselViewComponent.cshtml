@@ -10,39 +10,141 @@
         .ToList();
 }
 
-<div id="homeNewsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
-    <div class="carousel-indicators">
-        @for (int i = 0; i < chunks.Count; i++)
-        {
-            <button type="button"
-                    data-bs-target="#homeNewsCarousel"
-                    data-bs-slide-to="@i"
-                    class="@(i == 0 ? "active" : "")"
-                    aria-current="@(i == 0 ? "true" : "false")"
-                    aria-label="Slide @(i + 1)"></button>
-        }
-    </div>
-
-    <div class="carousel-inner">
-        @for (int s = 0; s < chunks.Count; s++)
-        {
-            <div class="carousel-item @(s == 0 ? "active" : "")">
-                <div class="row g-3 justify-content-center">
-                    @foreach (var news in chunks[s])
-                    {
-                        @await Html.PartialAsync("~/Views/Shared/PartialViews/CarouselCard.cshtml", news)
-                    }
-                </div>
+    <div class="carousel-wrapper">
+    <div id="homeNewsCarousel" class="carousel slide carousel-professional" data-bs-ride="carousel" data-bs-interval="8000">
+        
+        <!-- Enhanced Carousel Indicators -->
+        <div class="carousel-indicators-container">
+            <div class="carousel-indicators">
+                @for (int i = 0; i < chunks.Count; i++)
+                {
+                    <button type="button"
+                            data-bs-target="#homeNewsCarousel"
+                            data-bs-slide-to="@i"
+                            class="carousel-indicator @(i == 0 ? "active" : "")"
+                            aria-current="@(i == 0 ? "true" : "false")"
+                            aria-label="Slide @(i + 1)">
+                        <span class="indicator-progress"></span>
+                    </button>
+                }
             </div>
-        }
-    </div>
+            
+            <!-- Slide Counter -->
+            <div class="slide-counter">
+                <span class="current-slide">1</span> / <span class="total-slides">@chunks.Count</span>
+            </div>
+        </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#homeNewsCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#homeNewsCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
+        <!-- Carousel Content -->
+        <div class="carousel-inner">
+            @for (int s = 0; s < chunks.Count; s++)
+            {
+                <div class="carousel-item @(s == 0 ? "active" : "")" data-slide="@(s + 1)">
+                    <div class="carousel-content">
+                        <div class="row g-4 justify-content-center">
+                            @foreach (var news in chunks[s])
+                            {
+                                @await Html.PartialAsync("~/Views/Shared/PartialViews/CarouselCard.cshtml", news)
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Enhanced Navigation Controls -->
+        <button class="carousel-control carousel-control-prev" type="button" 
+                data-bs-target="#homeNewsCarousel" data-bs-slide="prev" 
+                aria-label="Previous slide">
+            <span class="carousel-control-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+            </span>
+            <span class="control-tooltip">Previous</span>
+        </button>
+        
+        <button class="carousel-control carousel-control-next" type="button" 
+                data-bs-target="#homeNewsCarousel" data-bs-slide="next" 
+                aria-label="Next slide">
+            <span class="carousel-control-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9,6 15,12 9,18"></polyline>
+                </svg>
+            </span>
+            <span class="control-tooltip">Next</span>
+        </button>
+
+        <!-- Carousel Progress Bar -->
+        <div class="carousel-progress">
+            <div class="progress-bar" id="carouselProgress"></div>
+        </div>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('#homeNewsCarousel');
+    const progressBar = document.querySelector('#carouselProgress');
+    const currentSlideElement = document.querySelector('.current-slide');
+    const totalSlides = @chunks.Count;
+    let slideInterval;
+    const slideTimeout = 8000;
+
+    // Update slide counter and progress
+    function updateCarouselState() {
+        const activeSlide = carousel.querySelector('.carousel-item.active');
+        const slideNumber = parseInt(activeSlide.dataset.slide);
+        
+        if (currentSlideElement) {
+            currentSlideElement.textContent = slideNumber;
+        }
+        
+        // Reset and animate progress bar
+        if (progressBar) {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            
+            setTimeout(() => {
+                progressBar.style.transition = `width ${slideTimeout}ms linear`;
+                progressBar.style.width = '100%';
+            }, 50);
+        }
+    }
+
+    // Initialize carousel state
+    updateCarouselState();
+
+    // Listen for slide changes
+    if (carousel) {
+        carousel.addEventListener('slide.bs.carousel', function () {
+            updateCarouselState();
+        });
+
+        // Pause progress on hover
+        carousel.addEventListener('mouseenter', function() {
+            if (progressBar) {
+                progressBar.style.animationPlayState = 'paused';
+            }
+        });
+
+        carousel.addEventListener('mouseleave', function() {
+            if (progressBar) {
+                progressBar.style.animationPlayState = 'running';
+            }
+        });
+    }
+
+    // Enhanced keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowLeft') {
+            const prevButton = carousel.querySelector('.carousel-control-prev');
+            if (prevButton) prevButton.click();
+        } else if (event.key === 'ArrowRight') {
+            const nextButton = carousel.querySelector('.carousel-control-next');
+            if (nextButton) nextButton.click();
+        }
+    });
+});
+</script>
+

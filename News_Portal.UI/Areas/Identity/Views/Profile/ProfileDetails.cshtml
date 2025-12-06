@@ -48,11 +48,11 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body text-center p-4">
                     <div class="position-relative d-inline-block mb-3">
-                        <img src="@(Model.ProfileImageUrl ?? "https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg")"
+                        <img src="@(Model.ProfileImageUrl ?? ViewBag.DefaultImageUrl)"
                              alt="Profile Picture"
                              class="rounded-circle border"
                              style="width: 120px; height: 120px; object-fit: cover;"
-                             onerror="this.src='https://res.cloudinary.com/dwkr48bj7/image/upload/User_fiy61j.jpg'" />
+                             onerror="this.src= @ViewBag.DefaultImageUrl" />
                         @* <div class="position-absolute bottom-0 end-0">
                             <a href="#" class="btn btn-primary btn-sm rounded-circle" 
                                data-bs-toggle="modal" 
