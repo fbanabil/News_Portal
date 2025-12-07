@@ -16,6 +16,7 @@ namespace News_Portal.Core.Domain.RepositoryContracts
         Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize);
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();
         Task<List<HomePageNewsToShowDTO>> GetOtherNewsByTypeAsync(NewsType newsType);
+        Task<List<News>> GetTopOfWeekNewsAsync();
         Task<int> GetTotalNewsCountByTypeAsync(NewsType newsType);
         Task<bool> NewsExistsBuId(Guid newsId);
         Task UpdateNews(News newsx);

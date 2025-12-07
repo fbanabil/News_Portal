@@ -1,0 +1,48 @@
+﻿@using News_Portal.Core.DTO.News
+@model HomePageNewsToShowDTO
+
+@{
+    var content = Model.NewsContent ?? string.Empty;
+    var snippet = content.Length > 500 ? content.Substring(0, 500) + "..." : content;
+    var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
+    var category = Model.NewsType.ToString();
+}
+
+<div class="compact-news-card card">
+    <div class="compact-image-wrapper">
+        @if (!string.IsNullOrWhiteSpace(Model.TitleImageUrl))
+        {
+            <img src="@Model.TitleImageUrl"
+                 alt="@Model.NewsTitle"
+                 class="compact-image" />
+        }
+        else
+        {
+            <div class="compact-image-placeholder">
+                <span>@category</span>
+            </div>
+        }
+    </div>
+
+    <div class="compact-body card-body">
+        <div class="compact-meta">
+            <span class="compact-date">@dateText</span>
+            <span class="compact-badge">@category</span>
+        </div>
+
+        <h6 class="compact-title">
+            @Model.NewsTitle
+        </h6>
+
+        @if (!string.IsNullOrWhiteSpace(snippet))
+        {
+            <p class="compact-snippet">
+                @snippet
+            </p>
+        }
+
+        <!-- Update this route to your actual details page -->
+        <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
+           class="stretched-link"></a>
+    </div>
+</div>

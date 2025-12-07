@@ -18,6 +18,7 @@ namespace News_Portal.Core.ServiceContracts
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();
         Task<List<HomePageNewsToShowDTO>> GetOtherNewsByTypeAsync(NewsType newsType);
         Task<List<HomePageNewsToShowDTO>> GetSuggestionNewsByTypeAsync(NewsType newsType);
+        Task<List<HomePageNewsToShowDTO>> GetTopOfWeekNewsAsync();
         Task<int> GetTotalNewsCountByTypeAsync(NewsType newsType);
     }
 }

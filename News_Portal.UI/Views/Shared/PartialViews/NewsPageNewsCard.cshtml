@@ -15,8 +15,8 @@
                 <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
             </p>
             <p class="card-text small flex-grow-1 mb-2">
-                @((Model.NewsContent ?? string.Empty).Length > 140
-                    ? Model.NewsContent!.Substring(0,140) + "…"
+                @((Model.NewsContent ?? string.Empty).Length > 160
+                    ? Model.NewsContent!.Substring(0,160) + "…"
                     : Model.NewsContent)
             </p>
             <span class="small text-muted">@Model.TotalViews.ToString("N0") views</span>

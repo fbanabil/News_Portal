@@ -29,8 +29,8 @@
                     <span class="badge bg-secondary">@Model.NewsType</span>
                 </p>
                 <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">
-                    @((Model.NewsContent ?? string.Empty).Length > 140
-                        ? Model.NewsContent!.Substring(0, 140) + "…"
+                    @((Model.NewsContent ?? string.Empty).Length > 35
+                        ? Model.NewsContent!.Substring(0, 35) + "…"
                         : Model.NewsContent)
                 </p>
             </div>

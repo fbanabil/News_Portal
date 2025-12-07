@@ -1,150 +1,304 @@
 ﻿@model List<HomePageNewsToShowDTO>
 
 @{
-    // items per slide
-    int chunkSize = 3;
-    var chunks = Model
-        .Select((item, index) => new { item, index })
-        .GroupBy(x => x.index / chunkSize)
-        .Select(g => g.Select(x => x.item).ToList())
-        .ToList();
+    var items = Model ?? new List<HomePageNewsToShowDTO>();
+    int totalItems = items.Count;
 }
 
-    <div class="carousel-wrapper">
-    <div id="homeNewsCarousel" class="carousel slide carousel-professional" data-bs-ride="carousel" data-bs-interval="8000">
-        
-        <!-- Enhanced Carousel Indicators -->
-        <div class="carousel-indicators-container">
-            <div class="carousel-indicators">
-                @for (int i = 0; i < chunks.Count; i++)
-                {
-                    <button type="button"
-                            data-bs-target="#homeNewsCarousel"
-                            data-bs-slide-to="@i"
-                            class="carousel-indicator @(i == 0 ? "active" : "")"
-                            aria-current="@(i == 0 ? "true" : "false")"
-                            aria-label="Slide @(i + 1)">
-                        <span class="indicator-progress"></span>
-                    </button>
-                }
+@if (totalItems > 0)
+{
+    <div class="container-fluid px-0">
+        <div id="newsCarousel" class="news-carousel-container">
+            
+            <!-- Slide counter -->
+            <div class="d-flex justify-content-center mb-3">
+                <div class="carousel-counter badge bg-light text-dark border">
+                    <span id="currentSlide">1</span> / <span id="totalSlides">@totalItems</span>
+                </div>
             </div>
             
-            <!-- Slide Counter -->
-            <div class="slide-counter">
-                <span class="current-slide">1</span> / <span class="total-slides">@chunks.Count</span>
-            </div>
-        </div>
-
-        <!-- Carousel Content -->
-        <div class="carousel-inner">
-            @for (int s = 0; s < chunks.Count; s++)
-            {
-                <div class="carousel-item @(s == 0 ? "active" : "")" data-slide="@(s + 1)">
-                    <div class="carousel-content">
-                        <div class="row g-4 justify-content-center">
-                            @foreach (var news in chunks[s])
-                            {
-                                @await Html.PartialAsync("~/Views/Shared/PartialViews/CarouselCard.cshtml", news)
-                            }
+            <!-- Carousel viewport -->
+            <div class="carousel-viewport position-relative overflow-hidden">
+                <div class="carousel-track d-flex" id="carouselTrack">
+                    @for (int i = 0; i < totalItems; i++)
+                    {
+                        <div class="carousel-slide" data-index="@i">
+                            <div class="px-2">
+                                @await Html.PartialAsync("~/Views/Shared/PartialViews/CarouselCard.cshtml", items[i])
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
-            }
-        </div>
-
-        <!-- Enhanced Navigation Controls -->
-        <button class="carousel-control carousel-control-prev" type="button" 
-                data-bs-target="#homeNewsCarousel" data-bs-slide="prev" 
-                aria-label="Previous slide">
-            <span class="carousel-control-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15,18 9,12 15,6"></polyline>
-                </svg>
-            </span>
-            <span class="control-tooltip">Previous</span>
-        </button>
-        
-        <button class="carousel-control carousel-control-next" type="button" 
-                data-bs-target="#homeNewsCarousel" data-bs-slide="next" 
-                aria-label="Next slide">
-            <span class="carousel-control-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9,6 15,12 9,18"></polyline>
-                </svg>
-            </span>
-            <span class="control-tooltip">Next</span>
-        </button>
-
-        <!-- Carousel Progress Bar -->
-        <div class="carousel-progress">
-            <div class="progress-bar" id="carouselProgress"></div>
+            </div>
+            
+            <!-- Controls -->
+            <button class="carousel-control carousel-control-prev btn btn-light shadow-sm" 
+                    type="button" 
+                    id="prevBtn" 
+                    aria-label="Previous">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            
+            <button class="carousel-control carousel-control-next btn btn-light shadow-sm" 
+                    type="button" 
+                    id="nextBtn" 
+                    aria-label="Next">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+            
+            <!-- Progress bar -->
+            <div class="carousel-progress mt-3">
+                <div class="progress" style="height: 3px;">
+                    <div class="progress-bar bg-primary" id="carouselProgressBar" style="width: 0%;"></div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const carousel = document.querySelector('#homeNewsCarousel');
-    const progressBar = document.querySelector('#carouselProgress');
-    const currentSlideElement = document.querySelector('.current-slide');
-    const totalSlides = @chunks.Count;
-    let slideInterval;
-    const slideTimeout = 8000;
-
-    // Update slide counter and progress
-    function updateCarouselState() {
-        const activeSlide = carousel.querySelector('.carousel-item.active');
-        const slideNumber = parseInt(activeSlide.dataset.slide);
-        
-        if (currentSlideElement) {
-            currentSlideElement.textContent = slideNumber;
-        }
-        
-        // Reset and animate progress bar
-        if (progressBar) {
-            progressBar.style.transition = 'none';
-            progressBar.style.width = '0%';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carousel = document.getElementById('newsCarousel');
+            const track = document.getElementById('carouselTrack');
+            const slides = track.querySelectorAll('.carousel-slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentSlideSpan = document.getElementById('currentSlide');
+            const progressBar = document.getElementById('carouselProgressBar');
             
-            setTimeout(() => {
-                progressBar.style.transition = `width ${slideTimeout}ms linear`;
-                progressBar.style.width = '100%';
-            }, 50);
-        }
-    }
-
-    // Initialize carousel state
-    updateCarouselState();
-
-    // Listen for slide changes
-    if (carousel) {
-        carousel.addEventListener('slide.bs.carousel', function () {
-            updateCarouselState();
-        });
-
-        // Pause progress on hover
-        carousel.addEventListener('mouseenter', function() {
-            if (progressBar) {
-                progressBar.style.animationPlayState = 'paused';
+            const totalItems = @totalItems;
+            let currentIndex = 0;
+            let isAnimating = false;
+            let autoPlayInterval;
+            const slideInterval = 5000; // 5 seconds
+            const animationDuration = 600; // 600ms
+            
+            // Calculate responsive slide width
+            function getSlideWidth() {
+                const viewport = carousel.querySelector('.carousel-viewport');
+                const viewportWidth = viewport.offsetWidth;
+                
+                if (window.innerWidth >= 992) {
+                    return viewportWidth / 3; // Show 3 slides on large screens
+                } else if (window.innerWidth >= 768) {
+                    return viewportWidth / 2; // Show 2 slides on medium screens
+                } else {
+                    return viewportWidth; // Show 1 slide on small screens
+                }
+            }
+            
+            // Get visible slides count based on screen size
+            function getVisibleSlidesCount() {
+                if (window.innerWidth >= 992) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+            
+            // Update slide positions
+            function updateSlidePositions() {
+                const slideWidth = getSlideWidth();
+                slides.forEach((slide, index) => {
+                    slide.style.width = `${slideWidth}px`;
+                    slide.style.flex = 'none';
+                });
+                
+                // Position the track
+                const offset = -currentIndex * slideWidth;
+                track.style.transform = `translateX(${offset}px)`;
+            }
+            
+            // Update counter
+            function updateCounter() {
+                const visibleCount = getVisibleSlidesCount();
+                const displayIndex = Math.min(currentIndex + 1, totalItems - visibleCount + 1);
+                currentSlideSpan.textContent = displayIndex;
+            }
+            
+            // Reset progress bar
+            function resetProgress() {
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '0%';
+                
+                setTimeout(() => {
+                    progressBar.style.transition = `width ${slideInterval}ms linear`;
+                    progressBar.style.width = '100%';
+                }, 50);
+            }
+            
+            // Pause progress bar
+            function pauseProgress() {
+                const currentWidth = progressBar.getBoundingClientRect().width;
+                const containerWidth = progressBar.parentElement.getBoundingClientRect().width;
+                const percentage = (currentWidth / containerWidth) * 100;
+                progressBar.style.transition = 'none';
+                progressBar.style.width = `${percentage}%`;
+            }
+            
+            // Go to next slide
+            function goNext() {
+                if (isAnimating) return;
+                
+                const visibleCount = getVisibleSlidesCount();
+                const maxIndex = totalItems - visibleCount;
+                
+                if (currentIndex >= maxIndex) {
+                    // Circular: go back to start
+                    currentIndex = 0;
+                } else {
+                    currentIndex++;
+                }
+                
+                animateSlide();
+            }
+            
+            // Go to previous slide
+            function goPrev() {
+                if (isAnimating) return;
+                
+                const visibleCount = getVisibleSlidesCount();
+                const maxIndex = totalItems - visibleCount;
+                
+                if (currentIndex <= 0) {
+                    // Circular: go to end
+                    currentIndex = maxIndex;
+                } else {
+                    currentIndex--;
+                }
+                
+                animateSlide();
+            }
+            
+            // Animate slide transition
+            function animateSlide() {
+                isAnimating = true;
+                
+                track.style.transition = `transform ${animationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                updateSlidePositions();
+                updateCounter();
+                
+                setTimeout(() => {
+                    isAnimating = false;
+                    track.style.transition = '';
+                }, animationDuration);
+                
+                resetProgress();
+            }
+            
+            // Auto play functionality
+            function startAutoPlay() {
+                stopAutoPlay();
+                autoPlayInterval = setInterval(goNext, slideInterval);
+                resetProgress();
+            }
+            
+            function stopAutoPlay() {
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = null;
+                }
+            }
+            
+            // Event listeners
+            nextBtn.addEventListener('click', () => {
+                goNext();
+                stopAutoPlay();
+                setTimeout(startAutoPlay, 2000); // Resume after 2 seconds
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                goPrev();
+                stopAutoPlay();
+                setTimeout(startAutoPlay, 2000); // Resume after 2 seconds
+            });
+            
+            // Pause on hover
+            carousel.addEventListener('mouseenter', () => {
+                stopAutoPlay();
+                pauseProgress();
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                startAutoPlay();
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    goPrev();
+                    stopAutoPlay();
+                    setTimeout(startAutoPlay, 2000);
+                } else if (e.key === 'ArrowRight') {
+                    goNext();
+                    stopAutoPlay();
+                    setTimeout(startAutoPlay, 2000);
+                }
+            });
+            
+            // Handle window resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    updateSlidePositions();
+                    updateCounter();
+                }, 250);
+            });
+            
+            // Touch/swipe support
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                stopAutoPlay();
+            });
+            
+            carousel.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+                e.preventDefault();
+            });
+            
+            carousel.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                
+                const diffX = startX - currentX;
+                const threshold = 50;
+                
+                if (Math.abs(diffX) > threshold) {
+                    if (diffX > 0) {
+                        goNext();
+                    } else {
+                        goPrev();
+                    }
+                }
+                
+                isDragging = false;
+                setTimeout(startAutoPlay, 2000);
+            });
+            
+            // Initialize
+            updateSlidePositions();
+            updateCounter();
+            startAutoPlay();
+            
+            // Hide controls if not enough items
+            const visibleCount = getVisibleSlidesCount();
+            if (totalItems <= visibleCount) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
             }
         });
-
-        carousel.addEventListener('mouseleave', function() {
-            if (progressBar) {
-                progressBar.style.animationPlayState = 'running';
-            }
-        });
-    }
-
-    // Enhanced keyboard navigation
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'ArrowLeft') {
-            const prevButton = carousel.querySelector('.carousel-control-prev');
-            if (prevButton) prevButton.click();
-        } else if (event.key === 'ArrowRight') {
-            const nextButton = carousel.querySelector('.carousel-control-next');
-            if (nextButton) nextButton.click();
-        }
-    });
-});
-</script>
+    </script>
+}
+else
+{
+    <div class="text-center py-5">
+        <div class="text-muted">
+            <i class="bi bi-newspaper fs-1 mb-3 d-block"></i>
+            <p class="mb-0">No news available at the moment.</p>
+        </div>
+    </div>
+}
 

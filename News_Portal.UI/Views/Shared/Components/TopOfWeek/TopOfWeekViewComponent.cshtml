@@ -1,0 +1,29 @@
+﻿@model List<HomePageNewsToShowDTO>
+
+@* <div class="top-news-header d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center gap-2">
+        <span class="heading-icon" aria-hidden="true">📰</span>
+        <h2 class="h5 mb-0">Top News</h2>
+    </div>
+    <span class="small text-muted">Updated @DateTime.Now.ToString("MMM dd, yyyy")</span>
+</div>
+<div class="heading-accent" role="presentation"></div> *@
+
+<div class="row g-2 g-md-3 mt-2">
+    @if (Model is { Count: > 0 })
+    {
+        foreach (var news in Model)
+        {
+            <div class="col-12">
+                @await Html.PartialAsync("~/Views/Shared/PartialViews/SuggestionNewsCard.cshtml", news)
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-light border mb-0">No Top News available.</div>
+        </div>
+    }
+</div>
+

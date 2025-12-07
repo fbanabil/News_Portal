@@ -1,0 +1,31 @@
+﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
+
+<!-- HERO SECTION - Completely separate container -->
+<section class="hero-section">
+    <div class="hero-container">
+        @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", @Model[0])
+    </div>
+    <div class="compact-grid">
+        <article class="compact-item" data-index="1">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[1])
+        </article>
+
+        <article class="compact-item" data-index="2">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[2])
+        </article>
+
+        <article class="compact-item" data-index="3">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[3])
+        </article>
+
+        <article class="compact-item" data-index="4">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[4])
+        </article>
+    </div>
+</section>
+
+
+
+<style>
+
+</style>

@@ -1,8 +1,67 @@
 ﻿@model List<HomePageNewsToShowDTO>
 
-<div class="row g-3 justify-content-center">
-    @foreach (var news in Model)
-    {
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageNewsCard .cshtml", news)
-    }
+<div class="two-col-featured">
+    <!-- Main big left -->
+    <div class="tc-main">
+        @if (Model != null && Model.Count > 0)
+        {
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml",Model[0])}
+        else
+        {
+            <div class="placeholder-content">
+                <span>No featured news available</span>
+            </div>
+        }
+    </div>
+
+    <!-- Right 1 (top) -->
+    <div class="tc-side tc-side-top">
+        @if (Model != null && Model.Count > 1)
+        {
+            @await Html.PartialAsync(
+            "~/Views/Shared/PartialViews/HomePageItemCard.cshtml",
+                Model[1]
+                )
+                }
+        else
+        {
+            <div class="placeholder-content">
+                <span>No news available</span>
+            </div>
+        }
+    </div>
+
+    <!-- Right 2 (middle) -->
+    <div class="tc-side tc-side-middle">
+        @if (Model != null && Model.Count > 2)
+        {
+            @await Html.PartialAsync(
+            "~/Views/Shared/PartialViews/HomePageItemCard.cshtml",
+                Model[2]
+                )
+                }
+        else
+        {
+            <div class="placeholder-content">
+                <span>No news available</span>
+            </div>
+        }
+    </div>
+
+    <!-- Right 3 (bottom) -->
+    <div class="tc-side tc-side-bottom">
+        @if (Model != null && Model.Count > 3)
+        {
+            @await Html.PartialAsync(
+            "~/Views/Shared/PartialViews/HomePageItemCard.cshtml",
+                Model[3]
+                )
+                }
+        else
+        {
+            <div class="placeholder-content">
+                <span>No news available</span>
+            </div>
+        }
+    </div>
 </div>

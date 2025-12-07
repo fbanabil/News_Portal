@@ -1,0 +1,589 @@
+﻿/* =========================================
+   MODERN NEWS CARD - REDESIGNED
+========================================= */
+
+.modern-news-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    height: 100%;
+    min-height: 280px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.modern-news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+/* =========================================
+   CARD MEDIA SECTION
+========================================= */
+
+.card-media {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+}
+
+.modern-news-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.placeholder-content {
+    text-align: center;
+    color: #64748b;
+}
+
+.placeholder-icon {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+}
+
+.placeholder-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Image overlay with category badge */
+.image-overlay {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.category-badge {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Category-specific badge colors */
+.badge-politics { background: rgba(239, 68, 68, 0.9); }
+.badge-sports { background: rgba(34, 197, 94, 0.9); }
+.badge-technology { background: rgba(59, 130, 246, 0.9); }
+.badge-entertainment { background: rgba(168, 85, 247, 0.9); }
+.badge-business { background: rgba(245, 158, 11, 0.9); }
+.badge-health { background: rgba(16, 185, 129, 0.9); }
+.badge-science { background: rgba(236, 72, 153, 0.9); }
+.badge-world { background: rgba(6, 182, 212, 0.9); }
+.badge-general { background: rgba(75, 85, 99, 0.9); }
+
+.trending-badge {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* =========================================
+   CARD CONTENT SECTION
+========================================= */
+
+.card-content {
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 8px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.meta-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.publish-time {
+    font-weight: 500;
+}
+
+.read-time {
+    padding: 2px 6px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.author-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #475569;
+    text-decoration: none;
+}
+
+.author-name:hover {
+    color: #3b82f6;
+}
+
+/* =========================================
+   TITLE STYLING - SINGLE LINE ONLY
+========================================= */
+
+.card-title {
+    margin: 0;
+    line-height: 1.2; /* REDUCED for single line */
+    flex-grow: 1;
+}
+
+.title-link {
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    /* SINGLE LINE ENFORCEMENT */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for truncated text */
+    display: block; /* CHANGED from -webkit-box to block */
+    width: 100%; /* Ensure full width utilization */
+    transition: color 0.2s ease;
+    /* REMOVE webkit line clamp properties */
+    /* -webkit-line-clamp: 2; */
+    /* -webkit-box-orient: vertical; */
+}
+
+.title-link:hover {
+    color: #3b82f6;
+}
+
+.card-excerpt {
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* =========================================
+   CARD FOOTER
+========================================= */
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.engagement-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.stat-item svg {
+    opacity: 0.7;
+}
+
+.stat-item.views { color: #3b82f6; }
+.stat-item.comments { color: #10b981; }
+.stat-item.likes { color: #ef4444; }
+
+.bookmark-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.bookmark-btn:hover {
+    background: #f1f5f9;
+    color: #3b82f6;
+    transform: scale(1.1);
+}
+
+/* =========================================
+   RESPONSIVE DESIGN - SINGLE LINE TITLES
+========================================= */
+
+@media (max-width: 1024px) {
+    .modern-news-card {
+        min-height: 260px;
+    }
+    
+    .card-media {
+        height: 120px;
+    }
+    
+    .card-content {
+        padding: 14px 16px 16px;
+        gap: 6px;
+    }
+    
+    .title-link {
+        font-size: 0.9375rem;
+        /* MAINTAIN single line */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .card-excerpt {
+        font-size: 0.8125rem;
+        -webkit-line-clamp: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .modern-news-card {
+        min-height: 240px;
+        border-radius: 12px;
+    }
+    
+    .card-media {
+        height: 100px;
+    }
+    
+    .card-content {
+        padding: 12px 14px 14px;
+        gap: 6px;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+    
+    .title-link {
+        font-size: 0.875rem;
+        /* MAINTAIN single line on mobile */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .card-excerpt {
+        font-size: 0.78125rem;
+        -webkit-line-clamp: 1;
+    }
+    
+    .engagement-stats {
+        gap: 12px;
+    }
+    
+    .category-badge {
+        font-size: 0.6875rem;
+        padding: 3px 8px;
+    }
+    
+    .image-overlay {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modern-news-card {
+        min-height: 220px;
+        border-radius: 10px;
+    }
+    
+    .card-media {
+        height: 90px;
+    }
+    
+    .card-content {
+        padding: 10px 12px 12px;
+        gap: 4px;
+    }
+    
+    .title-link {
+        font-size: 0.8125rem;
+        /* MAINTAIN single line on small screens */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .card-excerpt {
+        display: none; /* Hide excerpt on very small screens */
+    }
+    
+    .meta-info {
+        font-size: 0.6875rem;
+        gap: 6px;
+    }
+    
+    .engagement-stats {
+        gap: 10px;
+    }
+    
+    .stat-item {
+        font-size: 0.6875rem;
+    }
+    
+    .bookmark-btn {
+        padding: 4px;
+    }
+    
+    .trending-badge {
+        font-size: 0.625rem;
+        padding: 3px 6px;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+.modern-news-card:focus-within {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.title-link:focus {
+    outline: none;
+    color: #3b82f6;
+}
+
+.bookmark-btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =========================================
+   LOADING STATE
+========================================= */
+
+.modern-news-card.loading {
+    pointer-events: none;
+}
+
+.modern-news-card.loading .card-media {
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.modern-news-card.loading .card-content {
+    opacity: 0.6;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* =========================================
+   DARK MODE SUPPORT
+========================================= */
+
+@media (prefers-color-scheme: dark) {
+    .modern-news-card {
+        background: #1e293b;
+        border-color: #334155;
+    }
+    
+    .modern-news-card:hover {
+        border-color: rgba(139, 92, 246, 0.3);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-placeholder {
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+    }
+    
+    .placeholder-content {
+        color: #9ca3af;
+    }
+    
+    .title-link {
+        color: #f8fafc;
+    }
+    
+    .title-link:hover {
+        color: #a78bfa;
+    }
+    
+    .card-excerpt {
+        color: #94a3b8;
+    }
+    
+    .card-footer {
+        border-top-color: #334155;
+    }
+    
+    .read-time {
+        background: #334155;
+        color: #e2e8f0;
+    }
+    
+    .bookmark-btn {
+        color: #64748b;
+    }
+    
+    .bookmark-btn:hover {
+        background: #334155;
+        color: #a78bfa;
+    }
+    
+    .stat-item {
+        color: #94a3b8;
+    }
+}
+
+/* =========================================
+   PRINT STYLES
+========================================= */
+
+@media print {
+    .modern-news-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+        background: white !important;
+        color: black !important;
+    }
+    
+    .modern-news-card:hover {
+        transform: none;
+    }
+    
+    .category-badge {
+        background: #f3f4f6 !important;
+        color: #374151 !important;
+    }
+    
+    .trending-badge {
+        display: none;
+    }
+    
+    .bookmark-btn {
+        display: none;
+    }
+    
+    .engagement-stats {
+        display: none;
+    }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .modern-news-card {
+        transition: none;
+    }
+    
+    .modern-news-card:hover {
+        transform: none;
+    }
+    
+    .card-image {
+        transition: none;
+    }
+    
+    .modern-news-card:hover .card-image {
+        transform: none;
+    }
+    
+    .trending-badge {
+        animation: none;
+    }
+    
+    .modern-news-card.loading .card-media {
+        animation: none;
+    }
+}

@@ -3,255 +3,123 @@
     ViewBag.NewsType = NewsType.General;
 }
 
-<div class="home-container">
-    @if (TempData["Message"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>
-            @TempData["Message"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
+<!-- Newspaper Header -->
+<header class="newspaper-header">
+    <h1 class="newspaper-title">Daily News Portal</h1>
+    <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
+    <div class="newspaper-line"></div>
+</header>
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-            <div class="news-sections-wrapper">
-        <!-- Top News Carousel Section -->
-        <div class="news-section top-news-section">
-            <div class="news-heading" aria-label="Top News carousel heading">
-                <h2 class="carousel-heading">
-                    <span class="heading-icon" aria-hidden="true">📰</span>
-                    Top News
-                    <span class="badge">Featured</span>
-                </h2>
-                <div class="heading-accent" role="presentation"></div>
-            </div>
-            
-            @await Component.InvokeAsync("Carousel")
-        </div>
-
-        <!-- Politics Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-politics" aria-label="Politics section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">🏛️</span>
-                        Politics
-                    </h2>
-                </div>
-                <a asp-area=""
-                   asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Politics
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Politics)
-        </div>
-
-        <!-- Sports Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-sports" aria-label="Sports section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">⚽</span>
-                        Sports
-                    </h2>
-                </div>
-                <a asp-area=""
-                   asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Sports
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Sports)
-        </div>
-
-        <!-- Technology Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-technology" aria-label="Technology section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">💻</span>
-                        Technology
-                    </h2>
-                </div>
-                <a asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Technology
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Technology)
-        </div>
-
-        <!-- Entertainment Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-entertainment" aria-label="Entertainment section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">🎬</span>
-                        Entertainment
-                    </h2>
-                </div>
-                <a asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Entertainment
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Entertainment)
-        </div>
-
-        <!-- Health Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-health" aria-label="Health section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">🏥</span>
-                        Health
-                    </h2>
-                </div>
-                <a asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Health
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Health)
-        </div>
-
-        <!-- Business Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-business" aria-label="Business section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">💼</span>
-                        Business
-                    </h2>
-                </div>
-                <a asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Business
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Business)
-        </div>
-
-        <!-- Science Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-science" aria-label="Science section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">🔬</span>
-                        Science
-                    </h2>
-                </div>
-                <a asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.Science
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.Science)
-        </div>
-
-        <!-- World Section -->
-        <div class="news-section">
-            <div class="news-heading d-flex align-items-center justify-content-between category-world" aria-label="World section heading">
-                <div class="d-flex align-items-center gap-2">
-                    <h2 class="carousel-heading mb-0">
-                        <span class="heading-icon" aria-hidden="true">🌍</span>
-                        World
-                    </h2>
-                </div>
-                <a asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType=@NewsType.World
-                   asp-route-pageNo="1"
-                   asp-route-pageSize="18"
-                   class="see-all-btn">
-                    See all
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="heading-accent mb-3" role="presentation"></div>
-            
-            @await Component.InvokeAsync("OtherNews", NewsType.World)
-        </div>
+<!-- Alerts -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert success-alert">
+        ✓ @TempData["Message"]
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
     </div>
-</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert error-alert">
+        ⚠ @TempData["Error"]
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+}
+
+<!-- Newspaper Layout -->
+<main class="newspaper-main">
+    <!-- Top News - Full Width Banner -->
+    <section class="top-banner">
+        <h2 class="section-title">Breaking News</h2>
+        @await Component.InvokeAsync("Carousel")
+    </section>
+
+    <!-- Main Content Area -->
+    <div class="newspaper-content">
+        <!-- Left Column - Main Stories -->
+        <div class="main-column">
+            <!-- Politics -->
+            <article class="news-section politics">
+                <h3 class="category-title">Politics <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Politics, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                @await Component.InvokeAsync("OtherNews", NewsType.Politics)
+            </article>
+
+            <!-- Technology & Sports - Side by Side -->
+            <div class="two-column-section">
+                <article class="news-section technology">
+                    <h3 class="category-title">Technology <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Technology, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                    @await Component.InvokeAsync("OtherNews", NewsType.Technology)
+                </article>
+
+                <article class="news-section sports">
+                    <h3 class="category-title">Sports <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Sports, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                    @await Component.InvokeAsync("OtherNews", NewsType.Sports)
+                </article>
+            </div>
+
+            <!-- Business & Entertainment - Side by Side -->
+            <div class="two-column-section">
+                <article class="news-section business">
+                    <h3 class="category-title">Business <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Business, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                    @await Component.InvokeAsync("OtherNews", NewsType.Business)
+                </article>
+
+                <article class="news-section entertainment">
+                    <h3 class="category-title">Entertainment <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Entertainment, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                    @await Component.InvokeAsync("OtherNews", NewsType.Entertainment)
+                </article>
+            </div>
+
+            <!-- Science & Health - Side by Side -->
+            <div class="two-column-section">
+                <article class="news-section science">
+                    <h3 class="category-title">Science <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Science, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                    @await Component.InvokeAsync("OtherNews", NewsType.Science)
+                </article>
+
+                <article class="news-section health">
+                    <h3 class="category-title">Health <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Health, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                    @await Component.InvokeAsync("OtherNews", NewsType.Health)
+                </article>
+            </div>
+
+            <!-- World News - Full Width -->
+            <article class="news-section world">
+                <h3 class="category-title">World News <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.World, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
+                @await Component.InvokeAsync("OtherNews", NewsType.World)
+            </article>
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">📌 Pinned</h4>
+                @await Component.InvokeAsync("TopOfWeek")
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">📊 Weekly Top</h4>
+                @await Component.InvokeAsync("TopOfWeek")
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">📅 Monthly Top</h4>
+                @await Component.InvokeAsync("TopOfWeek")
+            </div>
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">📅 All Time Top</h4>
+                @await Component.InvokeAsync("TopOfWeek")
+            </div>
+        </aside>
+    </div>
+</main>
 
 @section Scripts {
     <script>
-        // Auto-dismiss alerts after 5 seconds
-        setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                if (alert.querySelector('.btn-close')) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }
-            });
+        // Auto-dismiss alerts
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => alert.style.display = 'none');
         }, 5000);
-
-        // Add staggered animation delay for sections
-        document.addEventListener('DOMContentLoaded', function() {
-            const sections = document.querySelectorAll('.news-section');
-            sections.forEach((section, index) => {
-                section.style.animationDelay = `${index * 0.1}s`;
-            });
-        });
     </script>
 }

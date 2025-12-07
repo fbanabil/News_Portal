@@ -40,7 +40,7 @@ namespace News_Portal.Infrastructure.Repositories
         public async Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync()
         {
             return await _dbContext.News.Include(i => i.Images).OrderByDescending(n => n.PublishedDate)
-                .Take(6)
+                .Take(9)
                 .Select(n => n.ToHomePageNewsToShowDTO())
                 .ToListAsync();
         }
@@ -49,8 +49,17 @@ namespace News_Portal.Infrastructure.Repositories
         {
             return await _dbContext.News.Include(i => i.Images).Where(n => n.NewsType == newsType)
                 .OrderByDescending(n => n.PublishedDate)
-                .Take(6)
+                .Take(5)
                 .Select(n => n.ToHomePageNewsToShowDTO())
+                .ToListAsync();
+        }
+
+        public async Task<List<News>> GetTopOfWeekNewsAsync()
+        {
+            return await _dbContext.News.Include(i => i.Images)
+                .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-100))
+                .OrderByDescending(n => n.TotalViews)
+                .Take(5)
                 .ToListAsync();
         }
 

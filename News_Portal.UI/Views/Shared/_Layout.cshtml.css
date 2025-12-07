@@ -203,14 +203,14 @@ body {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
-    padding: 1.5rem;
-    margin-top: 1.5rem;
+    padding: 0rem;
+    margin-top: .3rem;
     margin-bottom: 1.5rem;
     min-height: calc(100vh - 180px);
 }
 
 main {
-    padding: 0.5rem 0;
+    padding: 0rem 0;
 }
 
 /* Footer - Ultra Light Theme */
