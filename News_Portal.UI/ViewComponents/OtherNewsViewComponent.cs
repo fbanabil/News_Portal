@@ -28,7 +28,7 @@ namespace News_Portal.UI.ViewComponents
                 // take first 4 news items for other news types
 
 
-                homePageNewsToShowDTOs = homePageNewsToShowDTOs.Take(4).ToList();
+            homePageNewsToShowDTOs = homePageNewsToShowDTOs.Take(4).ToList();
 
             return View("OtherNewsViewComponent", homePageNewsToShowDTOs);
         }

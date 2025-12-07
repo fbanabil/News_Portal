@@ -3,18 +3,19 @@
 
 @{
     var content = Model.NewsContent ?? string.Empty;
-    var snippet = content.Length > 500 ? content.Substring(0, 500) + "..." : content;
+    var snippet = content.Length > 1800 ? content.Substring(0, 1800) + "..." : content;
     var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = Model.NewsType.ToString();
 }
 
-<div class="compact-news-card card">
+
+<div class="compact-news-card card h-100 border-0">
     <div class="compact-image-wrapper">
         @if (!string.IsNullOrWhiteSpace(Model.TitleImageUrl))
         {
             <img src="@Model.TitleImageUrl"
                  alt="@Model.NewsTitle"
-                 class="compact-image" />
+                 class="compact-image img-fluid" />
         }
         else
         {
@@ -24,24 +25,23 @@
         }
     </div>
 
-    <div class="compact-body card-body">
+    <div class="compact-body card-body p-2 p-md-3">
         <div class="compact-meta">
             <span class="compact-date">@dateText</span>
             <span class="compact-badge">@category</span>
         </div>
 
-        <h6 class="compact-title">
+        <h6 class="compact-title mb-1">
             @Model.NewsTitle
         </h6>
 
         @if (!string.IsNullOrWhiteSpace(snippet))
         {
-            <p class="compact-snippet">
+            <p class="compact-snippet mb-0">
                 @snippet
             </p>
         }
 
-        <!-- Update this route to your actual details page -->
         <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
            class="stretched-link"></a>
     </div>

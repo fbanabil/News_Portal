@@ -1,33 +1,29 @@
 ﻿@model List<HomePageNewsToShowDTO>
 
-<div class="split-featured-grid">
-    <div class="sf-item sf-left-top">
-        
+<div class="container-fluid px-0">
+    <div class="split-featured-grid">
+
+        <div class="sf-item sf-left-top">
             @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+        </div>
 
-    </div>
+        <div class="sf-item sf-left-middle">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+        </div>
 
-    <div class="sf-item sf-left-middle">
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+        <div class="sf-item sf-left-bottom">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
+        </div>
 
-    </div>
+        <!-- RIGHT COLUMN: big card spanning top two rows -->
+        <div class="sf-item sf-right-main">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
+        </div>
 
-    <div class="sf-item sf-left-bottom">
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
-
-    </div>
-
-    <!-- RIGHT COLUMN: big card spanning top two rows -->
-    <div class="sf-item sf-right-main">
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
-
-    </div>
-
-    <!-- RIGHT COLUMN: small card at the bottom -->
-    <div class="sf-item sf-right-bottom">
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[4])
+        <!-- RIGHT COLUMN: small card at the bottom -->
+        <div class="sf-item sf-right-bottom">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[4])
+        </div>
 
     </div>
 </div>
-
-

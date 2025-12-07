@@ -58,7 +58,7 @@
                 </article>
             </div>
 
-            <!-- Business & Entertainment - Side by Side -->
+
             <div class="two-column-section">
                 <article class="news-section business">
                     <h3 class="category-title">Business <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Business, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
@@ -95,17 +95,17 @@
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📌 Pinned</h4>
-                @await Component.InvokeAsync("Top",new {type = TopOfXType.Week,cnt = 6})
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.Month, cnt = 6 })
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📊 Weekly Top</h4>
-                @await Component.InvokeAsync("Top",new { type = TopOfXType.Week, cnt = 6 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 6 })
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📅 Monthly Top</h4>
-                @await Component.InvokeAsync("Top",new { type = TopOfXType.Month, cnt = 6 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 6 })
             </div>
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📅 All Time Top</h4>

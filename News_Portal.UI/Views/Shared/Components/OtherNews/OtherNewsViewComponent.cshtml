@@ -5,6 +5,7 @@
     <div class="tc-main">
         @if (Model != null && Model.Count > 0)
         {
+            
             @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml",Model[0])}
         else
         {
