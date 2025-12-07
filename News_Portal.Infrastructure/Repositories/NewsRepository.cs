@@ -54,6 +54,36 @@ namespace News_Portal.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt)
+        {
+            if(type == TopOfXType.Week)
+            {
+                return _dbContext.News.Include(i => i.Images)
+                    .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-7))
+                    .OrderByDescending(n => n.TotalViews)
+                    .Take(cnt)
+                    .Select(n => n.ToHomePageNewsToShowDTO())
+                    .ToListAsync();
+            }
+            else if(type == TopOfXType.Month)
+            {
+                return _dbContext.News.Include(i => i.Images)
+                    .Where(n => n.PublishedDate >= DateTime.Now.AddMonths(-1))
+                    .OrderByDescending(n => n.TotalViews)
+                    .Take(cnt)
+                    .Select(n => n.ToHomePageNewsToShowDTO())
+                    .ToListAsync();
+            }
+            else // AllTime
+            {
+                return _dbContext.News.Include(i => i.Images)
+                    .OrderByDescending(n => n.TotalViews)
+                    .Take(cnt)
+                    .Select(n => n.ToHomePageNewsToShowDTO())
+                    .ToListAsync();
+            }
+        }
+
         public async Task<List<News>> GetTopOfWeekNewsAsync()
         {
             return await _dbContext.News.Include(i => i.Images)

@@ -58,6 +58,11 @@ namespace News_Portal.Core.Services
             return homePageNewsToShowDTOs;
         }
 
+        public async Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt)
+        {
+                return await _newsRepository.GetTopNewsAsync(type, cnt);
+        }
+
         public async Task<List<HomePageNewsToShowDTO>> GetTopOfWeekNewsAsync()
         {
             List<News> news = await _newsRepository.GetTopOfWeekNewsAsync();

@@ -95,21 +95,21 @@
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📌 Pinned</h4>
-                @await Component.InvokeAsync("TopOfWeek")
+                @await Component.InvokeAsync("Top",new {type = TopOfXType.Week,cnt = 6})
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📊 Weekly Top</h4>
-                @await Component.InvokeAsync("TopOfWeek")
+                @await Component.InvokeAsync("Top",new { type = TopOfXType.Week, cnt = 6 })
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📅 Monthly Top</h4>
-                @await Component.InvokeAsync("TopOfWeek")
+                @await Component.InvokeAsync("Top",new { type = TopOfXType.Month, cnt = 6 })
             </div>
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📅 All Time Top</h4>
-                @await Component.InvokeAsync("TopOfWeek")
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 6 })
             </div>
         </aside>
     </div>
