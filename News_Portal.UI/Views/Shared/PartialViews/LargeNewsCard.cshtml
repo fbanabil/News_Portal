@@ -8,7 +8,7 @@
     var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = Model.NewsType.ToString();
 }
-
+<a asp-action="Details" asp-controller="Home" asp-route-newsId="@Model.NewsId" class="news-card-compact text-decoration-none d-block">
 
 <div class="hero-news-card card h-100 border-0">
     <div class="hero-image-wrapper">
@@ -20,13 +20,13 @@
         }
         else
         {
-            <div class="hero-image-placeholder">
+            @* <div class="hero-image-placeholder">
                 <span class="hero-placeholder-label">@category</span>
-            </div>
+            </div> *@
         }
 
         <div class="hero-image-overlay">
-            <span class="news-badge">@category</span>
+            @* <span class="news-badge">@category</span> *@
             <span class="hero-date">@dateText</span>
         </div>
     </div>
@@ -58,7 +58,8 @@
             </span>
         </div>
 
-        <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
-           class="stretched-link"></a>
+      
+
     </div>
 </div>
+</a>

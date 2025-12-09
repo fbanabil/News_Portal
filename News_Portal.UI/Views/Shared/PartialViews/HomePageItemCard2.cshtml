@@ -8,6 +8,7 @@
     var category = Model.NewsType.ToString();
 }
 
+<a asp-action="Details" asp-controller="Home" asp-route-newsId="@Model.NewsId" class="news-card-compact text-decoration-none d-block">
 
 <div class="compact-news-card card h-100 border-0">
     <div class="compact-image-wrapper">
@@ -28,7 +29,7 @@
     <div class="compact-body card-body p-2 p-md-3">
         <div class="compact-meta">
             <span class="compact-date">@dateText</span>
-            <span class="compact-badge">@category</span>
+            @* <span class="compact-badge">@category</span> *@
         </div>
 
         <h6 class="compact-title mb-1">
@@ -42,7 +43,6 @@
             </p>
         }
 
-        <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
-           class="stretched-link"></a>
     </div>
 </div>
+</a>

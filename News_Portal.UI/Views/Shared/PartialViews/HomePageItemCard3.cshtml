@@ -3,7 +3,7 @@
 
 @{
     var content = Model.NewsContent ?? string.Empty;
-    var snippet = content.Length > 120 ? content.Substring(0, 120) + "..." : content;
+    var snippet = content.Length > 1200 ? content.Substring(0, 1200) + "..." : content;
     var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = Model.NewsType.ToString().ToLower();
 }
@@ -32,6 +32,7 @@
         return number.ToString();
     }
 }
+<a asp-action="Details" asp-controller="Home" asp-route-newsId="@Model.NewsId" class="news-card-compact text-decoration-none d-block">
 
 <article class="modern-news-card" data-category="@category">
     <div class="card-media">
@@ -42,9 +43,9 @@
                  class="card-image"
                  loading="lazy" />
             <div class="image-overlay">
-                <span class="category-badge badge-@category">
+                @* <span class="category-badge badge-@category">
                     @GetCategoryIcon(category) @Model.NewsType.ToString()
-                </span>
+                </span> *@
             </div>
         }
         else
@@ -116,3 +117,4 @@
         </footer>
     </div>
 </article>
+</a>

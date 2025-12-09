@@ -3,10 +3,12 @@
 
 @{
     var content = Model.NewsContent ?? string.Empty;
-    var snippet = content.Length > 150 ? content.Substring(0, 150) + "..." : content;
+    var snippet = content.Length > 1500 ? content.Substring(0, 1500) + "..." : content;
     var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = Model.NewsType.ToString();
 }
+
+<a asp-action="Details" asp-controller="Home" asp-route-newsId="@Model.NewsId" class="news-card-compact text-decoration-none d-block">
 
 
 
@@ -29,7 +31,7 @@
     <div class="compact-body card-body">
         <div class="compact-meta">
             <span class="compact-date">@dateText</span>
-            <span class="compact-badge">@category</span>
+            @* <span class="compact-badge">@category</span> *@
         </div>
 
         <h6 class="compact-title">
@@ -43,8 +45,7 @@
             </p>
         }
 
-        <!-- Update this route to your actual details page -->
-        <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
-           class="stretched-link"></a>
+
     </div>
 </div>
+</a>
