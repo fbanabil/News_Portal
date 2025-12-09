@@ -98,6 +98,11 @@ namespace News_Portal.Infrastructure.Repositories
             return await _dbContext.News.AsNoTracking().CountAsync(n => n.NewsType == newsType);
         }
 
+        public async Task IncrementNewsViewsCount(Guid newsId)
+        {
+            await _dbContext.Database.ExecuteSqlInterpolatedAsync($"UPDATE News_Portal.News SET TotalViews = TotalViews + 1 WHERE NewsId = {newsId}");
+        }
+
         public async Task<bool> NewsExistsBuId(Guid newsId)
         {
             return await _dbContext.News.AsNoTracking().AnyAsync(n => n.NewsId == newsId);

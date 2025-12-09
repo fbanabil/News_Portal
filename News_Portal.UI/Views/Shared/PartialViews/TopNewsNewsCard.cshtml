@@ -41,10 +41,10 @@
                 </h6>
                 <p class="small text-muted mb-1">
                     <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
-                    @* <span class="badge @badgeClass">
+                    <span class="badge @badgeClass">
                         <i class="news-type-icon me-1" aria-hidden="true"></i>
                         @Model.NewsType
-                    </span> *@
+                    </span>
                 </p>
                 <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">
                     @((Model.NewsContent ?? string.Empty).Length > 40

@@ -1,5 +1,7 @@
-﻿using News_Portal.Core.DemoData;
+﻿using Microsoft.AspNetCore.Identity;
+using News_Portal.Core.DemoData;
 using News_Portal.Core.Domain.Entities;
+using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.Domain.RepositoryContracts;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
@@ -16,10 +18,12 @@ namespace News_Portal.Core.Services
     {
         private readonly NewsDemoData _newsDemoData;
         private readonly INewsRepository _newsRepository;
-        public NewsService(INewsRepository newsRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public NewsService(INewsRepository newsRepository,UserManager<ApplicationUser> userManager)
         {
             _newsDemoData = new NewsDemoData();
             _newsRepository = newsRepository;
+            _userManager = userManager;
         }
 
         public async Task AddNews(News news)
@@ -29,6 +33,7 @@ namespace News_Portal.Core.Services
 
         public async Task<DetailedNewsToShowDTO> GetDetailedNewsToShowDTOsByNewsId(Guid newsId)
         {
+            await _newsRepository.IncrementNewsViewsCount(newsId);
             News detailedNews = await _newsRepository.GetNewsById(newsId);
             return detailedNews.ToDetailedNewsToShowDTO();
         }

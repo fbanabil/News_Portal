@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using News_Portal.Infrastructure.DbContext;
 
@@ -11,9 +12,11 @@ using News_Portal.Infrastructure.DbContext;
 namespace News_Portal.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209174002_AddViews")]
+    partial class AddViews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,6 +221,26 @@ namespace News_Portal.Infrastructure.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("News", "News_Portal");
+                });
+
+            modelBuilder.Entity("News_Portal.Core.Domain.Entities.Views", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ViewedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Views", "News_Portal");
                 });
 
             modelBuilder.Entity("News_Portal.Core.Domain.IdentityEntities.ApplicationRole", b =>

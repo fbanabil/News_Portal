@@ -28,6 +28,8 @@ namespace News_Portal.Core.DTO.News
 
         public int TotalViews { get; set; }
 
+        public string? VideoUrl { get; set; }
+
         public ApplicationUser? Author { get; set; }
 
         public virtual ICollection<ImageToShowDTO>? Images { get; set; }
@@ -50,7 +52,8 @@ public static class DetailedNewsToShowDTOExtensions
             TotalViews = news.TotalViews,
             Author = news.Author,
             Images = news?.Images?.Select(img => img.ToImageToShowDTO()).ToList(),
-            Comments = news?.Comments?.Select(cmt => cmt.ToCommentToShowDTO()).ToList()
+            Comments = news?.Comments?.Select(cmt => cmt.ToCommentToShowDTO()).ToList(),
+            VideoUrl = news?.VideoUrl
         };
     }
 }

@@ -19,6 +19,7 @@ namespace News_Portal.Core.Domain.RepositoryContracts
         Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt);
         Task<List<News>> GetTopOfWeekNewsAsync();
         Task<int> GetTotalNewsCountByTypeAsync(NewsType newsType);
+        Task IncrementNewsViewsCount(Guid newsId);
         Task<bool> NewsExistsBuId(Guid newsId);
         Task UpdateNews(News newsx);
     }

@@ -48,6 +48,22 @@ namespace News_Portal.UI.Controllers
             DetailedNewsToShowDTO detailedNewsToShowDTOs = await _newsService.GetDetailedNewsToShowDTOsByNewsId(newsId);
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
             ViewBag.PresentUserName = user?.PersonName ?? "Unknown";
+            string videoLink = "https://www.youtube.com/watch?v=dhtZLiS8KaQ";
+            string youtubeEmbedUrl="";
+            if (videoLink.Contains("youtube.com/watch?v="))
+            {
+
+                var parts = videoLink.Split("watch?v=", StringSplitOptions.RemoveEmptyEntries);
+                var idPart = parts.Last().Split('&')[0];
+                youtubeEmbedUrl = $"https://www.youtube.com/embed/{idPart}";
+            }
+            else if (videoLink.Contains("youtu.be/"))
+            {
+                var parts = videoLink.Split("youtu.be/", StringSplitOptions.RemoveEmptyEntries);
+                var idPart = parts.Last().Split('?')[0];
+                youtubeEmbedUrl = $"https://www.youtube.com/embed/{idPart}";
+            }
+            ViewBag.VideoLink = youtubeEmbedUrl;
             return View(detailedNewsToShowDTOs);
         }
 

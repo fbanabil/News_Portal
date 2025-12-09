@@ -5,7 +5,6 @@
         <span class="heading-icon" aria-hidden="true">📰</span>
         <h2 class="h5 mb-0">Top News</h2>
     </div>
-    <span class="small text-muted">Updated @DateTime.Now.ToString("MMM dd, yyyy")</span>
 </div>
 <div class="heading-accent" role="presentation"></div>
 
@@ -15,7 +14,7 @@
         foreach (var news in Model)
         {
             <div class="col-12">
-                @await Html.PartialAsync("~/Views/Shared/PartialViews/SuggestionNewsCard.cshtml", news)
+                @await Html.PartialAsync("~/Views/Shared/PartialViews/TopNewsNewsCard.cshtml", news)
             </div>
         }
     }

@@ -33,6 +33,8 @@ namespace News_Portal.Core.Domain.Entities
         public DateTime LastUpdate { get; set; }
         public int TotalViews { get; set; } = 0;
 
+        public string? VideoUrl { get; set; }
+
         [Required]
         public Guid AuthorId { get; set; }
 

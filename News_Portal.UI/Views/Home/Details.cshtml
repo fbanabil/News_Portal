@@ -3,17 +3,31 @@
 
 @{
     ViewData["Title"] = Model.NewsTitle ?? "News Details";
+
     var galleryId = $"newsGallery_{Model.NewsId}";
     var authorName = Model.Author?.UserName ?? "Unknown";
     var commentsCount = Model.Comments?.Count ?? 0;
+
     var contentLines = (Model.NewsContent ?? string.Empty)
         .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
         .Select(l => l.Trim())
         .Where(l => !string.IsNullOrWhiteSpace(l))
         .ToList();
-    var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
-}
 
+    var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+    string? youtubeEmbedUrl = Model.VideoUrl;
+    
+    var hasVideo = !string.IsNullOrWhiteSpace(youtubeEmbedUrl);
+    var hasImages = Model.Images?.Any() == true;
+    var totalMediaItems = (hasImages ? Model.Images!.Count : 0) + (hasVideo ? 1 : 0);
+
+    string? youtubeVideoId = null;
+    if (hasVideo && youtubeEmbedUrl.Contains("youtube.com/embed/"))
+    {
+        var parts = youtubeEmbedUrl.Split('/');
+        youtubeVideoId = parts.LastOrDefault()?.Split('?').FirstOrDefault();
+    }
+}
 
 @if (TempData["Message"] != null)
 {
@@ -31,185 +45,185 @@
     </div>
 }
 
-
-
-
-
-
-
 <div class="container-lg my-4">
-    <div class="news-hero bg-light rounded-3 border p-3 p-md-4 mb-4">
-        <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="badge text-bg-primary">@Model.NewsType</span>
-            <small class="text-muted">Published @Model.PublishedDate.ToString("MMM dd, yyyy")</small>
-            <small class="text-muted ms-auto"><i class="bi bi-eye"></i> @Model.TotalViews.ToString("N0") views</small>
+    <header class="news-hero">
+        <div class="news-meta-bar">
+            <span class="news-category">@Model.NewsType</span>
+            <div class="news-dates">
+                <span class="published-date">
+                    <i class="bi bi-calendar3"></i>
+                    Published @Model.PublishedDate.ToString("MMM dd, yyyy")
+                </span>
+                <span class="updated-date">
+                    <i class="bi bi-clock-history"></i>
+                    Updated @Model.LastUpdate.ToString("MMM dd, yyyy HH:mm")
+                </span>
+            </div>
         </div>
-        <h1 class="h3 h1-md mb-2">@Model.NewsTitle</h1>
-        <div class="d-flex flex-wrap gap-3 text-muted small">
-            <span><i class="bi bi-person-circle me-1"></i>@authorName</span>
-            <span><i class="bi bi-clock-history me-1"></i>Updated @Model.LastUpdate.ToString("MMM dd, yyyy HH:mm")</span>
-            <span><i class="bi bi-chat-dots me-1"></i><span id="comments-count">@commentsCount</span> comments</span>
+
+        <h1 class="news-title">@Model.NewsTitle</h1>
+
+        <div class="news-stats-bar">
+            <div class="author-info">
+                <i class="bi bi-person-circle"></i>
+                <span class="author-name">@authorName</span>
+            </div>
+            <div class="article-stats">
+                <span class="views-count">
+                    <i class="bi bi-eye"></i>
+                    @Model.TotalViews.ToString("N0") views
+                </span>
+                <span class="comments-info">
+                    <i class="bi bi-chat-dots"></i>
+                    <span id="comments-count">@commentsCount</span> comments
+                </span>
+            </div>
         </div>
-    </div>
+    </header>
 
     <div class="row g-4">
-        <main class="col-12 col-lg-8">
-            @if (Model.Images?.Any() == true)
+        <main class="col-12 col-lg-8 d-flex flex-column gap-3">
+
+            @if (totalMediaItems > 0)
             {
-                if (Model.Images!.Count > 1)
+                @if (totalMediaItems > 1)
                 {
-                    <div id="@galleryId" class="carousel slide mb-3 rounded overflow-hidden shadow-sm" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            @for (int i = 0; i < Model.Images.Count; i++)
-                            {
-                                <button type="button"
-                                        data-bs-target="#@galleryId"
-                                        data-bs-slide-to="@i"
-                                        class="@(i == 0 ? "active" : null)"
-                                        aria-current="@(i == 0 ? "true" : null)"
-                                        aria-label="Slide @(i + 1)"></button>
-                            }
-                        </div>
+                    <div id="@galleryId"
+                         class="carousel slide mb-3 rounded overflow-hidden shadow-sm media-carousel"
+                         data-bs-ride="carousel"
+                         data-bs-interval="2000"
+                         data-bs-pause="false">
+
                         <div class="carousel-inner">
                             @{
-                                var idx = 0;
-                                foreach (var img in Model.Images)
+                                var slideIndex = 0;
+                            }
+                            
+                            @if (hasVideo)
+                            {
+                                <div class="carousel-item @(slideIndex == 0 ? "active" : "") video-slide">
+                                    <div class="ratio ratio-16x9">
+                                        <iframe src="@youtubeEmbedUrl?enablejsapi=1&origin=@(Context.Request.Scheme)://@(Context.Request.Host)"
+                                                title="YouTube video"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                referrerpolicy="strict-origin-when-cross-origin"
+                                                allowfullscreen
+                                                class="carousel-video"
+                                                id="youtube-player-@youtubeVideoId">
+                                        </iframe>
+                                    </div>
+                                </div>
+                                slideIndex++;
+                            }
+                            
+                            @if (hasImages)
+                            {
+                                @foreach (var img in Model.Images!)
                                 {
-                                    var active = idx == 0 ? "active" : null;
-                                    <div class="carousel-item @active">
+                                    <div class="carousel-item @(slideIndex == 0 ? "active" : "") image-slide">
                                         <div class="ratio ratio-16x9">
-                                            <img src="@img.ImageUrl" class="d-block w-100 object-fit-cover" alt="@Model.NewsTitle image @(idx+1)" loading="lazy" />
+                                            <img src="@img.ImageUrl"
+                                                 class="d-block w-100 object-fit-cover carousel-image"
+                                                 alt="@Model.NewsTitle image @(slideIndex + 1)"
+                                                 loading="lazy" />
                                         </div>
-                                    </div>;
-                                    idx++;
+                                    </div>
+                                    slideIndex++;
                                 }
                             }
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#@galleryId" data-bs-slide="prev">
+
+                        <button class="carousel-control-prev" type="button"
+                                data-bs-target="#@galleryId" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#@galleryId" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button"
+                                data-bs-target="#@galleryId" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
+
+                        <div class="auto-slide-control">
+                            <button type="button" class="btn btn-sm auto-slide-toggle" id="autoSlideToggle">
+                                <i class="bi bi-pause-fill"></i>
+                            </button>
+                        </div>
+
+                        <div class="video-status-indicator d-none" id="videoStatusIndicator">
+                            <i class="bi bi-play-circle-fill me-2"></i>
+                            <span>Video Playing</span>
+                        </div>
                     </div>
                 }
                 else
                 {
-                    var img = Model.Images.First();
-                    <div class="mb-3 rounded overflow-hidden shadow-sm">
+
+                    <div class="single-media mb-3 rounded overflow-hidden shadow-sm border">
                         <div class="ratio ratio-16x9">
-                            <img src="@img.ImageUrl" class="w-100 object-fit-cover" alt="@Model.NewsTitle" />
+                            @if (hasVideo)
+                            {
+                                <iframe src="@youtubeEmbedUrl"
+                                        title="YouTube video"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allowfullscreen>
+                                </iframe>
+                            }
+                            else if (hasImages)
+                            {
+                                var img = Model.Images!.First();
+                                <img src="@img.ImageUrl"
+                                     class="w-100 object-fit-cover"
+                                     alt="@Model.NewsTitle" />
+                            }
                         </div>
                     </div>
                 }
             }
 
-            <article class="news-article card border-0 shadow-sm mb-4">
-                <div class="card-body p-3 p-md-4">
+            <article class="news-article card border-0 shadow-sm flex-grow-1">
+                <div class="card-body p-3 p-md-4 news-article-scroll">
                     @if (contentLines.Count == 0)
                     {
-                        <p class="text-muted">No content available.</p>
+                        <p class="text-muted mb-0">No content available.</p>
                     }
                     else
                     {
                         foreach (var line in contentLines)
                         {
-                            <p class="fs-6 lh-base">@line</p>
+                            <p class="fs-6 lh-base mb-3">@line</p>
                         }
                     }
+                </div>
+                
+                <div class="article-footer">
+                    <button type="button"
+                            class="btn btn-outline-primary btn-comments"
+                            data-bs-toggle="modal"
+                            data-bs-target="#commentsModal">
+                        <i class="bi bi-chat-dots me-2"></i>
+                        View Comments
+                        (<span id="comments-toggle-count">@commentsCount</span>)
+                    </button>
                 </div>
             </article>
 
-            <!-- Comments Section -->
-            <section id="comments" class="mb-5">
-                <div class="d-flex align-items-center mb-3">
-                    <h2 class="h5 mb-0">Comments (<span id="comments-count">@commentsCount</span>)</h2>
-                    <span class="ms-2 badge rounded-pill text-bg-secondary" id="comments-count-badge">@commentsCount</span>
-                </div>
-
-                <div id="comments-container">
-                    @if (commentsCount == 0)
-                    {
-                        <div class="alert alert-light border small mb-4" role="status" id="no-comments-alert">
-                            No comments yet. Be the first to contribute.
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="list-group mb-4" id="comments-list">
-                            @foreach (var c in Model.Comments!.OrderByDescending(c => c.CommentDate))
-                            {
-                                @await Html.PartialAsync("~/Views/Shared/PartialViews/_Comment.cshtml", c)
-                            }
-                        </div>
-                    }
-                </div>
-
-                <!-- Comment Form -->
-                @{
-                    CommentToAddDTO commentToaddDTO = new CommentToAddDTO();
-                    commentToaddDTO.NewsId = Model.NewsId;
-                }
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <h6 class="card-title mb-3">
-                            <i class="bi bi-chat-dots me-2"></i>Add a comment
-                        </h6>
-                        
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <form asp-controller="Home" asp-action="AddComment" method="post" id="comment-form">
-                                @Html.AntiForgeryToken()
-
-                                <input type="hidden" name="NewsId" value="@Model.NewsId" />
-
-                                <div class="mb-3">
-                                    <label for="CommentText" class="form-label">Your comment</label>
-                                    <textarea name="CommentText"
-                                          id="CommentText"
-                                          class="form-control"
-                                          rows="4"
-                                          placeholder="Share your thoughts about this news article..."></textarea>
-                                    <span asp-validation-for="@commentToaddDTO.CommentText" class="text-danger small"></span>
-                                </div>
-
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        Commenting as <strong>@ViewBag.PresentUserName</strong>
-                                    </small>
-                                    <button type="submit" class="btn btn-primary" id="submit-btn">
-                                        <i class="bi bi-send me-1"></i>Post Comment
-                                    </button>
-                                </div>
-                            </form>
-                        }
-                        else
-                        {
-                            <div class="alert alert-info mb-0">
-                                <i class="bi bi-info-circle me-2"></i>
-                                <strong>Sign in required:</strong> You must be 
-                                <a asp-area="Identity" asp-controller="Account" asp-action="AuthLogin" class="alert-link">logged in</a> 
-                                to post comments.
-                            </div>
-                        }
-                    </div>
+            <section class="mt-3">
+                <h2 class="h6 mb-2">More on @Model.NewsType</h2>
+                <div class="border rounded-3 p-3 bg-light-subtle">
+                    @await Component.InvokeAsync("Suggestion", Model.NewsType)
                 </div>
             </section>
-
-            <div>
-                @await Component.InvokeAsync("Suggestion",Model.NewsType)
-            </div>
-
         </main>
 
         <aside class="col-12 col-lg-4">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm mb-3">
                 <div class="card-body">
-                    <h6 class="card-title mb-3">Share</h6>
-                    <div class="d-flex flex-wrap gap-2">
+                    <h6 class="card-title mb-3">Share this news</h6>
+                    <div class="d-flex flex-wrap gap-2 mb-2">
                         <a class="btn btn-sm btn-outline-primary"
                            target="_blank"
                            rel="noopener"
@@ -222,12 +236,18 @@
                            href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString(currentUrl)">
                             <i class="bi bi-facebook me-1"></i> Facebook
                         </a>
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="navigator.clipboard.writeText('@currentUrl')">
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary"
+                                onclick="navigator.clipboard.writeText('@currentUrl')">
                             <i class="bi bi-clipboard me-1"></i> Copy link
                         </button>
                     </div>
+                </div>
+            </div>
 
-                    <div class="d-flex flex-wrap gap-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex flex-column gap-2">
                         @await Component.InvokeAsync("TopNews")
                     </div>
                 </div>
@@ -236,83 +256,354 @@
     </div>
 </div>
 
+<div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="commentsModalLabel">
+                    <i class="bi bi-chat-dots me-2"></i>
+                    Comments (<span id="comments-count-modal">@commentsCount</span>)
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="comments-container" class="comments-list">
+                    @if (commentsCount == 0)
+                    {
+                        <div class="text-center py-5" id="no-comments-alert">
+                            <i class="bi bi-chat-dots display-4 text-muted mb-3"></i>
+                            <h6 class="text-muted">No comments yet</h6>
+                            <p class="text-muted small mb-0">Be the first to share your thoughts about this article.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="comments-list">
+                            @foreach (var c in Model.Comments!.OrderByDescending(c => c.CommentDate))
+                            {
+                                @await Html.PartialAsync("~/Views/Shared/PartialViews/_Comment.cshtml", c)
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    
+                        CommentToAddDTO commentToaddDTO = new CommentToAddDTO();
+                        commentToaddDTO.NewsId = Model.NewsId;
+                    
+
+                    <div class="w-100">
+                        <form asp-controller="Home" asp-action="AddComment" method="post" id="comment-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="NewsId" value="@Model.NewsId" />
+
+                            <div class="input-group">
+                                <textarea name="CommentText"
+                                          id="CommentText"
+                                          class="form-control"
+                                          rows="2"
+                                          placeholder="Share your thoughts about this article..."
+                                          style="resize: none;"></textarea>
+                                <button type="submit" class="btn btn-primary" id="submit-btn">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="@commentToaddDTO.CommentText"
+                                  class="text-danger small"></span>
+                            <small class="text-muted d-block mt-1">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Commenting as <strong>@ViewBag.PresentUserName</strong>
+                            </small>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="w-100">
+                        <div class="alert alert-info mb-0 d-flex align-items-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <span class="me-auto">You must be logged in to post comments.</span>
+                            <a asp-area="Identity"
+                               asp-controller="Account"
+                               asp-action="AuthLogin"
+                               class="btn btn-primary btn-sm">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        const form = document.getElementById("comment-form");
-        const commentsContainer = document.getElementById("comments-container");
-        const commentsCount = document.getElementById("comments-count");
-        const commentsCountBadge = document.getElementById("comments-count-badge");
-        const textarea = document.getElementById("CommentText");
-        const submitBtn = document.getElementById("submit-btn");
+        (function () {
+            const form = document.getElementById("comment-form");
+            const commentsContainer = document.getElementById("comments-container");
+            const commentsCount = document.getElementById("comments-count");
+            const commentsCountModal = document.getElementById("comments-count-modal");
+            const commentsToggleCount = document.getElementById("comments-toggle-count");
+            const textarea = document.getElementById("CommentText");
+            const submitBtn = document.getElementById("submit-btn");
+            const commentsModal = document.getElementById("commentsModal");
 
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            if (!textarea.value.trim()) {
-                return;
-            }
-
-            // Show loading state
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Posting...';
-            submitBtn.disabled = true;
-
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    body: formData
+            const mediaCarousel = document.querySelector('.media-carousel');
+            if (mediaCarousel) {
+                const carousel = bootstrap.Carousel.getOrCreateInstance(mediaCarousel, {
+                    interval: 2000,  
+                    ride: 'carousel',
+                    pause: false,   
+                    wrap: true
                 });
 
-                if (!response.ok) {
-                    console.error("Failed to post comment");
-                    return;
+                const autoSlideToggle = document.getElementById('autoSlideToggle');
+                const videoStatusIndicator = document.getElementById('videoStatusIndicator');
+                let isAutoSliding = true;
+                let isVideoPlaying = false;
+                let wasAutoSlidingBeforeVideo = true;
+
+                if (autoSlideToggle) {
+                    autoSlideToggle.addEventListener('click', function() {
+                        if (isAutoSliding) {
+                            carousel.pause();
+                            autoSlideToggle.innerHTML = '<i class="bi bi-play-fill"></i>';
+                            autoSlideToggle.setAttribute('title', 'Resume auto-slide');
+                            isAutoSliding = false;
+                        } else {
+                            if (!isVideoPlaying) {
+                                carousel.cycle();
+                            }
+                            autoSlideToggle.innerHTML = '<i class="bi bi-pause-fill"></i>';
+                            autoSlideToggle.setAttribute('title', 'Pause auto-slide');
+                            isAutoSliding = true;
+                        }
+                    });
                 }
 
-                const newCommentHtml = await response.text();
+                let youtubePlayer = null;
 
-                // Check if we need to create comments list (no comments before)
-                let commentsList = document.getElementById("comments-list");
-                const noCommentsAlert = document.getElementById("no-comments-alert");
+                window.addEventListener('message', function(event) {
+                    if (event.origin !== 'https://www.youtube.com') return;
+
+                    try {
+                        const data = JSON.parse(event.data);
+                        
+                        if (data.event === 'video-progress') {
+                            if (!isVideoPlaying) {
+                                isVideoPlaying = true;
+                                wasAutoSlidingBeforeVideo = isAutoSliding;
+                                
+                                if (isAutoSliding) {
+                                    carousel.pause();
+                                }
+                                
+                                if (videoStatusIndicator) {
+                                    videoStatusIndicator.classList.remove('d-none');
+                                }
+                                
+                                console.log('YouTube video started playing - carousel paused');
+                            }
+                        }
+                    } catch (e) {
+                    }
+                });
+
+                let videoInteractionTimer = null;
                 
-                if (noCommentsAlert) {
-                    // Remove "no comments" message and create comments list
-                    noCommentsAlert.remove();
-                    commentsList = document.createElement("div");
-                    commentsList.className = "list-group mb-4";
-                    commentsList.id = "comments-list";
-                    commentsContainer.appendChild(commentsList);
+                function handleVideoInteraction() {
+                    if (!isVideoPlaying) {
+                        isVideoPlaying = true;
+                        wasAutoSlidingBeforeVideo = isAutoSliding;
+                        
+                        if (isAutoSliding) {
+                            carousel.pause();
+                        }
+                        
+                        if (videoStatusIndicator) {
+                            videoStatusIndicator.classList.remove('d-none');
+                        }
+                        
+                        console.log('Video interaction detected - carousel paused');
+                    }
+                    
+                    if (videoInteractionTimer) {
+                        clearTimeout(videoInteractionTimer);
+                    }
+                    
+                    videoInteractionTimer = setTimeout(() => {
+                        if (isVideoPlaying) {
+                            isVideoPlaying = false;
+                            
+                            if (videoStatusIndicator) {
+                                videoStatusIndicator.classList.add('d-none');
+                            }
+                            
+                            if (wasAutoSlidingBeforeVideo && isAutoSliding) {
+                                carousel.cycle();
+                            }
+                            
+                            console.log('Video interaction timeout - carousel resumed');
+                        }
+                    }, 5000); 
                 }
 
-                // Add new comment at the top
-                commentsList.insertAdjacentHTML("afterbegin", newCommentHtml);
+                mediaCarousel.addEventListener('click', function(e) {
+                    const videoSlide = e.target.closest('.video-slide');
+                    if (videoSlide && videoSlide.classList.contains('active')) {
+                        handleVideoInteraction();
+                    }
+                });
 
-                // Clear textarea
-                textarea.value = "";
+                mediaCarousel.addEventListener('mousemove', function(e) {
+                    const videoSlide = e.target.closest('.video-slide');
+                    if (videoSlide && videoSlide.classList.contains('active')) {
+                        handleVideoInteraction();
+                    }
+                });
 
-                // Update counts
-                const current = parseInt(commentsCount.textContent || "0");
-                const next = current + 1;
-                commentsCount.textContent = next;
-                commentsCountBadge.textContent = next;
+                mediaCarousel.addEventListener('slide.bs.carousel', function (e) {
+                    const nextSlide = e.relatedTarget;
+                    
+                    if (isVideoPlaying) {
+                        isVideoPlaying = false;
+                        
+                        if (videoInteractionTimer) {
+                            clearTimeout(videoInteractionTimer);
+                            videoInteractionTimer = null;
+                        }
+                        
+                        if (videoStatusIndicator) {
+                            videoStatusIndicator.classList.add('d-none');
+                        }
+                        
+                        if (wasAutoSlidingBeforeVideo && isAutoSliding) {
+                            setTimeout(() => {
+                                carousel.cycle();
+                            }, 100);
+                        }
+                    }
+                    
+                    const currentSlide = mediaCarousel.querySelector('.carousel-item.active');
+                    const currentIframe = currentSlide?.querySelector('iframe');
+                    if (currentIframe && currentIframe.src.includes('youtube.com')) {
+                        currentIframe.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    }
+                });
 
-                // Also update the count in the news hero section
-                const heroCommentsCount = document.querySelector('.news-hero .bi-chat-dots').nextSibling;
-                if (heroCommentsCount) {
-                    heroCommentsCount.textContent = ` ${next} comments`;
-                }
+                document.addEventListener('keydown', function(e) {
+                    if (mediaCarousel.matches(':hover')) {
+                        if (e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            carousel.prev();
+                        } else if (e.key === 'ArrowRight') {
+                            e.preventDefault();
+                            carousel.next();
+                        } else if (e.key === ' ') {
+                            e.preventDefault();
+                            autoSlideToggle?.click();
+                        }
+                    }
+                });
 
-            } catch (err) {
-                console.error("Error posting comment:", err);
-            } finally {
-                // Restore button state
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                mediaCarousel.addEventListener('mouseenter', function() {
+                    if (isAutoSliding && !isVideoPlaying) {
+                        carousel.pause();
+                    }
+                });
+
+                mediaCarousel.addEventListener('mouseleave', function() {
+                    if (isAutoSliding && !isVideoPlaying) {
+                        carousel.cycle();
+                    }
+                });
             }
-        });
+
+            if (form && textarea && submitBtn) {
+                form.addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    if (!textarea.value.trim()) {
+                        return;
+                    }
+
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+                    submitBtn.disabled = true;
+
+                    const formData = new FormData(form);
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: "POST",
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            console.error("Failed to post comment");
+                            return;
+                        }
+
+                        const newCommentHtml = await response.text();
+
+                        let commentsList = document.getElementById("comments-list");
+                        const noCommentsAlert = document.getElementById("no-comments-alert");
+
+                        if (noCommentsAlert) {
+                            noCommentsAlert.remove();
+                            commentsList = document.createElement("div");
+                            commentsList.id = "comments-list";
+                            commentsContainer.appendChild(commentsList);
+                        }
+
+                        if (commentsList) {
+                            commentsList.insertAdjacentHTML("afterbegin", newCommentHtml);
+                        }
+
+                        textarea.value = "";
+
+                        const current = parseInt(commentsCount?.textContent || "0");
+                        const next = current + 1;
+
+                        if (commentsCount) commentsCount.textContent = next;
+                        if (commentsCountModal) commentsCountModal.textContent = next;
+                        if (commentsToggleCount) commentsToggleCount.textContent = next;
+
+                        const newComment = commentsList?.firstElementChild;
+                        if (newComment) {
+                            newComment.classList.add('new-comment-animation');
+                            setTimeout(() => {
+                                newComment.classList.remove('new-comment-animation');
+                            }, 1000);
+                        }
+
+                    } catch (err) {
+                        console.error("Error posting comment:", err);
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                });
+            }
+
+            if (commentsModal && textarea) {
+                commentsModal.addEventListener('shown.bs.modal', function () {
+                    textarea.focus();
+                });
+            }
+        })();
     </script>
 
     <partial name="_ValidationScriptsPartial" />
 }
-
