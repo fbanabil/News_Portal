@@ -49,7 +49,7 @@ namespace News_Portal.Infrastructure.Repositories
         {
             return await _dbContext.News.Include(i => i.Images).Where(n => n.NewsType == newsType)
                 .OrderByDescending(n => n.PublishedDate)
-                .Take(5)
+                .Take(6)
                 .Select(n => n.ToHomePageNewsToShowDTO())
                 .ToListAsync();
         }
@@ -74,7 +74,7 @@ namespace News_Portal.Infrastructure.Repositories
                     .Select(n => n.ToHomePageNewsToShowDTO())
                     .ToListAsync();
             }
-            else // AllTime
+            else 
             {
                 return _dbContext.News.Include(i => i.Images)
                     .OrderByDescending(n => n.TotalViews)

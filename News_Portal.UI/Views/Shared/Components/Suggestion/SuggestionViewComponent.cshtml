@@ -29,7 +29,7 @@ else
         var rowItems = items.Skip(row * 3).Take(3).ToList();
         if (!rowItems.Any()) { break; }
 
-        <div class="row g-2 g-md-3 mb-2">
+        <div class="row g-2 g-md-2 mb-2">
             @foreach (var news in rowItems)
             {
                 <div class="col-12 col-md-6 col-lg-4">

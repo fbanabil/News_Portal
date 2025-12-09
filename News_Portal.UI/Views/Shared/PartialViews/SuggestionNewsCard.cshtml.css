@@ -1,27 +1,641 @@
+/* =========================================
+   COLORFUL SUGGESTION CARD - REDESIGNED
+========================================= */
+
 .suggestion-card {
-    border-radius: .75rem;
+    border-radius: 0.75rem;
     overflow: hidden;
-    transition: transform .2s ease, box-shadow .2s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
     display: block;
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
 }
-.suggestion-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
-}
+
+    .suggestion-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15), 0 4px 12px rgba(59, 130, 246, 0.1);
+        border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .suggestion-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b, #10b981);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .suggestion-card:hover::before {
+        opacity: 1;
+    }
+
+/* =========================================
+   COLORFUL IMAGE SECTION
+========================================= */
+
 .suggestion-thumb {
     height: 100%;
     min-height: 96px;
-    background: #f2f4f6;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
 }
+
+    .suggestion-thumb::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient( 45deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 25%, rgba(236, 72, 153, 0.1) 50%, rgba(245, 158, 11, 0.1) 75%, rgba(16, 185, 129, 0.1) 100% );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+.suggestion-card:hover .suggestion-thumb::after {
+    opacity: 1;
+}
+
 .suggestion-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.4s ease;
+    filter: brightness(1.1) saturate(1.1);
 }
+
+.suggestion-card:hover .suggestion-img {
+    transform: scale(1.05);
+    filter: brightness(1.2) saturate(1.2);
+}
+
+/* =========================================
+   CARD BODY WITH COLORFUL ELEMENTS
+========================================= */
+
+.suggestion-card .card-body {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+}
+
+.suggestion-card .card-title {
+    color: #1e293b;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.suggestion-card:hover .card-title {
+    color: #4f46e5;
+}
+
+/* =========================================
+   NEWS TYPE COLORFUL BADGES
+========================================= */
+
+.badge {
+    position: relative;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Politics Badge - Red Theme */
+.badge-politics {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+    .badge-politics::before {
+        content: '???';
+        margin-right: 4px;
+    }
+
+/* Sports Badge - Green Theme */
+.badge-sports {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+    .badge-sports::before {
+        content: '?';
+        margin-right: 4px;
+    }
+
+/* Technology Badge - Blue Theme */
+.badge-technology {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+    .badge-technology::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* Business Badge - Purple Theme */
+.badge-business {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+    .badge-business::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* Entertainment Badge - Pink Theme */
+.badge-entertainment {
+    background: linear-gradient(135deg, #ec4899, #db2777) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+    .badge-entertainment::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* Science Badge - Cyan Theme */
+.badge-science {
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+}
+
+    .badge-science::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* Health Badge - Rose Theme */
+.badge-health {
+    background: linear-gradient(135deg, #f43f5e, #e11d48) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4);
+}
+
+    .badge-health::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* World Badge - Orange Theme */
+.badge-world {
+    background: linear-gradient(135deg, #f97316, #ea580c) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+    .badge-world::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* General Badge - Gray Theme (fallback) */
+.badge-general {
+    background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+}
+
+    .badge-general::before {
+        content: '??';
+        margin-right: 4px;
+    }
+
+/* Enhanced badge hover effects */
+.suggestion-card:hover .badge {
+    transform: scale(1.08) rotate(2deg);
+    filter: brightness(1.1);
+}
+
+.suggestion-card:hover .badge-politics {
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+}
+
+.suggestion-card:hover .badge-sports {
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
+}
+
+.suggestion-card:hover .badge-technology {
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+}
+
+.suggestion-card:hover .badge-business {
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
+}
+
+.suggestion-card:hover .badge-entertainment {
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.5);
+}
+
+.suggestion-card:hover .badge-science {
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.5);
+}
+
+.suggestion-card:hover .badge-health {
+    box-shadow: 0 6px 16px rgba(244, 63, 94, 0.5);
+}
+
+.suggestion-card:hover .badge-world {
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.5);
+}
+
+.suggestion-card:hover .badge-general {
+    box-shadow: 0 6px 16px rgba(107, 114, 128, 0.5);
+}
+
+/* =========================================
+   CARD BORDER COLORS BASED ON NEWS TYPE
+========================================= */
+
+/* Politics Cards - Red accents */
+.suggestion-card[data-news-type="politics"] {
+    border-left: 4px solid #ef4444;
+}
+
+    .suggestion-card[data-news-type="politics"]:hover {
+        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.15), 0 4px 12px rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+/* Sports Cards - Green accents */
+.suggestion-card[data-news-type="sports"] {
+    border-left: 4px solid #10b981;
+}
+
+    .suggestion-card[data-news-type="sports"]:hover {
+        box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15), 0 4px 12px rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+/* Technology Cards - Blue accents */
+.suggestion-card[data-news-type="technology"] {
+    border-left: 4px solid #3b82f6;
+}
+
+    .suggestion-card[data-news-type="technology"]:hover {
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15), 0 4px 12px rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+/* Business Cards - Purple accents */
+.suggestion-card[data-news-type="business"] {
+    border-left: 4px solid #8b5cf6;
+}
+
+    .suggestion-card[data-news-type="business"]:hover {
+        box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15), 0 4px 12px rgba(139, 92, 246, 0.1);
+        border-color: rgba(139, 92, 246, 0.3);
+    }
+
+/* Entertainment Cards - Pink accents */
+.suggestion-card[data-news-type="entertainment"] {
+    border-left: 4px solid #ec4899;
+}
+
+    .suggestion-card[data-news-type="entertainment"]:hover {
+        box-shadow: 0 12px 40px rgba(236, 72, 153, 0.15), 0 4px 12px rgba(236, 72, 153, 0.1);
+        border-color: rgba(236, 72, 153, 0.3);
+    }
+
+/* Science Cards - Cyan accents */
+.suggestion-card[data-news-type="science"] {
+    border-left: 4px solid #06b6d4;
+}
+
+    .suggestion-card[data-news-type="science"]:hover {
+        box-shadow: 0 12px 40px rgba(6, 182, 212, 0.15), 0 4px 12px rgba(6, 182, 212, 0.1);
+        border-color: rgba(6, 182, 212, 0.3);
+    }
+
+/* Health Cards - Rose accents */
+.suggestion-card[data-news-type="health"] {
+    border-left: 4px solid #f43f5e;
+}
+
+    .suggestion-card[data-news-type="health"]:hover {
+        box-shadow: 0 12px 40px rgba(244, 63, 94, 0.15), 0 4px 12px rgba(244, 63, 94, 0.1);
+        border-color: rgba(244, 63, 94, 0.3);
+    }
+
+/* World Cards - Orange accents */
+.suggestion-card[data-news-type="world"] {
+    border-left: 4px solid #f97316;
+}
+
+    .suggestion-card[data-news-type="world"]:hover {
+        box-shadow: 0 12px 40px rgba(249, 115, 22, 0.15), 0 4px 12px rgba(249, 115, 22, 0.1);
+        border-color: rgba(249, 115, 22, 0.3);
+    }
+
+/* =========================================
+   COLORFUL TEXT ELEMENTS
+========================================= */
+
+.suggestion-card .text-muted {
+    color: #64748b !important;
+    transition: color 0.3s ease;
+}
+
+.suggestion-card:hover .text-muted {
+    color: #475569 !important;
+}
+
+.suggestion-card .card-text {
+    color: #64748b;
+    line-height: 1.6;
+    transition: color 0.3s ease;
+}
+
+.suggestion-card:hover .card-text {
+    color: #374151;
+}
+
+/* =========================================
+   TWO-LINE CLAMP WITH COLOR ENHANCEMENT
+========================================= */
+
 .two-line-clamp {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    position: relative;
+}
+
+    /* Add a subtle gradient fade for clamped text */
+    .two-line-clamp::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 30px;
+        height: 1.2em;
+        background: linear-gradient(90deg, transparent, #fafbff);
+        pointer-events: none;
+    }
+
+.suggestion-card:hover .two-line-clamp::after {
+    background: linear-gradient(90deg, transparent, #fafbff);
+}
+
+/* =========================================
+   COLORFUL LOADING STATE
+========================================= */
+
+.suggestion-card.loading {
+    background: linear-gradient( 90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75% );
+    background-size: 200% 100%;
+    animation: colorfulShimmer 1.5s infinite;
+}
+
+@keyframes colorfulShimmer {
+    0% {
+        background-position: 200% 0;
+        background-image: linear-gradient(90deg, #f1f5f9 25%, #ddd6fe 50%, #f1f5f9 75%);
+    }
+
+    50% {
+        background-image: linear-gradient(90deg, #f1f5f9 25%, #fed7e2 50%, #f1f5f9 75%);
+    }
+
+    100% {
+        background-position: -200% 0;
+        background-image: linear-gradient(90deg, #f1f5f9 25%, #dbeafe 50%, #f1f5f9 75%);
+    }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 768px) {
+    .suggestion-card {
+        border-radius: 0.5rem;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+        .suggestion-card:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .suggestion-card::before {
+            height: 2px;
+        }
+
+    .badge {
+        font-size: 0.625rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+        .badge::before {
+            font-size: 0.75em;
+        }
+}
+
+@media (max-width: 480px) {
+    .suggestion-card {
+        border-radius: 0.375rem;
+    }
+
+        .suggestion-card:hover {
+            transform: translateY(-1px);
+        }
+
+    .suggestion-thumb {
+        min-height: 80px;
+    }
+
+    .badge {
+        font-size: 0.5625rem;
+        padding: 0.15rem 0.4rem;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY & REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .suggestion-card,
+    .suggestion-img,
+    .card-title,
+    .badge,
+    .text-muted,
+    .card-text {
+        transition: none !important;
+    }
+
+        .suggestion-card:hover {
+            transform: none;
+        }
+
+            .suggestion-card:hover .suggestion-img {
+                transform: none;
+            }
+
+            .suggestion-card:hover .badge {
+                transform: none;
+            }
+
+    .colorfulShimmer {
+        animation: none;
+    }
+}
+
+/* Focus styles for accessibility */
+.suggestion-card:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+    border-radius: 0.75rem;
+}
+
+.suggestion-card:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+/* =========================================
+   DARK MODE SUPPORT WITH COLORS
+========================================= */
+
+@media (prefers-color-scheme: dark) {
+    .suggestion-card {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        border-color: rgba(75, 85, 99, 0.3);
+    }
+
+        .suggestion-card .card-body {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+
+        .suggestion-card .card-title {
+            color: #f8fafc;
+        }
+
+        .suggestion-card:hover .card-title {
+            color: #a5b4fc;
+        }
+
+        .suggestion-card .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .suggestion-card:hover .text-muted {
+            color: #cbd5e1 !important;
+        }
+
+        .suggestion-card .card-text {
+            color: #94a3b8;
+        }
+
+        .suggestion-card:hover .card-text {
+            color: #cbd5e1;
+        }
+
+    .two-line-clamp::after {
+        background: linear-gradient(90deg, transparent, #334155);
+    }
+
+    .suggestion-card:hover .two-line-clamp::after {
+        background: linear-gradient(90deg, transparent, #334155);
+    }
+
+    /* Dark mode badge adjustments */
+    .badge {
+        filter: brightness(0.9);
+    }
+
+    .suggestion-card:hover .badge {
+        filter: brightness(1.1);
+    }
+}
+
+/* =========================================
+   HIGH CONTRAST MODE SUPPORT
+========================================= */
+
+@media (prefers-contrast: high) {
+    .suggestion-card {
+        border: 2px solid #000000;
+        background: #ffffff;
+    }
+
+        .suggestion-card:hover {
+            border-color: #0000ff;
+        }
+
+        .suggestion-card .card-title {
+            color: #000000;
+        }
+
+        .suggestion-card:hover .card-title {
+            color: #0000ff;
+        }
+
+    .badge {
+        background: #000000 !important;
+        color: #ffffff;
+        box-shadow: none !important;
+    }
+
+        .badge::before {
+            display: none;
+        }
+}
+
+/* =========================================
+   PRINT STYLES
+========================================= */
+
+@media print {
+    .suggestion-card {
+        break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb !important;
+        background: white !important;
+        transform: none !important;
+    }
+
+        .suggestion-card::before {
+            display: none;
+        }
+
+    .suggestion-thumb::after {
+        display: none;
+    }
+
+    .suggestion-img {
+        filter: none !important;
+    }
+
+    .badge {
+        background: #f3f4f6 !important;
+        color: #374151 !important;
+        box-shadow: none !important;
+    }
+
+        .badge::before {
+            display: none;
+        }
 }

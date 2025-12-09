@@ -4,12 +4,27 @@
     var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)
         ? "https://via.placeholder.com/300x200?text=News"
         : Model.TitleImageUrl;
+
+    // Dynamic badge color based on NewsType
+    var badgeClass = Model.NewsType.ToString().ToLowerInvariant() switch
+    {
+        "politics" => "badge-politics",
+        "sports" => "badge-sports",
+        "technology" => "badge-technology",
+        "business" => "badge-business",
+        "entertainment" => "badge-entertainment",
+        "science" => "badge-science",
+        "health" => "badge-health",
+        "world" => "badge-world",
+        _ => "badge-general"
+    };
 }
 
 <a asp-controller="Home"
    asp-action="Details"
    asp-route-newsId="@Model.NewsId"
-   class="card suggestion-card text-reset text-decoration-none shadow-sm">
+   class="card suggestion-card text-reset text-decoration-none shadow-sm"
+   data-news-type="@Model.NewsType.ToString().ToLowerInvariant()">
     <div class="row g-0 align-items-stretch">
         <div class="col-4 col-md-3">
             <div class="suggestion-thumb">
@@ -26,12 +41,15 @@
                 </h6>
                 <p class="small text-muted mb-1">
                     <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
-                    <span class="badge bg-secondary">@Model.NewsType</span>
+                    <span class="badge @badgeClass">
+                        <i class="news-type-icon me-1" aria-hidden="true"></i>
+                        @Model.NewsType
+                    </span>
                 </p>
                 <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">
-                    @((Model.NewsContent ?? string.Empty).Length > 35
-                        ? Model.NewsContent!.Substring(0, 35) + "…"
-                        : Model.NewsContent)
+                    @((Model.NewsContent ?? string.Empty).Length > 40
+                                        ? Model.NewsContent!.Substring(0, 40) + "…"
+                                        : Model.NewsContent)
                 </p>
             </div>
         </div>
