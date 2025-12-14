@@ -4,93 +4,245 @@
     ViewBag.Title = ViewBag.NewsType?.ToString() ?? "News";
     var title = ViewBag.NewsType?.ToString() ?? "News";
     int pageNo = ViewBag.PageNo is int p ? p : 1;
-    int pageSize = ViewBag.PageSize is int ps ? ps : 18;
+    int pageSize = ViewBag.PageSize is int ps ? ps : 12;
     int pageCount = ViewBag.PageCount is int pc ? pc : 1;
+    // Get category icon
+    var categoryIcon = ViewBag.NewsType?.ToString().ToLowerInvariant() switch
+    {
+        "politics" => "bi bi-bank",
+        "sports" => "bi bi-trophy",
+        "technology" => "bi bi-cpu",
+        "business" => "bi bi-briefcase",
+        "entertainment" => "bi bi-film",
+        "science" => "bi bi-flask",
+        "health" => "bi bi-heart-pulse",
+        "world" => "bi bi-globe",
+        _ => "bi bi-newspaper"
+    };
 }
 
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-enhanced success-alert alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
         @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
     </div>
 }
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-enhanced error-alert alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
         @TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
     </div>
 }
 
 
-
-
-
-<div class="container-lg my-4">
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <h1 class="h4 mb-0">@title</h1>
-        <div class="text-muted small">Page @pageNo of @pageCount</div>
-    </div>
-
-    @if (Model == null || Model.Count == 0)
-    {
-        <div class="alert alert-light border">No news available.</div>
-    }
-    else
-    {
-        <!-- 16 items in 4 rows (Bootstrap grid: responsive) -->
-        <div class="row g-3 justify-content-center">
-            @foreach (var news in Model)
-            {
-                @await Html.PartialAsync("~/Views/Shared/PartialViews/NewsPageNewsCard.cshtml", news)
-            }
+<div class="simple-category-header">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="@categoryIcon me-3"></i>
+                <div>
+                    <h2 class="category-title mb-1">@title</h2>
+                    <small class="text-muted">Page @pageNo of @pageCount</small>
+                </div>
+            </div>
+            <div class="category-stats">
+                <span class="badge bg-light text-dark">
+                    @((pageNo - 1) * pageSize + 1) - @(Math.Min(pageNo * pageSize, (Model?.Count ?? 0) + (pageNo - 1) * pageSize)) articles
+                </span>
+            </div>
         </div>
-    }
-
-    <!-- Pagination -->
-    <nav class="mt-4" aria-label="Pagination">
-        <ul class="pagination justify-content-center flex-wrap">
-            @{
-                bool hasPrev = pageNo > 1;
-                bool hasNext = pageNo < pageCount;
-                var routeType = (NewsType)ViewBag.NewsType;
-            }
-
-            <li class="page-item @(hasPrev ? "" : "disabled")">
-                <a class="page-link"
-                   asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType="@routeType"
-                   asp-route-pageNo="@(pageNo - 1)"
-                   asp-route-pageSize="@pageSize">Previous</a>
-            </li>
-
-            @for (int i = Math.Max(1, pageNo - 2); i <= Math.Min(pageCount, pageNo + 2); i++)
-            {
-                <li class="page-item @(i == pageNo ? "active" : "")">
-                    <a class="page-link"
-                       asp-controller="Home"
-                       asp-action="GetNews"
-                       asp-route-newsType="@routeType"
-                       asp-route-pageNo="@i"
-                       asp-route-pageSize="@pageSize">@i</a>
-                </li>
-            }
-
-            <li class="page-item @(hasNext ? "" : "disabled")">
-                <a class="page-link"
-                   asp-controller="Home"
-                   asp-action="GetNews"
-                   asp-route-newsType="@routeType"
-                   asp-route-pageNo="@(pageNo + 1)"
-                   asp-route-pageSize="@pageSize">Next</a>
-            </li>
-        </ul>
-    </nav>
+    </div>
 </div>
 
+<div class="container-fluid">
+    <div class="news-grid-container">
+        <!-- Main Content -->
+        <div class="main-content">
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="no-news-message">
+                    <div class="no-news-icon">
+                        <i class="bi bi-newspaper"></i>
+                    </div>
+                    <h4 class="text-muted">No @title News Available</h4>
+                    <p class="text-muted">Check back later for the latest updates in @title.ToLower().</p>
+                </div>
+            }
+            else
+            {
+                <div class="news-grid">
+                    @foreach (var news in Model)
+                    {
+                        var author = news.Author;
+                        <a asp-controller="Home" asp-action="Details" asp-route-newsId="@news.NewsId"
+                        class="news-card-enhanced text-reset text-decoration-none">
+                            <div class="news-card-image">
+                                <img src="@(string.IsNullOrWhiteSpace(news.TitleImageUrl) ? "https://via.placeholder.com/400x200?text=News" : news.TitleImageUrl)"
+                                     alt="@news.NewsTitle"
+                                     loading="lazy" />
+                                @* <span class="news-badge">@news.NewsType</span> *@
+                            </div>
+                            <div class="news-card-body">
+                                <h5 class="news-card-title" title="@news.NewsTitle">@news.NewsTitle</h5>
+                                <div class="news-card-meta">
+                                    <span><i class="bi bi-calendar3 me-1"></i>@news.PublishedDate.ToString("MMM dd, yyyy")</span>
+                                    <span><i class="bi bi-person me-1"></i>@author?.PersonName</span>
+                                </div>
+                                <p class="news-card-content">
+                                    @((news.NewsContent ?? string.Empty).Length > 120
+                                                                ? news.NewsContent!.Substring(0, 120) + "..."
+                                                                : news.NewsContent)
+                        </p>
+                        <div class="news-card-footer">
+                            <div class="view-count">
+                                <i class="bi bi-eye"></i>
+                                @news.TotalViews.ToString("N0")
+                            </div>
+                            <small class="text-primary">Read more →</small>
+                        </div>
+                    </div>
+                </a>
+                                }
+                </div>
+            }
 
+            <!-- Enhanced Pagination -->
+            @if (pageCount > 1)
+            {
+                <nav class="d-flex justify-content-center mt-4" aria-label="Pagination">
+                    <ul class="pagination pagination-enhanced mb-0">
+                        @{
+                            bool hasPrev = pageNo > 1;
+                            bool hasNext = pageNo < pageCount;
+                            var routeType = (NewsType)ViewBag.NewsType;
+                        }
 
+                        <li class="page-item @(hasPrev ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType="@routeType"
+                               asp-route-pageNo="@(pageNo - 1)"
+                               asp-route-pageSize="@pageSize">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </a>
+                        </li>
+
+                        @for (int i = Math.Max(1, pageNo - 2); i <= Math.Min(pageCount, pageNo + 2); i++)
+                        {
+                            <li class="page-item @(i == pageNo ? "active" : "")">
+                                <a class="page-link"
+                                   asp-controller="Home"
+                                   asp-action="GetNews"
+                                   asp-route-newsType="@routeType"
+                                   asp-route-pageNo="@i"
+                                   asp-route-pageSize="@pageSize">@i</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(hasNext ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-controller="Home"
+                               asp-action="GetNews"
+                               asp-route-newsType="@routeType"
+                               asp-route-pageNo="@(pageNo + 1)"
+                               asp-route-pageSize="@pageSize">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-pin-angle-fill text-primary"></i>
+                    Trending Now
+                </h4>
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-graph-up text-success"></i>
+                    Most Popular
+                </h4>
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-trophy text-warning"></i>
+                    All Time Favorites
+                </h4>
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
+            </div>
+
+            <!-- Quick Category Links -->
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-grid text-info"></i>
+                    Browse Categories
+                </h4>
+                <div class="d-flex flex-wrap gap-2">
+                    @{
+                        var categories = new[]
+                        {
+                                        new { Type = NewsType.Politics, Icon = "bi-bank", Color = "primary" },
+                                        new { Type = NewsType.Sports, Icon = "bi-trophy", Color = "success" },
+                                        new { Type = NewsType.Technology, Icon = "bi-cpu", Color = "info" },
+                                        new { Type = NewsType.Business, Icon = "bi-briefcase", Color = "warning" },
+                                        new { Type = NewsType.Entertainment, Icon = "bi-film", Color = "danger" },
+                                        new { Type = NewsType.Science, Icon = "bi-flask", Color = "secondary" },
+                                        new { Type = NewsType.Health, Icon = "bi-heart-pulse", Color = "success" },
+                                        new { Type = NewsType.World, Icon = "bi-globe", Color = "dark" }
+                                        };
+                    }
+
+                    @foreach (var category in categories)
+                    {
+                        <a asp-controller="Home"
+                           asp-action="GetNews"
+                           asp-route-newsType="@category.Type"
+                           asp-route-pageNo="1"
+                           asp-route-pageSize="18"
+                           class="btn btn-outline-@category.Color btn-sm">
+                            <i class="@category.Icon me-1"></i>
+                            @category.Type
+                        </a>
+                    }
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss enhanced alerts
+        setTimeout(() => {
+            document.querySelectorAll('.alert-enhanced').forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+
+        // Smooth scroll for pagination
+        document.querySelectorAll('.pagination a').forEach(link => {
+            link.addEventListener('click', () => {
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 100);
+            });
+        });
+    </script>
+}

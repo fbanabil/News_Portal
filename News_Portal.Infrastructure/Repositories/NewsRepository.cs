@@ -33,7 +33,7 @@ namespace News_Portal.Infrastructure.Repositories
 
         public async Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize)
         {
-            return await _dbContext.News.Include(i=>i.Images).Where(n => n.NewsType == newsType).
+            return await _dbContext.News.Include(i=>i.Images).Include(a=>a.Author).Where(n => n.NewsType == newsType).
                 OrderByDescending(p=>p.PublishedDate).Skip((pageNo-1) * pageSize).Take(pageSize).ToListAsync();
         }
 

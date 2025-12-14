@@ -78,7 +78,7 @@ namespace News_Portal.UI.Controllers
 
             if(pageSize == null || pageSize <= 0)
             {
-                pageSize = 18;
+                pageSize = 12;
             }
             int p=pageNo.Value,ps=pageSize.Value;
 

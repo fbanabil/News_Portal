@@ -184,6 +184,9 @@ namespace News_Portal.UI.Samples
                 }
             }
 
+            await _userManager.Users.ExecuteUpdateAsync(s => s.SetProperty(u => u.EmailConfirmed, u => true) );
+
+
 
         }
     }
