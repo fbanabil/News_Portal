@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.RepositoryContracts;
 using News_Portal.Core.DTO.News;
@@ -24,6 +26,11 @@ namespace News_Portal.Infrastructure.Repositories
         {
             await _dbContext.News.AddAsync(news);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<News>> GetAllAuthorsNews(Guid authorId)
+        {
+            return await _dbContext.News.Include(i=>i.Images).Include(i=>i.Comments).Include(i=>i.Author).Where(n => n.AuthorId == authorId).ToListAsync();
         }
 
         public async Task<News> GetNewsById(Guid newsId)

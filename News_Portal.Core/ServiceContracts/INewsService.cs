@@ -12,7 +12,8 @@ namespace News_Portal.Core.ServiceContracts
     public interface INewsService
     {
         Task AddNews(News news);
-
+        Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, AuthorNewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10);
+        Task<int> GetAuthorsNewsCountAsync(Guid id, AuthorNewsFilterParametersDTO parametersDTO);
         Task<DetailedNewsToShowDTO> GetDetailedNewsToShowDTOsByNewsId(Guid newsId);
         Task<List<HomePageNewsToShowDTO>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize);
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();

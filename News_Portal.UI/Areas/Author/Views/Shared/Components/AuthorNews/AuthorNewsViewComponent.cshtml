@@ -1,0 +1,69 @@
+﻿@model List<AuthorsNewsToShowDTO>
+@{
+    int pageCount = ViewBag.PageCount ?? 1;
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalCount = ViewBag.TotalCount ?? Model?.Count ?? 0;
+}
+
+<div class="author-news-container">
+    <!-- Header Section -->
+    <div class="news-header">
+        <div class="news-stats">
+            <h2 class="news-title">Your News Articles</h2>
+            <div class="news-count">
+                <span class="count-number">@totalCount</span>
+                <span class="count-label">articles found</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Content -->
+    <div class="news-content">
+        @if (Model != null && Model.Any())
+        {
+            <div class="news-list">
+                @foreach (var newsItem in Model)
+                {
+                    @await Html.PartialAsync("~/Areas/Author/Views/Shared/PartialViews/AuthorNewsCard.cshtml", newsItem)
+                }
+            </div>
+
+            <!-- Pagination -->
+            @if (pageCount > 1)
+            {
+              
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h3 class="empty-title">No articles found</h3>
+                <p class="empty-message">Try adjusting your filters or create your first news article.</p>
+                <a href="@Url.Action("Create", "NewsManagement", new { area = "Author" })" class="btn-create">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Create New Article
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Loading State (hidden by default) -->
+    <div class="loading-state" id="loadingState" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+        <p>Loading articles...</p>
+    </div>
+</div>
+
+<style>
+    
+</style>

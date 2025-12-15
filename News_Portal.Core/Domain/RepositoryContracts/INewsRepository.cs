@@ -12,6 +12,7 @@ namespace News_Portal.Core.Domain.RepositoryContracts
     public interface INewsRepository
     {
         Task AddNews(News news);
+        Task<List<News>> GetAllAuthorsNews(Guid authorId);
         Task<News> GetNewsById(Guid newsId);
         Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize);
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();

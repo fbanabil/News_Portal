@@ -1,0 +1,26 @@
+﻿@model AuthorsNewsToShowDTO
+
+<div class="news-card">
+    <div class="news-image">
+        @if (Model.Images != null && Model.Images.Any())
+        {
+            <img src="@Model.Images.First().ImageUrl" alt="@Model.NewsTitle" />
+        }
+        else
+        {
+            <div class="no-image">No Image</div>
+        }
+    </div>
+
+    <div class="news-content">
+        <h3>@Model.NewsTitle</h3>
+        <p>@(Model.NewsContent?.Length > 150 ? Model.NewsContent.Substring(0, 150) + "..." : Model.NewsContent)</p>
+
+        <div class="news-info">
+            <span>@Model.NewsType</span>
+            <span>@Model.NewsStatus</span>
+            <span>@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+        </div>
+    </div>
+</div>
+
