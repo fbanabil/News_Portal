@@ -76,9 +76,9 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             user.PersonName = profileToUpdate.PersonName;
             user.PhoneNumber = profileToUpdate.PhoneNumber;
 
-            await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
+            if(user.PersonImageUrl!=null) await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
 
-            user.PersonImageUrl = await _imageService.UploadToCloudinary(profileToUpdate.ProfileImage);
+            if(profileToUpdate.ProfileImage!=null) user.PersonImageUrl = await _imageService.UploadToCloudinary(profileToUpdate.ProfileImage);
 
             IdentityResult result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)

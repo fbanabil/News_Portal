@@ -1,0 +1,625 @@
+﻿@model NewsToEditDTO
+@using News_Portal.Core.Enums
+@{
+    ViewData["Title"] = "Edit News";
+}
+
+<!-- Newspaper Header -->
+<header class="newspaper-header">
+    <h1 class="newspaper-title">Daily News Portal</h1>
+    <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
+    <div class="newspaper-line"></div>
+</header>
+
+<!-- Alerts -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert success-alert">
+        ✓ @TempData["Message"]
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert error-alert">
+        ⚠ @TempData["Error"]
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+}
+
+<div class="add-news-main">
+    <div class="add-news-container">
+
+        <main class="main-content">
+            <div class="form-header">
+                <div class="form-title-section">
+                    <h1 class="form-title">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Edit News Article
+                    </h1>
+                    <p class="form-subtitle">Update your news article details and content</p>
+                </div>
+            </div>
+
+            <form asp-controller="AuthorActions" asp-action="EditNews" method="post" enctype="multipart/form-data" class="add-news-form">
+                @Html.AntiForgeryToken()
+                <input asp-for="NewsId" type="hidden" />
+
+                <div asp-validation-summary="All" class="validation-summary"></div>
+
+                <div class="form-content">
+
+                    <div class="form-group">
+                        <label asp-for="NewsTitle" class="form-label">
+                            <i class="bi bi-type me-1"></i>
+                            News Title *
+                        </label>
+                        <input asp-for="NewsTitle"
+                               type="text"
+                               class="form-control"
+                               placeholder="Enter a compelling news title..."
+                               maxlength="100" />
+                        <span asp-validation-for="NewsTitle" class="text-danger"></span>
+                        <small class="form-text">Maximum 100 characters</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NewsContent" class="form-label">
+                            <i class="bi bi-file-text me-1"></i>
+                            News Content *
+                        </label>
+                        <textarea asp-for="NewsContent"
+                                  class="form-control content-textarea"
+                                  rows="12"
+                                  placeholder="Write your news article content here..."></textarea>
+                        <span asp-validation-for="NewsContent" class="text-danger"></span>
+                        <small class="form-text">Provide detailed information about the news story</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="NewsType" class="form-label">
+                                <i class="bi bi-tag me-1"></i>
+                                News Type *
+                            </label>
+                            <select asp-for="NewsType" class="form-select">
+                                @foreach (var newsType in Enum.GetValues<NewsType>())
+                                {
+                                    if (newsType.ToString() != "General")
+                                    {
+                                        <option value="@newsType">@newsType</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="NewsType" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="NewsPriority" class="form-label">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                Priority *
+                            </label>
+                            <select asp-for="NewsPriority" class="form-select">
+                                @foreach (var priority in Enum.GetValues<NewsPriority>())
+                                {
+                                    <option value="@priority">@priority</option>
+                                }
+                            </select>
+                            <span asp-validation-for="NewsPriority" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="VideoUrl" class="form-label">
+                            <i class="bi bi-camera-video me-1"></i>
+                            Video URL (Optional)
+                        </label>
+                        <input asp-for="VideoUrl"
+                               type="url"
+                               class="form-control"
+                               placeholder="https://youtube.com/embed/your-video-id" />
+                        <span asp-validation-for="VideoUrl" class="text-danger"></span>
+                        <small class="form-text">Add a YouTube embed URL to include video content</small>
+                    </div>
+
+                    @if (Model.ExistingImages != null && Model.ExistingImages.Any())
+                    {
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-images me-1"></i>
+                                Current Images
+                            </label>
+
+                            <div class="existing-images-container">
+                                <div class="existing-images-grid" id="existingImagesGrid">
+                                    @{int i = 0;}
+                                    @foreach (var image in Model.ExistingImages)
+                                    {
+                                        <div class="existing-image-item" data-image-id="@image.ImageId">
+                                            <div class="image-wrapper">
+                                                <img src="@image.ImageUrl" alt="News Image" class="existing-image" />
+                                                <div class="image-overlay">
+                                                    <button type="button"
+                                                            class="btn btn-danger btn-sm remove-image-btn"
+                                                            onclick="removeExistingImage('@image.ImageId')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="image-info">
+                                                <small class="image-url text-muted">@image.ImageUrl</small>
+                                            </div>
+
+                                            <input type="hidden" class="existing-hidden imageid"
+                                                   name="ExistingImages[@i].ImageId" value="@image.ImageId" />
+                                            <input type="hidden" class="existing-hidden imageurl"
+                                                   name="ExistingImages[@i].ImageUrl" value="@image.ImageUrl" />
+                                        </div>
+                                        i++;
+                                    }
+                                </div>
+
+                                <small class="form-text">
+                                    Click the trash icon to remove images. Removed images will be deleted when you save.
+                                </small>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label asp-for="NewImages" class="form-label">
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Add New Images (Optional)
+                        </label>
+                        <div class="image-upload-wrapper" id="imageUploadWrapper">
+                            <input asp-for="NewImages"
+                                   type="file"
+                                   class="image-input"
+                                   multiple
+                                   accept="image/*"
+                                   id="imageInput"
+                                   onchange="handleNewImages(this)" />
+                            <div class="image-upload-info">
+                                <i class="bi bi-cloud-upload"></i>
+                                <span>Click to select images or drag and drop</span>
+                                <small>Maximum 4 images (JPG, PNG, GIF)</small>
+                            </div>
+                        </div>
+                        <span asp-validation-for="NewImages" class="text-danger"></span>
+                        <div class="image-count-display" id="imageCount" style="display: none;">
+                            <small class="text-muted">Selected: <span id="selectedCount">0</span>/4 images</small>
+                        </div>
+                    </div>
+
+                    <div class="selected-files-container" id="selectedFiles" style="display: none;">
+                        <h6 class="selected-files-title">
+                            <i class="bi bi-file-earmark-image me-1"></i>
+                            New Images Selected
+                        </h6>
+                        <div class="selected-files-list" id="selectedFilesList"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
+                            <i class="bi bi-check-lg me-2"></i>
+                            Update Article
+                        </button>
+                        <a href="@Url.Action("DetailedNews", "AuthorActions", new { area = "Author", newsId = Model.NewsId })"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Cancel
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-lightbulb"></i>
+                    Edit Guidelines
+                </h4>
+                <div class="guidelines-content">
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Write clear and engaging titles</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Provide comprehensive content</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Choose appropriate categories</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Set correct priority levels</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Add relevant images and videos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-info-circle"></i>
+                    Content Guidelines
+                </h4>
+                <div class="content-info">
+                    <div class="info-item">
+                        <span class="info-label">Title:</span>
+                        <span class="info-value">Maximum 100 characters</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Content:</span>
+                        <span class="info-value">Be descriptive and informative</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Images:</span>
+                        <span class="info-value">Maximum 4 new images (JPG, PNG, GIF)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Video:</span>
+                        <span class="info-value">YouTube URLs only</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h4>
+                <div class="quick-actions">
+                    <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
+                       class="action-btn primary">
+                        <i class="bi bi-list"></i>
+                        View My Articles
+                    </a>
+                    <button type="button" class="action-btn secondary" onclick="resetForm()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Reset Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-graph-up"></i>
+                    Article Statistics
+                </h4>
+                <div class="tips-content">
+                    <div class="tip-item">
+                        <strong>Image Management:</strong>
+                        <p>Remove unwanted images by clicking the trash icon. Add new images using the file selector above.</p>
+                    </div>
+                    <div class="tip-item">
+                        <strong>Priority Setting:</strong>
+                        <p>High priority articles appear prominently on the homepage.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let selectedFiles = [];
+        const maxImages = 4;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if ($('.field-validation-error:not(:empty)').length > 0) {
+                $('.validation-summary').show();
+            }
+
+            const textarea = document.querySelector('.content-textarea');
+            if (textarea) {
+                textarea.addEventListener('input', function () {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 400) + 'px';
+                });
+
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 400) + 'px';
+            }
+
+            const form = document.querySelector('.add-news-form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (form && submitBtn) {
+                form.addEventListener('submit', function (e) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Updating...';
+                    submitBtn.disabled = true;
+
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 5000);
+                });
+            }
+
+            const titleInput = document.querySelector('input[name="NewsTitle"]');
+            if (titleInput) {
+                const maxLength = titleInput.getAttribute('maxlength');
+                const charCountElement = document.createElement('small');
+                charCountElement.className = 'char-count';
+                titleInput.parentNode.appendChild(charCountElement);
+
+                function updateCharCount() {
+                    const remaining = maxLength - titleInput.value.length;
+                    charCountElement.textContent = `${remaining} characters remaining`;
+                    charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';
+                }
+
+                titleInput.addEventListener('input', updateCharCount);
+                updateCharCount();
+            }
+
+            initializeImageUpload();
+        });
+
+        function initializeImageUpload() {
+            const imageInput = document.getElementById('imageInput');
+            const wrapper = document.getElementById('imageUploadWrapper');
+            const selectedFilesContainer = document.getElementById('selectedFiles');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const imageCount = document.getElementById('imageCount');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (!imageInput || !wrapper) return;
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                wrapper.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                wrapper.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                wrapper.addEventListener(eventName, unhighlight, false);
+            });
+
+            wrapper.addEventListener('drop', handleDrop, false);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                wrapper.classList.add('drag-over');
+            }
+
+            function unhighlight(e) {
+                wrapper.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(Array.from(files));
+            }
+
+            function handleFiles(files) {
+                const imageFiles = files.filter(file => file.type.startsWith('image/'));
+                const totalFiles = selectedFiles.length + imageFiles.length;
+
+                if (totalFiles > maxImages) {
+                    const allowedFiles = maxImages - selectedFiles.length;
+                    if (allowedFiles > 0) {
+                        alert(`You can only select up to ${maxImages} images. Only the first ${allowedFiles} image(s) will be added.`);
+                        imageFiles.splice(allowedFiles);
+                    } else {
+                        alert(`You have already selected the maximum of ${maxImages} images.`);
+                        return;
+                    }
+                }
+
+                selectedFiles = selectedFiles.concat(imageFiles);
+                updateFilesDisplay();
+                updateFileInput();
+            }
+
+            function updateFilesDisplay() {
+                if (selectedFiles.length > 0) {
+                    selectedFilesContainer.style.display = 'block';
+                    imageCount.style.display = 'block';
+                    selectedCount.textContent = selectedFiles.length;
+                    selectedFilesList.innerHTML = '';
+
+                    selectedFiles.forEach((file, index) => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'selected-file-item';
+                        fileItem.innerHTML = `
+                            <div class="file-info">
+                                <i class="bi bi-file-earmark-image file-icon"></i>
+                                <div class="file-details">
+                                    <span class="file-name">${file.name}</span>
+                                    <small class="file-size text-muted">${formatFileSize(file.size)}</small>
+                                </div>
+                            </div>
+                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="Remove file">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        `;
+                        selectedFilesList.appendChild(fileItem);
+                    });
+                } else {
+                    selectedFilesContainer.style.display = 'none';
+                    imageCount.style.display = 'none';
+                    selectedFilesList.innerHTML = '';
+                }
+            }
+
+            function updateFileInput() {
+                const dt = new DataTransfer();
+                selectedFiles.forEach(file => dt.items.add(file));
+                imageInput.files = dt.files;
+            }
+        }
+
+        function handleNewImages(input) {
+            const files = Array.from(input.files);
+            handleFiles(files);
+
+            function handleFiles(files) {
+                const imageFiles = files.filter(file => file.type.startsWith('image/'));
+
+                if (imageFiles.length > maxImages) {
+                    alert(`You can only select up to ${maxImages} images. Only the first ${maxImages} image(s) will be processed.`);
+                    imageFiles.splice(maxImages);
+                }
+
+                selectedFiles = imageFiles;
+                updateFilesDisplay();
+            }
+
+            function updateFilesDisplay() {
+                const selectedFilesContainer = document.getElementById('selectedFiles');
+                const selectedFilesList = document.getElementById('selectedFilesList');
+                const imageCount = document.getElementById('imageCount');
+                const selectedCount = document.getElementById('selectedCount');
+
+                if (selectedFiles.length > 0) {
+                    selectedFilesContainer.style.display = 'block';
+                    imageCount.style.display = 'block';
+                    selectedCount.textContent = selectedFiles.length;
+                    selectedFilesList.innerHTML = '';
+
+                    selectedFiles.forEach((file, index) => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'selected-file-item';
+                        fileItem.innerHTML = `
+                            <div class="file-info">
+                                <i class="bi bi-file-earmark-image file-icon"></i>
+                                <div class="file-details">
+                                    <span class="file-name">${file.name}</span>
+                                    <small class="file-size text-muted">${formatFileSize(file.size)}</small>
+                                </div>
+                            </div>
+                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="Remove file">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        `;
+                        selectedFilesList.appendChild(fileItem);
+                    });
+                } else {
+                    selectedFilesContainer.style.display = 'none';
+                    imageCount.style.display = 'none';
+                }
+            }
+        }
+
+        
+        function removeExistingImage(imageId) {
+            const imageItem = document.querySelector(`[data-image-id="${imageId}"]`);
+            if (!imageItem) return;
+
+            imageItem.style.transition = 'opacity 0.3s ease';
+            imageItem.style.opacity = '0.3';
+            imageItem.classList.add('removed-image');
+
+            const hiddenInputs = imageItem.querySelectorAll('input[type="hidden"]');
+            hiddenInputs.forEach(input => {
+                input.disabled = true;
+            });
+
+            const overlay = imageItem.querySelector('.image-overlay');
+            if (overlay) {
+                overlay.innerHTML = '<span class="badge bg-danger">Removed</span>';
+            }
+
+            const removeBtn = imageItem.querySelector('.remove-image-btn');
+            if (removeBtn) {
+                removeBtn.disabled = true;
+                removeBtn.innerHTML = '<i class="bi bi-check"></i>';
+            }
+
+            reindexExistingImages();
+        }
+
+        function reindexExistingImages() {
+            const items = document.querySelectorAll('#existingImagesGrid .existing-image-item');
+            let idx = 0;
+
+            items.forEach(item => {
+                const hiddenId = item.querySelector('input.imageid');
+                const hiddenUrl = item.querySelector('input.imageurl');
+                if (!hiddenId || !hiddenUrl) return;
+
+                if (hiddenId.disabled || hiddenUrl.disabled) return;
+
+                hiddenId.name = `ExistingImages[${idx}].ImageId`;
+                hiddenUrl.name = `ExistingImages[${idx}].ImageUrl`;
+                idx++;
+            });
+        }
+
+        window.removeFile = function (index) {
+            selectedFiles.splice(index, 1);
+
+            const selectedFilesContainer = document.getElementById('selectedFiles');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const imageCount = document.getElementById('imageCount');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (selectedFiles.length > 0) {
+                selectedCount.textContent = selectedFiles.length;
+                selectedFilesList.innerHTML = '';
+
+                selectedFiles.forEach((file, newIndex) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'selected-file-item';
+                    fileItem.innerHTML = `
+                        <div class="file-info">
+                            <i class="bi bi-file-earmark-image file-icon"></i>
+                            <div class="file-details">
+                                <span class="file-name">${file.name}</span>
+                                <small class="file-size text-muted">${formatFileSize(file.size)}</small>
+                            </div>
+                        </div>
+                        <button type="button" class="remove-file-btn" onclick="removeFile(${newIndex})" title="Remove file">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    `;
+                    selectedFilesList.appendChild(fileItem);
+                });
+            } else {
+                selectedFilesContainer.style.display = 'none';
+                imageCount.style.display = 'none';
+            }
+
+            const imageInput = document.getElementById('imageInput');
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            imageInput.files = dt.files;
+        };
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function resetForm() {
+            if (confirm('Are you sure you want to reset all changes? This will restore the original values.')) {
+                location.reload();
+            }
+        }
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,17 +1,14 @@
-﻿/* Layout polish for the Suggestion component (6 items, 2 rows x 3 columns) */
-.suggestion-header {
+﻿.suggestion-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: .25rem;
 }
 
-/* Row spacing inside this component */
 .row {
     margin-bottom: .25rem;
 }
 
-/* Make all cards equal height across the grid */
 .row > [class^="col-"],
 .row > [class*=" col-"] {
     display: flex;
@@ -21,12 +18,10 @@
     width: 100%;
 }
 
-/* Reach into the partial to ensure the anchor-card fills its column */
 ::deep .suggestion-card {
     height: 100%;
 }
 
-/* Optional: slightly stronger hover on cards in this component */
 @media (hover:hover) {
     ::deep .suggestion-card:hover {
         box-shadow: 0 .6rem 1.2rem rgba(0,0,0,.18);
@@ -34,7 +29,6 @@
     }
 }
 
-/* Compact tweak for small screens */
 @media (max-width: 576px) {
     .row { margin-bottom: .2rem; }
 }

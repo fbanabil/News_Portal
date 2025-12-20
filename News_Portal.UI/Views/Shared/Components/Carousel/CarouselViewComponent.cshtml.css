@@ -1,5 +1,4 @@
-﻿/* Modern News Card Styling for Carousel */
-.news-card-compact {
+﻿.news-card-compact {
     border: none;
     border-radius: 16px;
     overflow: hidden;
@@ -31,7 +30,6 @@
             color: #667eea;
         }
 
-    /* Image Container */
     .news-card-compact .ratio {
         flex: 0 0 auto;
         height: 180px;
@@ -59,7 +57,6 @@
         background: #f8fafc;
     }
 
-    /* Card Body */
     .news-card-compact .card-body {
         flex: 1;
         padding: 1.25rem;
@@ -69,7 +66,6 @@
         min-height: 160px;
     }
 
-    /* Card Title */
     .news-card-compact .card-title {
         font-size: 1rem;
         font-weight: 700;
@@ -85,7 +81,6 @@
         min-height: 2.8rem;
     }
 
-/* Card Meta Information */
 .card-meta {
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
@@ -112,7 +107,6 @@
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
 }
 
-/* Card Content */
 .news-card-compact .card-text {
     font-size: 0.85rem;
     line-height: 1.5;
@@ -125,7 +119,6 @@
     margin-bottom: 1rem;
 }
 
-/* Footer Information */
 .card-footer-info {
     margin-top: auto;
     padding-top: 0.75rem;
@@ -152,7 +145,6 @@
     transition: all 0.3s ease;
 }
 
-/* Loading State */
 .news-card-compact.loading {
     opacity: 0.7;
     pointer-events: none;
@@ -193,7 +185,6 @@
     }
 }
 
-/* News carousel container */
 .news-carousel-container {
     position: relative;
     background: #fff;
@@ -202,7 +193,6 @@
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
-/* Carousel counter */
 .carousel-counter {
     font-size: 0.875rem;
     font-weight: 500;
@@ -211,29 +201,24 @@
     border: 1px solid #dee2e6;
 }
 
-/* Carousel viewport */
 .carousel-viewport {
     margin: 0 -0.5rem;
     position: relative;
 }
 
-/* Carousel track */
 .carousel-track {
     transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
 }
 
-/* Individual slides */
 .carousel-slide {
     flex-shrink: 0;
 }
 
-/* Hide cloned slides from screen readers */
 .clone-slide {
     aria-hidden: true;
 }
 
-/* Carousel controls */
 .carousel-control {
     position: absolute;
     top: 50%;
@@ -284,7 +269,6 @@
     color: #007bff;
 }
 
-/* Progress bar styling */
 .carousel-progress {
     padding: 0 1rem;
 }
@@ -299,7 +283,6 @@
     background: linear-gradient(90deg, #007bff, #0056b3);
 }
 
-/* Responsive adjustments */
 @media (max-width: 992px) {
     .news-carousel-container {
         padding: 1rem;
@@ -348,13 +331,11 @@
     }
 }
 
-/* Focus states for accessibility */
 .carousel-control:focus {
     outline: 2px solid #007bff;
     outline-offset: 2px;
 }
 
-/* Smooth animations */
 @media (prefers-reduced-motion: reduce) {
     .carousel-track {
         transition: none;
@@ -365,13 +346,11 @@
     }
 }
 
-/* Touch feedback */
 .carousel-viewport {
     touch-action: pan-y pinch-zoom;
     -webkit-overflow-scrolling: touch;
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
     .carousel-control {
         border-color: #000;
@@ -387,13 +366,11 @@
     }
 }
 
-/* Loading state */
 .carousel-track.loading {
     opacity: 0.7;
     pointer-events: none;
 }
 
-/* Ensure smooth transitions */
 .carousel-track * {
     pointer-events: auto;
 }

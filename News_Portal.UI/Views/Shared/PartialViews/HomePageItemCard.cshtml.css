@@ -1,11 +1,9 @@
-﻿/* =========================================
-   HERO NEWS CARD (big left)
-========================================= */
+﻿
 
 .hero-news-card {
     display: flex;
     flex-direction: column;
-    height: 100%; /* fill big left div */
+    height: 100%; 
     background: #0f172a;
     border-radius: 1rem;
     border: none;
@@ -14,7 +12,6 @@
     color: #e5e7eb;
 }
 
-/* Image area: top, 16:9 ratio */
 .hero-image-wrapper {
     position: relative;
     width: 100%;
@@ -48,7 +45,6 @@
     background: rgba(148, 163, 234, 0.2);
 }
 
-/* Gradient overlay on bottom of image */
 .hero-image-overlay {
     position: absolute;
     left: 0;
@@ -63,7 +59,6 @@
     font-size: 0.8rem;
 }
 
-/* Category badge */
 .news-badge {
     padding: 0.2rem 0.7rem;
     border-radius: 999px;
@@ -75,7 +70,6 @@
     font-size: 0.7rem;
 }
 
-/* Date text in overlay */
 .hero-date {
     color: #e5e7eb;
     opacity: 0.95;
@@ -83,7 +77,6 @@
     font-size: 0.8rem;
 }
 
-/* Body of hero card */
 .hero-body {
     padding: 1.15rem 1.2rem 1.1rem;
     display: flex;
@@ -99,7 +92,6 @@
     line-height: 1.35;
 }
 
-/* Multi-line clamp for hero snippet */
 .hero-snippet {
     margin-bottom: 0.9rem;
     color: #cbd5f5;
@@ -111,7 +103,6 @@
     overflow: hidden;
 }
 
-/* Meta row at bottom */
 .hero-meta {
     margin-top: auto;
     display: flex;
@@ -134,21 +125,17 @@
     gap: 0.25rem;
 }
 
-/* Hover for hero */
 .hero-news-card:hover {
     box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45), 0 0 0 1px rgba(129, 140, 248, 0.7);
     transform: translateY(-2px);
     transition: box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1), transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* =========================================
-   COMPACT NEWS CARD (small ones)
-========================================= */
 
 .compact-news-card {
     display: flex;
     flex-direction: row;
-    height: 100%; /* fill small cell */
+    height: 100%; 
     border-radius: 0.9rem;
     border: 1px solid rgba(226, 232, 240, 0.9);
     overflow: hidden;
@@ -156,7 +143,6 @@
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
-/* Image left */
 .compact-image-wrapper {
     flex: 0 0 30%;
     max-width: 30%;
@@ -184,7 +170,6 @@
     color: #4b5563;
 }
 
-/* Text area */
 .compact-body {
     flex: 1 1 auto;
     padding: 0.7rem 0.85rem 0.75rem;
@@ -192,7 +177,6 @@
     flex-direction: column;
 }
 
-/* Top meta row */
 .compact-meta {
     display: flex;
     justify-content: space-between;
@@ -217,7 +201,6 @@
     font-weight: 600;
 }
 
-/* Title + snippet */
 .compact-title {
     font-size: 0.92rem;
     font-weight: 700;
@@ -241,16 +224,12 @@
     overflow: hidden;
 }
 
-/* Hover for compact */
 .compact-news-card:hover {
     box-shadow: 0 14px 32px rgba(148, 163, 184, 0.4), 0 0 0 1px rgba(129, 140, 248, 0.55);
     transform: translateY(-2px);
     transition: box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1), transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* =========================================
-   Responsiveness
-========================================= */
 
 @media (max-width: 768px) {
     .hero-title {
@@ -272,7 +251,6 @@
     }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
     .hero-news-card,
     .compact-news-card {

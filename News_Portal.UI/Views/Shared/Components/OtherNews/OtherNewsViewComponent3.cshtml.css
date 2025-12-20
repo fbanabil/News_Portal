@@ -1,15 +1,9 @@
-﻿/* =========================================
-       FUNDAMENTAL LAYOUT SEPARATION
-========================================= */
-
-/* Remove the old column-stack approach entirely */
+﻿
 .column-stack {
-    display: none; /* Disable old layout if it exists */
+    display: none; 
 }
 
-/* =========================================
-   HERO SECTION - STANDALONE LAYOUT
-========================================= */
+
 
 .hero-section {
     width: 100%;
@@ -40,9 +34,6 @@
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
 }
 
-/* =========================================
-   SECTION DIVIDER
-========================================= */
 
 .section-divider {
     width: 100%;
@@ -63,10 +54,6 @@
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
 }
-
-/* =========================================
-   COMPACT SECTION - GRID LAYOUT
-========================================= */
 
 .compact-section {
     width: 100%;
@@ -152,7 +139,6 @@
     z-index: 10;
 }
 
-/* Ensure nested cards adapt to new layout */
 .compact-item .news-card-compact {
     background: transparent;
     border: none;
@@ -161,9 +147,6 @@
     min-height: 80px;
 }
 
-/* =========================================
-   RESPONSIVE DESIGN
-========================================= */
 
 @media (max-width: 1024px) {
     .hero-section {
@@ -283,27 +266,19 @@
     }
 }
 
-/* =========================================
-   ENHANCED VISUAL SEPARATION
-========================================= */
 
 .hero-section {
-    /* Additional visual separation */
     border: 2px solid #e0e7ff;
     background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     box-shadow: 0 12px 35px rgba(59, 130, 246, 0.1);
 }
 
 .compact-section {
-    /* Different visual theme */
     border: 2px solid #d1fae5;
     background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
     box-shadow: 0 8px 25px rgba(16, 185, 129, 0.08);
 }
 
-/* =========================================
-   ACCESSIBILITY
-========================================= */
 
 .hero-section:focus-within {
     outline: 3px solid #3b82f6;
@@ -315,7 +290,6 @@
     outline-offset: 1px;
 }
 
-/* Screen reader only content */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -328,9 +302,6 @@
     border: 0;
 }
 
-/* =========================================
-   PRINT STYLES
-========================================= */
 
 @media print {
     .hero-section {
@@ -372,9 +343,6 @@
     }
 }
 
-/* =========================================
-   DARK MODE SUPPORT
-========================================= */
 
 @media (prefers-color-scheme: dark) {
     .hero-section {

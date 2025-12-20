@@ -1,20 +1,18 @@
 ﻿.two-col-featured {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* left bigger */
-    grid-template-rows: repeat(3, 1fr); /* 3 equal rows */
+    grid-template-columns: 2fr 1fr; 
+    grid-template-rows: repeat(3, 1fr); 
     gap: 0.75rem;
     width: 100%;
     min-height: 360px;
 }
 
-/* Big left div spans full height */
 .tc-main {
     grid-column: 1 / 2;
     grid-row: 1 / 4;
     display: flex;
 }
 
-/* Right column slots */
 .tc-side {
     grid-column: 2 / 3;
     display: flex;
@@ -32,7 +30,6 @@
     grid-row: 3 / 4;
 }
 
-/* Make the partials expand to fill their cell */
 .tc-main > *,
 .tc-side > * {
     width: 100%;
@@ -41,7 +38,6 @@
     flex-direction: column;
 }
 
-/* Simple placeholder styling for missing items */
 .placeholder-content {
     border-radius: 0.9rem;
     border: 1px dashed #cbd5e1;
@@ -56,7 +52,6 @@
     text-align: center;
 }
 
-/* Mobile: stack vertically */
 @media (max-width: 768px) {
     .two-col-featured {
         grid-template-columns: 1fr;

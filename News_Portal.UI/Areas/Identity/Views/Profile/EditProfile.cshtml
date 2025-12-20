@@ -23,13 +23,11 @@
 
 <div class="container py-4">
     <div class="profile-form-container">
-        <!-- Header -->
         <div class="text-center mb-4">
             <h1 class="h3 mb-2">Edit Profile</h1>
             <p class="text-muted">Update your personal information and preferences</p>
         </div>
 
-        <!-- Edit Profile Form -->
         <div class="card">
             <div class="card-header py-3">
                 <h5 class="mb-0">
@@ -41,12 +39,10 @@
                 <form asp-area="Identity" asp-controller="Profile" asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     
-                    <!-- Validation Summary -->
                     <div asp-validation-summary="All" class="validation-summary-errors" role="alert" style="display: none;">
                         <strong>Please correct the following errors:</strong>
                     </div>
 
-                    <!-- Profile Image Section -->
                     <div class="row mb-4">
                         <div class="col-12">
                             <div class="text-center mb-3">
@@ -66,7 +62,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- File Input for New Image -->
                                 <input asp-for="ProfileImage" 
                                        type="file" 
                                        id="profileImageFile" 
@@ -74,14 +69,11 @@
                                        accept="image/*" 
                                        onchange="previewImage(this)" />
                                 
-                                <!-- Hidden field to preserve existing image URL -->
                                 <input asp-for="ExistingProfileImageUrl" type="hidden" />
                                 
-                                <!-- Validation messages -->
                                 <span asp-validation-for="ProfileImage" class="text-danger"></span>
                                 <span asp-validation-for="ExistingProfileImageUrl" class="text-danger"></span>
                                 
-                                <!-- Image Status Display -->
                                 <div id="imageStatus" class="image-upload-status status-current">
                                     <i class="bi bi-info-circle me-1"></i>
                                     <span id="imageStatusText">Using current profile picture</span>
@@ -97,9 +89,7 @@
                         </div>
                     </div>
 
-                    <!-- Form Fields -->
                     <div class="row g-4">
-                        <!-- Full Name -->
                         <div class="col-md-6">
                             <div class="form-floating">
                                 <input asp-for="PersonName" 
@@ -115,7 +105,6 @@
                             <span asp-validation-for="PersonName" class="field-validation-error"></span>
                         </div>
 
-                        <!-- Phone Number -->
                         <div class="col-md-6">
                             <div class="form-floating">
                                 <input asp-for="PhoneNumber" 
@@ -132,7 +121,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional Information Section -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <hr class="my-4">
@@ -149,7 +137,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <hr class="my-4">
@@ -174,7 +161,6 @@
             </div>
         </div>
 
-        <!-- Validation Guidelines Card -->
         <div class="card mt-4">
             <div class="card-body">
                 <h6 class="card-title">
@@ -207,17 +193,14 @@
     
     <script>
         $(document).ready(function() {
-            // Show validation summary if there are errors
             if ($('.field-validation-error:contains("field is required"), .field-validation-error:not(:empty)').length > 0) {
                 $('.validation-summary-errors').show();
             }
             
-            // Custom validation for phone number
             $.validator.addMethod("phone", function(value, element) {
                 return this.optional(element) || /^[\+]?[\s\-\(\)]*([0-9][\s\-\(\)]*){10,}$/i.test(value);
             }, "Please enter a valid phone number");
 
-            // Real-time validation feedback
             $('#personName').on('blur input', function() {
                 validateField($(this), function(value) {
                     if (!value || value.trim() === '') {
@@ -243,11 +226,9 @@
                 });
             });
 
-            // File validation
             $('#profileImageFile').on('change', function() {
                 const file = this.files[0];
                 if (file) {
-                    // Validate file size (5MB limit)
                     if (file.size > 5 * 1024 * 1024) {
                         alert('File size must be less than 5MB');
                         $(this).val('');
@@ -255,7 +236,6 @@
                         return;
                     }
                     
-                    // Validate file type
                     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
                     if (!allowedTypes.includes(file.type)) {
                         alert('Please select a valid image file (JPG, PNG, GIF)');
@@ -264,14 +244,12 @@
                         return;
                     }
                     
-                    // Update status to show new image selected
                     updateImageStatus('new', `New image selected: ${file.name}`);
                 } else {
                     resetImageStatus();
                 }
             });
 
-            // Form submission handling
             $('form').on('submit', function(e) {
                 const submitBtn = $('#submitBtn');
                 const isValid = $(this).valid();
@@ -284,7 +262,6 @@
             });
         });
 
-        // Helper function for field validation
         function validateField($field, validationFunc) {
             const value = $field.val();
             const errorMessage = validationFunc(value);
@@ -299,7 +276,6 @@
             }
         }
 
-        // Image preview functionality
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -312,7 +288,6 @@
             }
         }
 
-        // Update image status display
         function updateImageStatus(type, message) {
             const $status = $('#imageStatus');
             const $statusText = $('#imageStatusText');
@@ -328,27 +303,21 @@
             }
         }
 
-        // Reset image status to current
         function resetImageStatus() {
             updateImageStatus('current', 'Using current profile picture');
         }
 
-        // Reset form functionality
         function resetForm() {
             if (confirm('Are you sure you want to reset all changes?')) {
-                // Reset form
                 $('form')[0].reset();
                 
-                // Clear validation errors
                 $('.input-validation-error').removeClass('input-validation-error');
                 $('.field-validation-error').text('').hide();
                 $('.validation-summary-errors').hide();
                 
-                // Reset image preview to original
                 const originalImageUrl = '@(Model.ExistingProfileImageUrl ?? ViewBag.DefaultImageUrl)';
                 $('#profileImagePreview').attr('src', originalImageUrl);
                 
-                // Clear file input and reset status
                 $('#profileImageFile').val('');
                 resetImageStatus();
             }

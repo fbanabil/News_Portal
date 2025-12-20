@@ -1,6 +1,5 @@
 ﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
 
-<!-- HERO SECTION - Completely separate container -->
 <section class="hero-section">
     <div class="hero-container">
         @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", @Model[0])
@@ -26,6 +25,3 @@
 
 
 
-<style>
-
-</style>

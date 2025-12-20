@@ -26,13 +26,32 @@ namespace News_Portal.Core.DTO.News
         [Required]
         public NewsType NewsType { get; set; }
 
-        [Required]
-        public NewsStatus NewsStatus { get; set; }
+        //[Required]
+        //public NewsStatus NewsStatus { get; set; }
 
         [Required]
         public NewsPriority NewsPriority { get; set; }
+        
+        public string? VideoUrl { get; set; }
 
         public List<IFormFile>? Images { get; set; }
 
+        public Domain.Entities.News ToNews()
+        {
+            Domain.Entities.News dto = new Domain.Entities.News();
+            dto.NewsTitle = NewsTitle;
+            dto.NewsContent = NewsContent;
+            dto.NewsPriority = NewsPriority;
+            dto.NewsType = NewsType;
+            dto.VideoUrl = VideoUrl;
+            dto.NewsId = Guid.NewGuid();
+            //dto.NewsStatus = NewsStatus;
+            dto.PublishedDate = DateTime.UtcNow;
+            dto.LastUpdate = DateTime.UtcNow;
+            dto.TotalViews = 0;
+            return dto;
+        }
+
     }
 }
+

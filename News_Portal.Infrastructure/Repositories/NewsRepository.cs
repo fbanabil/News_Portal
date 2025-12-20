@@ -28,21 +28,44 @@ namespace News_Portal.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+
+
+
+
+        public async Task DeleteNewsAsync(Guid newsId)
+        {
+            await _dbContext.News.Where(n => n.NewsId == newsId).ExecuteDeleteAsync();
+        }
+
+
+
+
+
+
         public async Task<List<News>> GetAllAuthorsNews(Guid authorId)
         {
             return await _dbContext.News.Include(i=>i.Images).Include(i=>i.Comments).Include(i=>i.Author).Where(n => n.AuthorId == authorId).ToListAsync();
         }
+
+
+
 
         public async Task<News> GetNewsById(Guid newsId)
         {
             return await _dbContext.News.Include(i=>i.Author).Include(i=>i.Images).Include(i=>i.Comments).ThenInclude(i=>i.User).FirstOrDefaultAsync(n=>n.NewsId == newsId);
         }
 
+
+
+
         public async Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize)
         {
             return await _dbContext.News.Include(i=>i.Images).Include(a=>a.Author).Where(n => n.NewsType == newsType).
                 OrderByDescending(p=>p.PublishedDate).Skip((pageNo-1) * pageSize).Take(pageSize).ToListAsync();
         }
+
+
+
 
         public async Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync()
         {
@@ -52,6 +75,9 @@ namespace News_Portal.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+
+
+
         public async Task<List<HomePageNewsToShowDTO>> GetOtherNewsByTypeAsync(NewsType newsType)
         {
             return await _dbContext.News.Include(i => i.Images).Where(n => n.NewsType == newsType)
@@ -60,6 +86,9 @@ namespace News_Portal.Infrastructure.Repositories
                 .Select(n => n.ToHomePageNewsToShowDTO())
                 .ToListAsync();
         }
+
+
+
 
         public Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt)
         {
@@ -91,6 +120,9 @@ namespace News_Portal.Infrastructure.Repositories
             }
         }
 
+
+
+
         public async Task<List<News>> GetTopOfWeekNewsAsync()
         {
             return await _dbContext.News.Include(i => i.Images)
@@ -100,24 +132,35 @@ namespace News_Portal.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+
+
+
         public async Task<int> GetTotalNewsCountByTypeAsync(NewsType newsType)
         {
             return await _dbContext.News.AsNoTracking().CountAsync(n => n.NewsType == newsType);
         }
+
+
+
 
         public async Task IncrementNewsViewsCount(Guid newsId)
         {
             await _dbContext.Database.ExecuteSqlInterpolatedAsync($"UPDATE News_Portal.News SET TotalViews = TotalViews + 1 WHERE NewsId = {newsId}");
         }
 
+
+
+
         public async Task<bool> NewsExistsBuId(Guid newsId)
         {
             return await _dbContext.News.AsNoTracking().AnyAsync(n => n.NewsId == newsId);
         }
 
-        public async Task UpdateNews(News newsx)
+
+
+        public async Task UpdateNews(News news)
         {
-            _dbContext.News.Update(newsx);
+            _dbContext.News.Update(news);
             await _dbContext.SaveChangesAsync();
         }
     }

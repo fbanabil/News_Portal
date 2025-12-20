@@ -17,6 +17,6 @@ namespace News_Portal.Core.Enums
 
     public enum NewsType
     {
-        General, Sports, Politics, Technology, Entertainment, Health, Business, Science, World
+        Sports, Politics, Technology, Entertainment, Health, Business, Science, World
     }
 }

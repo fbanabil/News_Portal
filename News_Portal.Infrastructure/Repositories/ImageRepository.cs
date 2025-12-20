@@ -1,4 +1,5 @@
-﻿using News_Portal.Core.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.RepositoryContracts;
 using News_Portal.Infrastructure.DbContext;
 using System;
@@ -16,11 +17,35 @@ namespace News_Portal.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
+        
+        
+        
+        
         public async Task AddImage(Images image)
         {
             await _dbContext.Images.AddAsync(image);
             await _dbContext.SaveChangesAsync();
         }
+
+
+
+
+        public async Task DeleteImageFromImageTable(Guid imageId)
+        {
+            await _dbContext.Images.Where(Images => Images.ImageId == imageId).ExecuteDeleteAsync();
+        }
+
+
+
+
+        public async Task<Images> GetImageById(Guid imageId)
+        {
+            Images? image = await _dbContext.Images.FindAsync(imageId);
+            return image!;
+        }
+
+
+
 
         public async Task<bool> ImageExistsById(Guid imageId)
         {

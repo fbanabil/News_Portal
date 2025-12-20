@@ -1,6 +1,4 @@
-﻿/* =========================================
-   MODERN NEWS CARD - REDESIGNED
-========================================= */
+﻿
 
 .modern-news-card {
     display: flex;
@@ -22,9 +20,6 @@
     border-color: rgba(99, 102, 241, 0.2);
 }
 
-/* =========================================
-   CARD MEDIA SECTION
-========================================= */
 
 .card-media {
     position: relative;
@@ -74,7 +69,6 @@
     letter-spacing: 0.05em;
 }
 
-/* Image overlay with category badge */
 .image-overlay {
     position: absolute;
     top: 12px;
@@ -100,7 +94,6 @@
     gap: 4px;
 }
 
-/* Category-specific badge colors */
 .badge-politics { background: rgba(239, 68, 68, 0.9); }
 .badge-sports { background: rgba(34, 197, 94, 0.9); }
 .badge-technology { background: rgba(59, 130, 246, 0.9); }
@@ -129,9 +122,6 @@
     50% { opacity: 0.8; }
 }
 
-/* =========================================
-   CARD CONTENT SECTION
-========================================= */
 
 .card-content {
     padding: 16px 20px 20px;
@@ -184,13 +174,10 @@
     color: #3b82f6;
 }
 
-/* =========================================
-   TITLE STYLING - SINGLE LINE ONLY
-========================================= */
 
 .card-title {
     margin: 0;
-    line-height: 1.2; /* REDUCED for single line */
+    line-height: 1.2;/
     flex-grow: 1;
 }
 
@@ -199,16 +186,12 @@
     text-decoration: none;
     font-size: 1rem;
     font-weight: 700;
-    /* SINGLE LINE ENFORCEMENT */
-    white-space: nowrap; /* Prevent wrapping */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Show ellipsis for truncated text */
-    display: block; /* CHANGED from -webkit-box to block */
-    width: 100%; /* Ensure full width utilization */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    display: block; 
+    width: 100%; 
     transition: color 0.2s ease;
-    /* REMOVE webkit line clamp properties */
-    /* -webkit-line-clamp: 2; */
-    /* -webkit-box-orient: vertical; */
 }
 
 .title-link:hover {
@@ -226,9 +209,7 @@
     overflow: hidden;
 }
 
-/* =========================================
-   CARD FOOTER
-========================================= */
+
 
 .card-footer {
     display: flex;
@@ -277,9 +258,6 @@
     transform: scale(1.1);
 }
 
-/* =========================================
-   RESPONSIVE DESIGN - SINGLE LINE TITLES
-========================================= */
 
 @media (max-width: 1024px) {
     .modern-news-card {
@@ -297,7 +275,6 @@
     
     .title-link {
         font-size: 0.9375rem;
-        /* MAINTAIN single line */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -333,7 +310,6 @@
     
     .title-link {
         font-size: 0.875rem;
-        /* MAINTAIN single line on mobile */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -377,14 +353,13 @@
     
     .title-link {
         font-size: 0.8125rem;
-        /* MAINTAIN single line on small screens */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     
     .card-excerpt {
-        display: none; /* Hide excerpt on very small screens */
+        display: none; 
     }
     
     .meta-info {
@@ -410,9 +385,7 @@
     }
 }
 
-/* =========================================
-   ACCESSIBILITY
-========================================= */
+
 
 .modern-news-card:focus-within {
     outline: 2px solid #3b82f6;
@@ -429,7 +402,6 @@
     outline-offset: 2px;
 }
 
-/* Screen reader only */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -442,9 +414,6 @@
     border: 0;
 }
 
-/* =========================================
-   LOADING STATE
-========================================= */
 
 .modern-news-card.loading {
     pointer-events: none;
@@ -465,9 +434,6 @@
     100% { background-position: -200% 0; }
 }
 
-/* =========================================
-   DARK MODE SUPPORT
-========================================= */
 
 @media (prefers-color-scheme: dark) {
     .modern-news-card {
@@ -523,9 +489,6 @@
     }
 }
 
-/* =========================================
-   PRINT STYLES
-========================================= */
 
 @media print {
     .modern-news-card {
@@ -557,10 +520,6 @@
         display: none;
     }
 }
-
-/* =========================================
-   REDUCED MOTION
-========================================= */
 
 @media (prefers-reduced-motion: reduce) {
     .modern-news-card {

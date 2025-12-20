@@ -1,4 +1,5 @@
-﻿using News_Portal.Core.Domain.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using System;
@@ -12,14 +13,22 @@ namespace News_Portal.Core.ServiceContracts
     public interface INewsService
     {
         Task AddNews(News news);
+        Task AddNewsByAuthor(NewsToAddDTO newsToAddDTO, Guid authoId);
+        Task DeleteNewsAsync(Guid newsId, Guid id);
         Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, AuthorNewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10);
         Task<int> GetAuthorsNewsCountAsync(Guid id, AuthorNewsFilterParametersDTO parametersDTO);
+        Task<AuthorsNewsDetailesToShowDTO> GetAuthorsNewsDetailsAsync(Guid newsId);
+        Task<List<HomePageNewsToShowDTO>> GetAuthorsTopNewsAsync(int size, Guid id);
+
+        //Task<BestOfAuthorsNewsDTO> GetBestOfAuthorsNewsAsync(int size);
         Task<DetailedNewsToShowDTO> GetDetailedNewsToShowDTOsByNewsId(Guid newsId);
         Task<List<HomePageNewsToShowDTO>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize);
+        Task<NewsToEditDTO> GetNewsForEditAsync(Guid newsId);
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();
         Task<List<HomePageNewsToShowDTO>> GetOtherNewsByTypeAsync(NewsType newsType);
         Task<List<HomePageNewsToShowDTO>> GetSuggestionNewsByTypeAsync(NewsType newsType);
         Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt);
         Task<int> GetTotalNewsCountByTypeAsync(NewsType newsType);
+        Task UpdateNewsAsync(NewsToEditDTO newsToEditDTO, Guid id);
     }
 }

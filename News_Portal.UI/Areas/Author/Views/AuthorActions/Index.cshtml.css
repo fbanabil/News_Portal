@@ -1,8 +1,4 @@
-﻿/* ============================================
-   Pagination Styles
-   ============================================ */
-
-.pagination-wrapper {
+﻿.pagination-wrapper {
     margin-top: 30px;
     padding: 25px 30px;
     background: #f8f9fa;
@@ -127,9 +123,6 @@
         box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
     }
 
-/* ============================================
-   Responsive Pagination Styles
-   ============================================ */
 
 @media (max-width: 768px) {
     .pagination-wrapper {
@@ -175,7 +168,6 @@
         min-width: 36px;
     }
 
-    /* Hide some page numbers on very small screens */
     .page-item:not(.disabled):not(.active):not(:first-child):not(:last-child):not(:nth-child(2)):not(:nth-last-child(2)) {
         display: none;
     }
@@ -194,9 +186,6 @@
     }
 }
 
-/* ============================================
-   Filter Styles
-   ============================================ */
 
 .filters-container {
     background: white;
@@ -245,12 +234,12 @@
 
 .filter-fields {
     padding: 30px;
-    display: none; /* Initially hidden */
-    transition: all 0.3s ease; /* Smooth transition */
+    display: none; 
+    transition: all 0.3s ease;
 }
 
     .filter-fields.show {
-        display: block; /* Show when toggled */
+        display: block; 
     }
 
 .filter-row {
@@ -353,9 +342,6 @@
         transform: translateY(-1px);
     }
 
-/* ============================================
-   Articles Section Styles
-   ============================================ */
 
 .articles-section {
     background: white;
@@ -395,9 +381,6 @@
     padding: 30px;
 }
 
-/* ============================================
-   Responsive Filter Styles
-   ============================================ */
 
 @media (max-width: 992px) {
     .filter-row {
@@ -499,12 +482,6 @@
     }
 }
 
-/* Existing styles continue below... */
-/* ============================================
-   Author News Page Styles
-   ============================================ */
-
-/* Main Layout Container */
 .author-news-main {
     max-width: 1400px;
     margin: 0 auto;
@@ -520,9 +497,6 @@
     align-items: start;
 }
 
-/* ============================================
-   Main Content Section
-   ============================================ */
 .main-content {
     background: white;
     border-radius: 12px;
@@ -559,9 +533,6 @@
     padding: 20px;
 }
 
-/* ============================================
-   Sidebar Styles
-   ============================================ */
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -605,9 +576,6 @@
     padding: 20px;
 }
 
-/* ============================================
-   Quick Stats Section
-   ============================================ */
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -639,9 +607,6 @@
     letter-spacing: 0.5px;
 }
 
-/* ============================================
-   Quick Actions Section
-   ============================================ */
 .quick-actions {
     padding: 20px;
     display: flex;
@@ -679,11 +644,6 @@
         color: white;
     }
 
-/* ============================================
-   Responsive Design
-   ============================================ */
-
-/* Large tablets and small desktops */
 @media (max-width: 1200px) {
     .author-news-container {
         grid-template-columns: 1fr 300px;
@@ -696,7 +656,6 @@
     }
 }
 
-/* Tablets */
 @media (max-width: 992px) {
     .author-news-main {
         padding: 15px;
@@ -725,7 +684,6 @@
     }
 }
 
-/* Mobile phones */
 @media (max-width: 768px) {
     .author-news-main {
         padding: 10px;
@@ -775,7 +733,6 @@
     }
 }
 
-/* Small mobile phones */
 @media (max-width: 480px) {
     .author-news-main {
         padding: 8px;
@@ -802,9 +759,6 @@
     }
 }
 
-/* ============================================
-   Alert Styles (Enhanced)
-   ============================================ */
 .alert {
     position: relative;
     padding: 15px 40px 15px 15px;
@@ -846,9 +800,6 @@
         opacity: 1;
     }
 
-/* ============================================
-   Newspaper Header (Inherited Styles)
-   ============================================ */
 .newspaper-header {
     text-align: center;
     margin-bottom: 30px;
@@ -877,7 +828,6 @@
     margin: 10px auto 0;
 }
 
-/* Mobile adjustments for header */
 @media (max-width: 768px) {
     .newspaper-header {
         padding: 15px 0;

@@ -5,7 +5,6 @@
 
     Model.parametersDTO ??= new AuthorNewsFilterParametersDTO();
 
-    // Defaults
     if (Model.pageNo <= 0) Model.pageNo = 1;
     if (Model.pageSize <= 0) Model.pageSize = 5;
     Model.sortBy ??= "PublishedDate";
@@ -14,14 +13,12 @@
     
 }
 
-<!-- Newspaper Header -->
 <header class="newspaper-header">
     <h1 class="newspaper-title">Daily News Portal</h1>
     <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
     <div class="newspaper-line"></div>
 </header>
 
-<!-- Alerts -->
 @if (TempData["Message"] != null)
 {
     <div class="alert success-alert">
@@ -37,11 +34,9 @@
     </div>
 }
 
-<!-- Main Layout Container -->
 <div class="author-news-main">
     <div class="author-news-container">
 
-        <!-- Main Content Section -->
         <main class="main-content">
             <div class="section-header">
                 <h2 class="section-title">
@@ -53,7 +48,6 @@
 
             <div class="author-news-content">
 
-                <!-- Filter Section -->
                 <div class="filters-container">
                     <form method="get"
                           asp-area="Author"
@@ -62,7 +56,6 @@
                           class="filters-form"
                           id="filtersForm">
 
-                        <!-- Filter Header -->
                         <div class="filter-header">
                             <h4 class="filter-title">
                                 <i class="bi bi-funnel"></i>
@@ -73,10 +66,8 @@
                             </button>
                         </div>
 
-                        <!-- Filter Fields -->
                         <div class="filter-fields" id="filterFields">
 
-                            <!-- Row 1: Title and Content Search -->
                             <div class="filter-row">
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsTitle" class="filter-label">
@@ -101,7 +92,6 @@
                                 </div>
                             </div>
 
-                            <!-- Row 2: News Type and Status -->
                             <div class="filter-row">
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsType" class="filter-label">
@@ -136,7 +126,6 @@
                                 </div>
                             </div>
 
-                            <!-- Row 3: Priority and Published Date -->
                             <div class="filter-row">
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsPriority" class="filter-label">
@@ -166,7 +155,6 @@
                                 </div>
                             </div>
 
-                            <!-- Row 4: Sorting Options -->
                             <div class="filter-row">
                                 <div class="filter-group">
                                     <label asp-for="sortBy" class="filter-label">
@@ -192,14 +180,13 @@
                                         @foreach (SortTypes sortType in Enum.GetValues<SortTypes>())
                                         {
                                             <option value="@sortType" selected="@(Model.sortType == sortType)">
-                                                @sortType
+                                                @sortType.GetDisplayName()
                                             </option>
                                         }
                                     </select>
                                 </div>
                             </div>
 
-                            <!-- Row 5: Page Size and Actions -->
                             <div class="filter-row">
                                 <div class="filter-group">
                                     <label asp-for="pageSize" class="filter-label">
@@ -215,7 +202,6 @@
                                 </div>
 
                                 <div class="filter-group filter-actions">
-                                    <!-- pageNo must exist to submit correct page later -->
                                     <input type="hidden" asp-for="pageNo" value="@Model.pageNo" id="pageNoHidden" />
 
                                     <button type="submit" class="btn-filter-apply">
@@ -237,7 +223,6 @@
                     </form>
                 </div>
 
-                <!-- Articles List Section -->
                 <div class="articles-section">
                     <div class="articles-header">
                         <h3>📰 Your Articles</h3>
@@ -250,7 +235,6 @@
                         </div>
                     </div>
 
-                    <!-- Articles List Component -->
                     <div class="articles-list" id="authorNewsHost">
                         @await Component.InvokeAsync("AuthorNews", new {
                         authorNewsFilterParametersDTO = Model.parametersDTO,
@@ -261,13 +245,11 @@
                                                 })
                     </div>
 
-                    <!-- Enhanced Pagination Controls -->
                     <div class="pagination-wrapper" id="paginationSection">
                         @if (pageCount > 1)
                         {
                             <nav class="pagination-nav" aria-label="Article pagination">
                                 <ul class="pagination-enhanced">
-                                    <!-- First Page Button -->
                                     @if (Model.pageNo > 2)
                                     {
                                         <li class="page-item">
@@ -278,7 +260,6 @@
                                         </li>
                                     }
 
-                                    <!-- Previous Button -->
                                     @if (Model.pageNo > 1)
                                     {
                                         <li class="page-item">
@@ -289,7 +270,6 @@
                                         </li>
                                     }
 
-                                    <!-- Page Number Buttons -->
                                     @{
                                         int startPage = Math.Max(1, Model.pageNo - 2);
                                         int endPage = Math.Min(pageCount, Model.pageNo + 2);
@@ -335,7 +315,6 @@
                                         </li>
                                     }
 
-                                    <!-- Next Button -->
                                     @if (Model.pageNo < pageCount)
                                     {
                                         <li class="page-item">
@@ -346,7 +325,6 @@
                                         </li>
                                     }
 
-                                    <!-- Last Page Button -->
                                     @if (Model.pageNo < pageCount - 1)
                                     {
                                         <li class="page-item">
@@ -359,24 +337,7 @@
                                 </ul>
                             </nav>
 
-                            <!-- Pagination Info -->
-                            <div class="pagination-info">
-                                <div class="pagination-summary">
-                                    Showing <strong>@((Model.pageNo - 1) * Model.pageSize + 1)</strong> to 
-                                    <strong>@Math.Min(Model.pageNo * Model.pageSize, ViewBag.TotalItems ?? Model.pageSize * pageCount)</strong> 
-                                    of <strong>@(ViewBag.TotalItems ?? Model.pageSize * pageCount)</strong> articles
-                                </div>
-                                
-                                <div class="page-size-controls">
-                                    <label for="pageSizeSelect">Items per page:</label>
-                                    <select asp-for="pageSize" class="page-size-select" id="pageSizeSelect" onchange="changePageSize()">
-                                        <option value="5" selected="@(Model.pageSize == 5)">5</option>
-                                        <option value="10" selected="@(Model.pageSize == 10)">10</option>
-                                        <option value="20" selected="@(Model.pageSize == 20)">20</option>
-                                        <option value="50" selected="@(Model.pageSize == 50)">50</option>
-                                    </select>
-                                </div>
-                            </div>
+                           
                         }
                     </div>
 
@@ -385,10 +346,8 @@
             </div>
         </main>
 
-        <!-- Right Sidebar -->
         <aside class="sidebar">
 
-            <!-- Quick Stats Section -->
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-graph-up"></i>
@@ -414,21 +373,22 @@
                 </div>
             </div>
 
-            <!-- Quick Actions Section -->
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-lightning"></i>
                     Quick Actions
                 </h4>
                 <div class="quick-actions">
-                    <a href="#" class="action-btn primary">
+                    <a href="@Url.Action("AddNews", "AuthorActions", new { area = "Author" })"
+                        class="action-btn primary">
                         <i class="bi bi-plus-circle"></i>
                         Create New Article
                     </a>
-                    <a href="#" class="action-btn secondary">
+                    <a href="@Url.Action("Index","Home")" class="action-btn secondary">
                         <i class="bi bi-eye"></i>
                         View All Articles
                     </a>
+                    @*
                     <a href="#" class="action-btn primary">
                         <i class="bi bi-bar-chart"></i>
                         Analytics
@@ -437,20 +397,19 @@
                         <i class="bi bi-gear"></i>
                         Settings
                     </a>
+                    *@
                 </div>
             </div>
 
-            <!-- Best Performing News Section -->
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-trophy"></i>
                     Your Top Articles
                 </h4>
-                <p class="sidebar-subtitle">Most viewed articles this month</p>
+               
                 <div class="best-news-content">
                     <div class="content-placeholder">
-                        <p>Your best performing articles will be displayed here.</p>
-                        <small class="text-muted">Connect this to your actual data source</small>
+                        @await Component.InvokeAsync("AuthorsBest", new { size = 10 })
                     </div>
                 </div>
             </div>
@@ -462,16 +421,12 @@
 
 @section Scripts {
     <script>
-        // Enhanced pagination with auto-scroll functionality
         async function goToPageWithScroll(pageNo) {
-            // Show loading indicator
             showLoadingIndicator();
             
             try {
-                // First, scroll to 10% of the page smoothly
                 await scrollToPercentage(10);
                 
-                // Then load the new page content
                 await goToPage(pageNo);
                 
             } catch (error) {
@@ -482,7 +437,6 @@
             }
         }
 
-        // Smooth scroll to percentage of page
         function scrollToPercentage(percentage) {
             return new Promise((resolve) => {
                 const documentHeight = document.documentElement.scrollHeight;
@@ -494,22 +448,18 @@
                     behavior: 'smooth'
                 });
                 
-                // Wait for scroll animation to complete
                 setTimeout(resolve, 500);
             });
         }
 
-        // Enhanced goToPage function
         async function goToPage(pageNo) {
             const host = document.getElementById('authorNewsHost');
             if (!host) return;
 
-            // Update hidden pageNo input
             const pageNoHidden = document.getElementById('pageNoHidden');
             if (pageNoHidden) pageNoHidden.value = pageNo;
 
-            // Get current URL parameters
-            const params = new URLSearchParams(window.location.search);
+             const params = new URLSearchParams(window.location.search);
             params.set('pageNo', pageNo);
 
             const url = '@Url.Action("AuthorNewsList", "AuthorActions", new { area = "Author" })' + '?' + params.toString();
@@ -522,20 +472,15 @@
                 throw new Error('Failed to fetch page data');
             }
 
-            // Update content
             host.innerHTML = await response.text();
 
-            // Update URL to reflect current page
             const newUrl = window.location.pathname + '?' + params.toString();
             window.history.replaceState({}, '', newUrl);
 
-            // Update pagination controls
             updatePaginationControls(pageNo, @pageCount);
         }
 
-        // Enhanced pagination controls update
         function updatePaginationControls(currentPage, totalPages) {
-            // Update page info
             const pageInfo = document.querySelector('.pagination-summary');
             if (pageInfo) {
                 const pageSize = @Model.pageSize;
@@ -546,13 +491,11 @@
                 pageInfo.innerHTML = `Showing <strong>${startItem}</strong> to <strong>${endItem}</strong> of <strong>${totalItems}</strong> articles`;
             }
 
-            // Update pagination buttons
             const paginationNav = document.querySelector('.pagination-enhanced');
             if (!paginationNav) return;
 
             let html = '';
 
-            // First Page Button
             if (currentPage > 2) {
                 html += `<li class="page-item">
                             <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
@@ -561,7 +504,6 @@
                          </li>`;
             }
 
-            // Previous Button
             if (currentPage > 1) {
                 html += `<li class="page-item">
                             <button onclick="goToPageWithScroll(${currentPage - 1})" class="page-link" title="Previous Page">
@@ -570,7 +512,6 @@
                          </li>`;
             }
 
-            // Page numbers
             const startPage = Math.max(1, currentPage - 2);
             const endPage = Math.min(totalPages, currentPage + 2);
 
@@ -602,7 +543,6 @@
                          </li>`;
             }
 
-            // Next Button
             if (currentPage < totalPages) {
                 html += `<li class="page-item">
                             <button onclick="goToPageWithScroll(${currentPage + 1})" class="page-link" title="Next Page">
@@ -611,7 +551,6 @@
                          </li>`;
             }
 
-            // Last Page Button
             if (currentPage < totalPages - 1) {
                 html += `<li class="page-item">
                             <button onclick="goToPageWithScroll(${totalPages})" class="page-link" title="Last Page">
@@ -623,7 +562,6 @@
             paginationNav.innerHTML = html;
         }
 
-        // Page size change handler
         async function changePageSize() {
             const pageSize = document.getElementById('pageSizeSelect').value;
             const params = new URLSearchParams(window.location.search);
@@ -633,7 +571,6 @@
             window.location.href = window.location.pathname + '?' + params.toString();
         }
 
-        // Loading indicator functions
         function showLoadingIndicator() {
             const paginationWrapper = document.querySelector('.pagination-wrapper');
             if (paginationWrapper) {
@@ -641,7 +578,6 @@
                 paginationWrapper.style.pointerEvents = 'none';
             }
             
-            // Add loading spinner
             const spinner = document.createElement('div');
             spinner.id = 'pagination-loading';
             spinner.innerHTML = `
@@ -671,7 +607,6 @@
             }
         }
 
-        // Error display function
         function showError(message) {
             const errorAlert = document.createElement('div');
             errorAlert.className = 'alert error-alert';
@@ -687,7 +622,6 @@
             }
         }
 
-        // Filter toggle function (existing)
         function toggleFilters() {
             const filterFields = document.getElementById('filterFields');
             const toggleBtn = document.querySelector('.btn-toggle-filters i');
@@ -703,9 +637,7 @@
             }
         }
 
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize filters as hidden
             const filterFields = document.getElementById('filterFields');
             const toggleBtn = document.querySelector('.btn-toggle-filters i');
 

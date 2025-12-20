@@ -1,0 +1,520 @@
+﻿@model NewsToAddDTO
+@using News_Portal.Core.Enums
+@{
+    ViewBag.Title = "Add News";
+}
+
+
+<header class="newspaper-header">
+    <h1 class="newspaper-title">Daily News Portal</h1>
+    <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
+    <div class="newspaper-line"></div>
+</header>
+
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert success-alert">
+        ✓ @TempData["Message"]
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert error-alert">
+        ⚠ @TempData["Error"]
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+}
+
+<div class="add-news-main">
+    <div class="add-news-container">
+
+        <main class="main-content">
+            <div class="form-header">
+                <div class="form-title-section">
+                    <h1 class="form-title">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Create New Article
+                    </h1>
+                    <p class="form-subtitle">Share your story with the world</p>
+                </div>
+            </div>
+
+            <form asp-area="Author" asp-controller="AuthorActions" asp-action="AddNews" method="post" enctype="multipart/form-data" class="add-news-form">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="All" class="validation-summary"></div>
+
+                <div class="form-content">
+
+                    <div class="form-group">
+                        <label asp-for="NewsTitle" class="form-label">
+                            <i class="bi bi-type me-1"></i>
+                            News Title *
+                        </label>
+                        <input asp-for="NewsTitle"
+                               type="text"
+                               class="form-control"
+                               placeholder="Enter a compelling news title..."
+                               maxlength="100" />
+                        <span asp-validation-for="NewsTitle" class="text-danger"></span>
+                        <small class="form-text">Maximum 100 characters</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NewsContent" class="form-label">
+                            <i class="bi bi-file-text me-1"></i>
+                            News Content *
+                        </label>
+                        <textarea asp-for="NewsContent"
+                                  class="form-control content-textarea"
+                                  rows="12"
+                                  placeholder="Write your news article content here..."></textarea>
+                        <span asp-validation-for="NewsContent" class="text-danger"></span>
+                        <small class="form-text">Provide detailed information about the news story</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="NewsType" class="form-label">
+                                <i class="bi bi-tag me-1"></i>
+                                News Type *
+                            </label>
+                            <select asp-for="NewsType" class="form-select">
+                                <option value="">Select news type...</option>
+                                @foreach (var newsType in Enum.GetValues<NewsType>())
+                                {
+                                    if(newsType.ToString()!="General") 
+                                    {
+                                        <option value="@newsType">@newsType</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="NewsType" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="NewsPriority" class="form-label">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                Priority *
+                            </label>
+                            <select asp-for="NewsPriority" class="form-select">
+                                <option value="">Select priority...</option>
+                                @foreach (var priority in Enum.GetValues<NewsPriority>())
+                                {
+                                    <option value="@priority">@priority</option>
+                                }
+                            </select>
+                            <span asp-validation-for="NewsPriority" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="VideoUrl" class="form-label">
+                            <i class="bi bi-camera-video me-1"></i>
+                            Video URL (Optional)
+                        </label>
+                        <input asp-for="VideoUrl"
+                               type="url"
+                               class="form-control"
+                               placeholder="https://youtube.com/embed/your-video-id" />
+                        <span asp-validation-for="VideoUrl" class="text-danger"></span>
+                        <small class="form-text">Add a YouTube embed URL to include video content</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Images" class="form-label">
+                            <i class="bi bi-images me-1"></i>
+                            Article Images (Optional)
+                        </label>
+                        <div class="image-upload-wrapper" id="imageUploadWrapper">
+                            <input asp-for="Images"
+                                   type="file"
+                                   class="image-input"
+                                   accept="image/*"
+                                   multiple
+                                   id="imageInput" />
+                            <div class="image-upload-info">
+                                <i class="bi bi-cloud-upload"></i>
+                                <span>Click to select images or drag and drop</span>
+                                <small>Maximum 4 images (JPG, PNG, GIF)</small>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Images" class="text-danger"></span>
+                        <div class="image-count-display" id="imageCount" style="display: none;">
+                            <small class="text-muted">Selected: <span id="selectedCount">0</span>/4 images</small>
+                        </div>
+                    </div>
+
+                    <div class="selected-files-container" id="selectedFiles" style="display: none;">
+                        <h6 class="selected-files-title">
+                            <i class="bi bi-file-earmark-image me-1"></i>
+                            Selected Files
+                        </h6>
+                        <div class="selected-files-list" id="selectedFilesList"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <i class="bi bi-check-lg me-2"></i>
+                            Publish Article
+                        </button>
+                        <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Back to Articles
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-lightbulb"></i>
+                    Writing Tips
+                </h4>
+                <div class="guidelines-content">
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Write clear and engaging titles</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Provide accurate and factual content</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Choose appropriate news category</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Set proper priority level</span>
+                    </div>
+                    <div class="guideline-item">
+                        <i class="bi bi-check2 text-success"></i>
+                        <span>Add up to 4 relevant images</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-info-circle"></i>
+                    Content Guidelines
+                </h4>
+                <div class="content-info">
+                    <div class="info-item">
+                        <span class="info-value">Maximum 100 characters</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Content:</span>
+                        <span class="info-value">Be descriptive and informative</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Images:</span>
+                        <span class="info-value">Maximum 4 images (JPG, PNG, GIF)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Video:</span>
+                        <span class="info-value">YouTube URLs only</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h4>
+                <div class="quick-actions">
+                    <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
+                       class="action-btn primary">
+                        <i class="bi bi-list"></i>
+                        View My Articles
+                    </a>
+                    <button type="button" class="action-btn secondary" onclick="clearForm()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Clear Form
+                    </button>
+                    
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-tags"></i>
+                    Category Guide
+                </h4>
+                <div class="category-guide">
+                    <small class="text-muted">Choose the most appropriate category for your article to help readers find relevant content easily.</small>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let selectedFiles = [];
+        const maxImages = 4;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.querySelector('.content-textarea');
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 400) + 'px';
+                });
+
+                 
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 400) + 'px';
+            }
+
+            const form = document.querySelector('.add-news-form');
+            const submitBtn = document.querySelector('.btn-submit');
+
+            if (form && submitBtn) {
+                form.addEventListener('submit', function(e) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Publishing...';
+                    submitBtn.disabled = true;
+
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 5000);
+                });
+            }
+
+            const titleInput = document.querySelector('input[name="NewsTitle"]');
+            if (titleInput) {
+                const maxLength = titleInput.getAttribute('maxlength');
+                const charCountElement = document.createElement('small');
+                charCountElement.className = 'char-count';
+                titleInput.parentNode.appendChild(charCountElement);
+
+                function updateCharCount() {
+                    const remaining = maxLength - titleInput.value.length;
+                    charCountElement.textContent = `${remaining} characters remaining`;
+                    charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';
+                }
+
+                titleInput.addEventListener('input', updateCharCount);
+                updateCharCount();
+            }
+
+            initializeImageUpload();
+
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.style.display = 'none', 300);
+                });
+            }, 5000);
+        });
+
+        function initializeImageUpload() {
+            const imageInput = document.getElementById('imageInput');
+            const wrapper = document.getElementById('imageUploadWrapper');
+            const selectedFilesContainer = document.getElementById('selectedFiles');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const imageCount = document.getElementById('imageCount');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (!imageInput || !wrapper) return;
+
+            imageInput.addEventListener('change', function(e) {
+                handleFiles(Array.from(e.target.files));
+            });
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                wrapper.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                wrapper.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                wrapper.addEventListener(eventName, unhighlight, false);
+            });
+
+            wrapper.addEventListener('drop', handleDrop, false);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                wrapper.classList.add('drag-over');
+            }
+
+            function unhighlight(e) {
+                wrapper.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(Array.from(files));
+            }
+
+            function handleFiles(files) {
+                const imageFiles = files.filter(file => file.type.startsWith('image/'));
+
+                const totalFiles = selectedFiles.length + imageFiles.length;
+
+                if (totalFiles > maxImages) {
+                    const allowedFiles = maxImages - selectedFiles.length;
+                    if (allowedFiles > 0) {
+                        showAlert(`You can only select up to ${maxImages} images. Only the first ${allowedFiles} image(s) will be added.`, 'warning');
+                        imageFiles.splice(allowedFiles);
+                    } else {
+                        showAlert(`You have already selected the maximum of ${maxImages} images.`, 'error');
+                        return;
+                    }
+                }
+
+                selectedFiles = selectedFiles.concat(imageFiles);
+
+                updateFilesDisplay();
+                updateFileInput();
+            }
+
+            function updateFilesDisplay() {
+                if (selectedFiles.length > 0) {
+                    selectedFilesContainer.style.display = 'block';
+                    imageCount.style.display = 'block';
+                    selectedCount.textContent = selectedFiles.length;
+                    selectedFilesList.innerHTML = '';
+
+                    selectedFiles.forEach((file, index) => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'selected-file-item';
+                        fileItem.innerHTML = `
+                            <div class="file-info">
+                                <i class="bi bi-file-earmark-image file-icon"></i>
+                                <div class="file-details">
+                                    <span class="file-name">${file.name}</span>
+                                    <small class="file-size text-muted">${formatFileSize(file.size)}</small>
+                                </div>
+                            </div>
+                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="Remove file">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        `;
+                        selectedFilesList.appendChild(fileItem);
+                    });
+                } else {
+                    selectedFilesContainer.style.display = 'none';
+                    imageCount.style.display = 'none';
+                    selectedFilesList.innerHTML = '';
+                }
+            }
+
+            function updateFileInput() {
+                const dt = new DataTransfer();
+                selectedFiles.forEach(file => dt.items.add(file));
+                imageInput.files = dt.files;
+            }
+        }
+
+        window.removeFile = function(index) {
+            selectedFiles.splice(index, 1);
+
+            const selectedFilesContainer = document.getElementById('selectedFiles');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const imageCount = document.getElementById('imageCount');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (selectedFiles.length > 0) {
+                selectedCount.textContent = selectedFiles.length;
+                selectedFilesList.innerHTML = '';
+
+                selectedFiles.forEach((file, newIndex) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'selected-file-item';
+                    fileItem.innerHTML = `
+                        <div class="file-info">
+                            <i class="bi bi-file-earmark-image file-icon"></i>
+                            <div class="file-details">
+                                <span class="file-name">${file.name}</span>
+                                <small class="file-size text-muted">${formatFileSize(file.size)}</small>
+                            </div>
+                        </div>
+                        <button type="button" class="remove-file-btn" onclick="removeFile(${newIndex})" title="Remove file">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    `;
+                    selectedFilesList.appendChild(fileItem);
+                });
+            } else {
+                selectedFilesContainer.style.display = 'none';
+                imageCount.style.display = 'none';
+                selectedFilesList.innerHTML = '';
+            }
+
+            const imageInput = document.getElementById('imageInput');
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            imageInput.files = dt.files;
+        };
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            const alertClass = type === 'error' ? 'error-alert' : type === 'warning' ? 'error-alert' : 'success-alert';
+            const alertIcon = type === 'error' || type === 'warning' ? '⚠' : '✓';
+
+            alertDiv.className = `alert ${alertClass}`;
+            alertDiv.innerHTML = `
+                ${alertIcon} ${message}
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
+            `;
+
+            const formHeader = document.querySelector('.form-header');
+            if (formHeader) {
+                formHeader.insertAdjacentElement('afterend', alertDiv);
+                setTimeout(() => alertDiv.remove(), 5000);
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data?')) {
+                document.querySelector('.add-news-form').reset();
+
+                selectedFiles = [];
+
+                document.getElementById('selectedFiles').style.display = 'none';
+                document.getElementById('selectedFilesList').innerHTML = '';
+                document.getElementById('imageCount').style.display = 'none';
+
+                const textarea = document.querySelector('.content-textarea');
+                if (textarea) {
+                    textarea.style.height = 'auto';
+                }
+
+                const event = new Event('input');
+                document.querySelector('input[name="NewsTitle"]')?.dispatchEvent(event);
+            }
+        }
+
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,5 +1,4 @@
-﻿/* Newspaper Layout Styles */
-* {
+﻿* {
     box-sizing: border-box;
 }
 
@@ -19,7 +18,6 @@ body {
     padding: 0 15px;
 }
 
-/* Newspaper Header */
 .newspaper-header {
     text-align: center;
     padding: 20px 0;
@@ -49,7 +47,6 @@ body {
     margin: 15px auto;
 }
 
-/* Alerts */
 .alert {
     padding: 10px 15px;
     margin: 10px 0;
@@ -80,7 +77,6 @@ body {
     cursor: pointer;
 }
 
-/* Main Layout */
 .newspaper-main {
     max-width: 1400px;
     margin: 0 auto;
@@ -103,7 +99,6 @@ body {
     min-width: 0;
 }
 
-/* Section Titles */
 .section-title {
     font-size: 2.2rem;
     font-weight: bold;
@@ -138,7 +133,6 @@ body {
     text-decoration: underline;
 }
 
-/* News Sections */
 .news-section {
     margin-bottom: 35px;
     padding-bottom: 25px;
@@ -149,7 +143,6 @@ body {
     border-bottom: none;
 }
 
-/* Two Column Layout */
 .two-column-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -157,7 +150,6 @@ body {
     margin-bottom: 35px;
 }
 
-/* Category-specific styling */
 .politics .category-title { border-color: #dc3545; }
 .sports .category-title { border-color: #28a745; }
 .technology .category-title { border-color: #007bff; }
@@ -167,7 +159,6 @@ body {
 .science .category-title { border-color: #fd7e14; }
 .world .category-title { border-color: #17a2b8; }
 
-/* Sidebar */
 .sidebar {
     background: #f8f9fa;
     padding: 20px;
@@ -195,7 +186,6 @@ body {
     padding-bottom: 5px;
 }
 
-/* Component Integration Styles */
 .two-col-featured {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -218,7 +208,6 @@ body {
     margin-bottom: 0;
 }
 
-/* Responsive Design */
 @media (max-width: 992px) {
     .newspaper-content {
         grid-template-columns: 1fr;
@@ -279,7 +268,6 @@ body {
     }
 }
 
-/* Print Styles */
 @media print {
     .sidebar {
         display: none;

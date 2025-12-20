@@ -6,7 +6,6 @@
 }
 
 <div class="author-news-container">
-    <!-- Header Section -->
     <div class="news-header">
         <div class="news-stats">
             <h2 class="news-title">Your News Articles</h2>
@@ -17,7 +16,6 @@
         </div>
     </div>
 
-    <!-- News Content -->
     <div class="news-content">
         @if (Model != null && Model.Any())
         {
@@ -28,7 +26,6 @@
                 }
             </div>
 
-            <!-- Pagination -->
             @if (pageCount > 1)
             {
               
@@ -55,7 +52,6 @@
         }
     </div>
 
-    <!-- Loading State (hidden by default) -->
     <div class="loading-state" id="loadingState" style="display: none;">
         <div class="loading-spinner">
             <div class="spinner"></div>

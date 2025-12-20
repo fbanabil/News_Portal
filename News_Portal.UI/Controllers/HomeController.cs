@@ -48,7 +48,7 @@ namespace News_Portal.UI.Controllers
             DetailedNewsToShowDTO detailedNewsToShowDTOs = await _newsService.GetDetailedNewsToShowDTOsByNewsId(newsId);
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
             ViewBag.PresentUserName = user?.PersonName ?? "Unknown";
-            string videoLink = "https://www.youtube.com/watch?v=dhtZLiS8KaQ";
+            string videoLink = detailedNewsToShowDTOs.VideoUrl ?? "";
             string youtubeEmbedUrl="";
             if (videoLink.Contains("youtube.com/watch?v="))
             {
@@ -64,6 +64,7 @@ namespace News_Portal.UI.Controllers
                 youtubeEmbedUrl = $"https://www.youtube.com/embed/{idPart}";
             }
             ViewBag.VideoLink = youtubeEmbedUrl;
+            detailedNewsToShowDTOs.VideoUrl = youtubeEmbedUrl;
             return View(detailedNewsToShowDTOs);
         }
 

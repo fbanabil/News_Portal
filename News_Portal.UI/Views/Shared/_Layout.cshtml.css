@@ -1,20 +1,14 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-/* Modern Ultra-Light Professional News Portal Styles */
-
-/* Typography and Base Styles */
+﻿
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #495057;
     margin-bottom: 80px;
-    background-color: #fdfdfe; /* Much lighter background */
+    background-color: #fdfdfe; 
 }
 
-/* Header and Navigation - Ultra Light Theme */
 .navbar {
-    background: linear-gradient(135deg, #a8b3f0 0%, #c4ccf7 100%) !important; /* Much lighter gradient */
+    background: linear-gradient(135deg, #a8b3f0 0%, #c4ccf7 100%) !important;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
     border: none !important;
     padding: 0.75rem 0;
@@ -34,11 +28,10 @@ body {
 }
 
     .navbar-brand:hover {
-        color: #ffeaa7 !important; /* Softer hover color */
+        color: #ffeaa7 !important; 
         transform: translateY(-1px);
     }
 
-/* Navigation Links with Icons */
 .navbar-nav .nav-link {
     color: #ffffff !important;
     font-weight: 500;
@@ -75,13 +68,11 @@ body {
         width: 70%;
     }
 
-/* Navigation Icons */
 .nav-link i {
     margin-right: 0.5rem;
     font-size: 0.9rem;
 }
 
-/* User Profile Container Optimization */
 .user-profile-container {
     display: flex;
     align-items: center;
@@ -121,7 +112,6 @@ body {
     white-space: nowrap;
 }
 
-/* Logout Button with Icon */
 .logout-btn-container {
     display: flex;
     align-items: center;
@@ -142,7 +132,7 @@ body {
 }
 
     .logout-btn:hover {
-        background-color: rgba(255, 107, 107, 0.85); /* Softer red */
+        background-color: rgba(255, 107, 107, 0.85); 
         border-color: rgba(255, 107, 107, 0.85);
         color: #ffffff;
         transform: translateY(-1px);
@@ -153,19 +143,18 @@ body {
         font-size: 0.8rem;
     }
 
-/* Circular Login/Register Button - Matching Logout Button Style */
 .btn-outline-primary {
     color: #ffffff !important;
     border-color: rgba(255, 255, 255, 0.4) !important;
     background: rgba(255, 255, 255, 0.15) !important;
     padding: 0.4rem 0.8rem !important;
-    border-radius: 18px !important; /* Same as logout button */
+    border-radius: 18px !important;
     font-weight: 500 !important;
     transition: all 0.3s ease !important;
-    font-size: 0.85rem !important; /* Same as logout button */
+    font-size: 0.85rem !important;
     display: flex !important;
     align-items: center !important;
-    gap: 0.4rem !important; /* Same as logout button */
+    gap: 0.4rem !important; 
     text-decoration: none !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     white-space: nowrap !important;
@@ -180,10 +169,9 @@ body {
     }
 
     .btn-outline-primary i {
-        font-size: 0.8rem; /* Same as logout button */
+        font-size: 0.8rem;
     }
 
-/* Mobile Navigation Toggle */
 .navbar-toggler {
     border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 6px;
@@ -198,7 +186,6 @@ body {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-/* Main Content Container */
 .container {
     background-color: #ffffff;
     border-radius: 10px;
@@ -213,9 +200,8 @@ main {
     padding: 0rem 0;
 }
 
-/* Footer - Ultra Light Theme */
 .footer {
-    background: linear-gradient(135deg, #f1f3f4 0%, #fafbfc 100%); /* Much lighter footer */
+    background: linear-gradient(135deg, #f1f3f4 0%, #fafbfc 100%); 
     color: #6c757d;
     padding: 1.5rem 0;
     margin-top: auto;
@@ -242,16 +228,14 @@ main {
     }
 
         .footer a:hover {
-            color: #a8b3f0; /* Matching the navbar color */
+            color: #a8b3f0;
             text-decoration: underline;
         }
 
-/* Enhanced Box Shadow - Ultra Lighter */
 .box-shadow {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
-/* Border Improvements */
 .border-top {
     border-top: 1px solid #f1f3f4;
 }
@@ -260,7 +244,6 @@ main {
     border-bottom: 1px solid #f1f3f4;
 }
 
-/* Button Styles - Light Theme */
 .btn-primary {
     background: linear-gradient(135deg, #a8b3f0 0%, #c4ccf7 100%);
     border: none;
@@ -277,7 +260,6 @@ main {
         box-shadow: 0 4px 8px rgba(168, 179, 240, 0.3);
     }
 
-/* Navigation Pills */
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     background: linear-gradient(135deg, #a8b3f0 0%, #c4ccf7 100%);
@@ -285,7 +267,6 @@ main {
     color: #ffffff;
 }
 
-/* Responsive Design Enhancements */
 @media (max-width: 767.98px) {
     .navbar-brand {
         font-size: 1.3rem;
@@ -337,7 +318,6 @@ main {
     }
 }
 
-/* Loading Animation for Better UX */
 .container {
     animation: fadeInUp 0.5s ease-out;
 }
@@ -354,7 +334,6 @@ main {
     }
 }
 
-/* Focus States for Accessibility */
 .navbar-nav .nav-link:focus,
 .btn:focus,
 .user-profile-container:focus {
@@ -362,13 +341,11 @@ main {
     outline-offset: 2px;
 }
 
-/* Hover Effects for Better Interactivity */
 .container:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: box-shadow 0.3s ease;
 }
 
-/* Custom Profile Component Styles */
 .profile-dropdown {
     position: relative;
 }
@@ -403,7 +380,6 @@ main {
         color: #a8b3f0;
     }
 
-/* Navigation Icon Styles */
 .nav-icon-general::before {
     content: "🏠";
     margin-right: 0.5rem;
@@ -449,7 +425,6 @@ main {
     margin-right: 0.5rem;
 }
 
-/* Ensure proper spacing and alignment */
 .ms-auto .nav-item {
     display: flex;
     align-items: center;
@@ -459,17 +434,12 @@ main {
     align-items: center;
 }
 
-/* ============================= */
-/*          DARK MODE            */
-/* ============================= */
-/* Add `dark-mode` class to body to enable */
 
 body.dark-mode {
-    background-color: #0f172a; /* deep slate/navy */
+    background-color: #0f172a;
     color: #e5e7eb;
 }
 
-    /* Header & Navbar - Dark */
     body.dark-mode .navbar {
         background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
         box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
@@ -496,7 +466,6 @@ body.dark-mode {
             background-color: #fbbf24;
         }
 
-    /* User Profile - Dark */
     body.dark-mode .user-profile-container {
         background-color: rgba(15, 23, 42, 0.9);
     }
@@ -517,7 +486,6 @@ body.dark-mode {
         color: #f9fafb;
     }
 
-    /* Logout / Auth Buttons */
     body.dark-mode .logout-btn {
         background: rgba(15, 23, 42, 0.9);
         border-color: rgba(249, 250, 251, 0.2);
@@ -544,7 +512,6 @@ body.dark-mode {
             box-shadow: 0 2px 8px rgba(129, 140, 248, 0.5) !important;
         }
 
-    /* Toggler */
     body.dark-mode .navbar-toggler {
         border-color: rgba(249, 250, 251, 0.7);
     }
@@ -557,7 +524,6 @@ body.dark-mode {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%25249, 250, 251, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
     }
 
-    /* Main Container - Dark Card Style */
     body.dark-mode .container {
         background-color: #020617;
         box-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
@@ -567,7 +533,6 @@ body.dark-mode {
         color: #e5e7eb;
     }
 
-    /* Footer - Dark */
     body.dark-mode .footer {
         background: linear-gradient(135deg, #020617 0%, #030712 100%);
         color: #9ca3af;
@@ -587,7 +552,6 @@ body.dark-mode {
                 color: #a5b4fc;
             }
 
-    /* Shadows & Borders - Dark */
     body.dark-mode .box-shadow {
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
     }
@@ -597,7 +561,6 @@ body.dark-mode {
         border-color: #111827;
     }
 
-    /* Primary Buttons - Dark */
     body.dark-mode .btn-primary {
         background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
         box-shadow: 0 2px 8px rgba(79, 70, 229, 0.6);
@@ -608,14 +571,12 @@ body.dark-mode {
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.8);
         }
 
-    /* Nav Pills - Dark */
     body.dark-mode .nav-pills .nav-link.active,
     body.dark-mode .nav-pills .show > .nav-link {
         background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
         color: #f9fafb;
     }
 
-    /* Profile Dropdown - Dark */
     body.dark-mode .profile-dropdown-menu {
         background: #020617;
         border-color: #111827;
@@ -631,7 +592,6 @@ body.dark-mode {
             color: #a5b4fc;
         }
 
-    /* Footer & Links General */
     body.dark-mode a {
         color: #a5b4fc;
     }
@@ -640,12 +600,10 @@ body.dark-mode {
             color: #c7d2fe;
         }
 
-    /* Container Hover - Dark */
     body.dark-mode .container:hover {
         box-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
     }
 
-    /* Focus State - Dark */
     body.dark-mode .navbar-nav .nav-link:focus,
     body.dark-mode .btn:focus,
     body.dark-mode .user-profile-container:focus {

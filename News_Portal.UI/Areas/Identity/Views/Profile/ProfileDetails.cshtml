@@ -27,7 +27,6 @@
 <div class="container py-4">
     <div class="row">
         <div class="col-12">
-            <!-- Header Section -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 class="h3 mb-1">Profile Details</h1>
@@ -43,7 +42,6 @@
     </div>
 
     <div class="row">
-        <!-- Profile Card -->
         <div class="col-lg-4 mb-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body text-center p-4">
@@ -53,19 +51,10 @@
                              class="rounded-circle border"
                              style="width: 120px; height: 120px; object-fit: cover;"
                              onerror="this.src= @ViewBag.DefaultImageUrl" />
-                        @* <div class="position-absolute bottom-0 end-0">
-                            <a href="#" class="btn btn-primary btn-sm rounded-circle" 
-                               data-bs-toggle="modal" 
-                               data-bs-target="#profilePictureModal"
-                               title="Change Profile Picture">
-                                
-                            </a>
-                        </div> *@
                     </div>
                     <h4 class="mb-1">@(Model.PersonName ?? "User Name")</h4>
                     <p class="text-muted mb-3">@(Model.Email ?? "user@example.com")</p>
                     
-                    <!-- Status Badge -->
                     <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
                         <i class="bi bi-check-circle-fill me-1"></i>Verified Account
                     </span>
@@ -86,10 +75,8 @@
             </div>
         </div>
 
-        <!-- Profile Information -->
         <div class="col-lg-8">
             <div class="row">
-                <!-- Personal Information Card -->
                 <div class="col-12 mb-4">
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white border-0 py-3">
@@ -134,7 +121,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions Card -->
                 <div class="col-12 mb-4">
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white border-0 py-3">
@@ -193,7 +179,6 @@
     </div>
 </div>
 
-<!-- Profile Picture Modal -->
 <div class="modal fade" id="profilePictureModal" tabindex="-1" aria-labelledby="profilePictureModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -222,7 +207,6 @@
     </div>
 </div>
 
-<!-- Reset Password Confirmation Modal -->
 <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -252,7 +236,6 @@
     </div>
 </div>
 
-<!-- Delete Account Confirmation Modal -->
 <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -295,11 +278,9 @@
 
 @section Scripts {
     <script>
-        // Handle profile picture modal
         document.addEventListener('DOMContentLoaded', function() {
             console.log('ProfileDetails page loaded successfully');
             
-            // Handle delete confirmation text validation
             const confirmationInput = document.getElementById('confirmationText');
             const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
             
@@ -319,20 +300,17 @@
             }
         });
 
-        // Reset password functionality
         function resetPassword() {
             const resetModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
             resetModal.show();
         }
 
         function confirmResetPassword() {
-            // Show loading state
             const confirmBtn = document.querySelector('#resetPasswordModal .btn-danger');
             const originalText = confirmBtn.innerHTML;
             confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Sending...';
             confirmBtn.disabled = true;
 
-            // Make AJAX request to reset password
             fetch('@Url.Action("ResetPassword", "Profile", new { area = "Identity" })', {
                 method: 'POST',
                 headers: {
@@ -346,16 +324,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Close modal first
                     const modalInstance = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
                     modalInstance.hide();
                     
-                    // Wait for modal to fully close before showing alert
                     document.getElementById('resetPasswordModal').addEventListener('hidden.bs.modal', function() {
                         setTimeout(() => {
                             showAlert('success', 'Password reset email sent successfully! Please check your email.');
                         }, 100);
-                    }, { once: true }); // Use once: true to ensure this only fires once
+                    }, { once: true }); 
                 } else {
                     showAlert('danger', data.message || 'Failed to send reset email. Please try again.');
                 }
@@ -365,30 +341,25 @@
                 showAlert('danger', 'An error occurred. Please try again later.');
             })
             .finally(() => {
-                // Restore button state
                 confirmBtn.innerHTML = originalText;
                 confirmBtn.disabled = false;
             });
         }
 
-        // Delete account functionality
         function deleteAccount() {
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
             deleteModal.show();
             
-            // Reset the confirmation input and button state
             document.getElementById('confirmationText').value = '';
             document.getElementById('confirmDeleteBtn').disabled = true;
         }
 
         function confirmDeleteAccount() {
-            // Show loading state
             const confirmBtn = document.getElementById('confirmDeleteBtn');
             const originalText = confirmBtn.innerHTML;
             confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
             confirmBtn.disabled = true;
 
-            // Make AJAX request to delete account
             fetch('@Url.Action("DeleteAccount", "Profile", new { area = "Identity" })', {
                 method: 'POST',
                 headers: {
@@ -399,24 +370,20 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Close modal first
                     const modalInstance = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
                     modalInstance.hide();
                     
-                    // Wait for modal to fully close before showing alert
                     document.getElementById('deleteAccountModal').addEventListener('hidden.bs.modal', function() {
                         setTimeout(() => {
                             showAlert('success', 'Account deleted successfully. Redirecting...', false);
                             
-                            // Redirect to home after 3 seconds
                             setTimeout(() => {
                                 window.location.href = '@Url.Action("Index", "Home", new { area = "" })';
                             }, 3000);
                         }, 100);
-                    }, { once: true }); // Use once: true to ensure this only fires once
+                    }, { once: true }); 
                 } else {
                     showAlert('danger', data.message || 'Failed to delete account. Please try again.');
-                    // Restore button state
                     confirmBtn.innerHTML = originalText;
                     confirmBtn.disabled = false;
                 }
@@ -424,14 +391,12 @@
             .catch(error => {
                 console.error('Error:', error);
                 showAlert('danger', 'An error occurred. Please try again later.');
-                // Restore button state
                 confirmBtn.innerHTML = originalText;
                 confirmBtn.disabled = false;
             });
         }
 
         function showAlert(type, message, autoDismiss = true) {
-            // Remove any existing alerts first
             const existingAlerts = document.querySelectorAll('.alert');
             existingAlerts.forEach(alert => alert.remove());
             
@@ -442,14 +407,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`;
             
-            // Insert alert at the top of the container
             const container = document.querySelector('.container');
             container.insertAdjacentHTML('afterbegin', alertHtml);
             
-            // Scroll to top to ensure visibility
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
-            // Auto-dismiss after 5 seconds if enabled
             if (autoDismiss) {
                 setTimeout(() => {
                     const alert = container.querySelector('.alert');

@@ -1,7 +1,6 @@
 ﻿@model List<HomePageNewsToShowDTO>
 
 <div class="two-col-featured">
-    <!-- Main big left -->
     <div class="tc-main">
         @if (Model != null && Model.Count > 0)
         {
@@ -15,7 +14,6 @@
         }
     </div>
 
-    <!-- Right 1 (top) -->
     <div class="tc-side tc-side-top">
         @if (Model != null && Model.Count > 1)
         {
@@ -32,7 +30,6 @@
         }
     </div>
 
-    <!-- Right 2 (middle) -->
     <div class="tc-side tc-side-middle">
         @if (Model != null && Model.Count > 2)
         {
@@ -49,7 +46,6 @@
         }
     </div>
 
-    <!-- Right 3 (bottom) -->
     <div class="tc-side tc-side-bottom">
         @if (Model != null && Model.Count > 3)
         {

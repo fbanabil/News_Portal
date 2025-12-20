@@ -1,6 +1,4 @@
-/* =========================================
-   COLORFUL SUGGESTION CARD - REDESIGNED
-========================================= */
+
 
 .suggestion-card {
     border-radius: 0.75rem;
@@ -36,9 +34,6 @@
         opacity: 1;
     }
 
-/* =========================================
-   COLORFUL IMAGE SECTION
-========================================= */
 
 .suggestion-thumb {
     height: 100%;
@@ -75,9 +70,6 @@
     filter: brightness(1.2) saturate(1.2);
 }
 
-/* =========================================
-   CARD BODY WITH COLORFUL ELEMENTS
-========================================= */
 
 .suggestion-card .card-body {
     position: relative;
@@ -95,9 +87,6 @@
     color: #4f46e5;
 }
 
-/* =========================================
-   NEWS TYPE COLORFUL BADGES
-========================================= */
 
 .badge {
     position: relative;
@@ -114,7 +103,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Politics Badge - Red Theme */
 .badge-politics {
     background: linear-gradient(135deg, #ef4444, #dc2626) !important;
     color: #ffffff;
@@ -126,7 +114,6 @@
         margin-right: 4px;
     }
 
-/* Sports Badge - Green Theme */
 .badge-sports {
     background: linear-gradient(135deg, #10b981, #059669) !important;
     color: #ffffff;
@@ -138,7 +125,6 @@
         margin-right: 4px;
     }
 
-/* Technology Badge - Blue Theme */
 .badge-technology {
     background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
     color: #ffffff;
@@ -150,7 +136,6 @@
         margin-right: 4px;
     }
 
-/* Business Badge - Purple Theme */
 .badge-business {
     background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
     color: #ffffff;
@@ -162,7 +147,6 @@
         margin-right: 4px;
     }
 
-/* Entertainment Badge - Pink Theme */
 .badge-entertainment {
     background: linear-gradient(135deg, #ec4899, #db2777) !important;
     color: #ffffff;
@@ -174,7 +158,6 @@
         margin-right: 4px;
     }
 
-/* Science Badge - Cyan Theme */
 .badge-science {
     background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
     color: #ffffff;
@@ -186,7 +169,6 @@
         margin-right: 4px;
     }
 
-/* Health Badge - Rose Theme */
 .badge-health {
     background: linear-gradient(135deg, #f43f5e, #e11d48) !important;
     color: #ffffff;
@@ -198,7 +180,6 @@
         margin-right: 4px;
     }
 
-/* World Badge - Orange Theme */
 .badge-world {
     background: linear-gradient(135deg, #f97316, #ea580c) !important;
     color: #ffffff;
@@ -210,7 +191,6 @@
         margin-right: 4px;
     }
 
-/* General Badge - Gray Theme (fallback) */
 .badge-general {
     background: linear-gradient(135deg, #6b7280, #4b5563) !important;
     color: #ffffff;
@@ -222,7 +202,6 @@
         margin-right: 4px;
     }
 
-/* Enhanced badge hover effects */
 .suggestion-card:hover .badge {
     transform: scale(1.08) rotate(2deg);
     filter: brightness(1.1);
@@ -264,11 +243,7 @@
     box-shadow: 0 6px 16px rgba(107, 114, 128, 0.5);
 }
 
-/* =========================================
-   CARD BORDER COLORS BASED ON NEWS TYPE
-========================================= */
 
-/* Politics Cards - Red accents */
 .suggestion-card[data-news-type="politics"] {
     border-left: 4px solid #ef4444;
 }
@@ -278,7 +253,6 @@
         border-color: rgba(239, 68, 68, 0.3);
     }
 
-/* Sports Cards - Green accents */
 .suggestion-card[data-news-type="sports"] {
     border-left: 4px solid #10b981;
 }
@@ -288,7 +262,6 @@
         border-color: rgba(16, 185, 129, 0.3);
     }
 
-/* Technology Cards - Blue accents */
 .suggestion-card[data-news-type="technology"] {
     border-left: 4px solid #3b82f6;
 }
@@ -298,7 +271,6 @@
         border-color: rgba(59, 130, 246, 0.3);
     }
 
-/* Business Cards - Purple accents */
 .suggestion-card[data-news-type="business"] {
     border-left: 4px solid #8b5cf6;
 }
@@ -308,7 +280,6 @@
         border-color: rgba(139, 92, 246, 0.3);
     }
 
-/* Entertainment Cards - Pink accents */
 .suggestion-card[data-news-type="entertainment"] {
     border-left: 4px solid #ec4899;
 }
@@ -318,7 +289,6 @@
         border-color: rgba(236, 72, 153, 0.3);
     }
 
-/* Science Cards - Cyan accents */
 .suggestion-card[data-news-type="science"] {
     border-left: 4px solid #06b6d4;
 }
@@ -328,7 +298,6 @@
         border-color: rgba(6, 182, 212, 0.3);
     }
 
-/* Health Cards - Rose accents */
 .suggestion-card[data-news-type="health"] {
     border-left: 4px solid #f43f5e;
 }
@@ -338,7 +307,6 @@
         border-color: rgba(244, 63, 94, 0.3);
     }
 
-/* World Cards - Orange accents */
 .suggestion-card[data-news-type="world"] {
     border-left: 4px solid #f97316;
 }
@@ -348,9 +316,7 @@
         border-color: rgba(249, 115, 22, 0.3);
     }
 
-/* =========================================
-   COLORFUL TEXT ELEMENTS
-========================================= */
+
 
 .suggestion-card .text-muted {
     color: #64748b !important;
@@ -371,9 +337,7 @@
     color: #374151;
 }
 
-/* =========================================
-   TWO-LINE CLAMP WITH COLOR ENHANCEMENT
-========================================= */
+
 
 .two-line-clamp {
     display: -webkit-box;
@@ -383,7 +347,6 @@
     position: relative;
 }
 
-    /* Add a subtle gradient fade for clamped text */
     .two-line-clamp::after {
         content: '';
         position: absolute;
@@ -399,9 +362,6 @@
     background: linear-gradient(90deg, transparent, #fafbff);
 }
 
-/* =========================================
-   COLORFUL LOADING STATE
-========================================= */
 
 .suggestion-card.loading {
     background: linear-gradient( 90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75% );
@@ -425,9 +385,7 @@
     }
 }
 
-/* =========================================
-   RESPONSIVE DESIGN
-========================================= */
+
 
 @media (max-width: 768px) {
     .suggestion-card {
@@ -472,9 +430,7 @@
     }
 }
 
-/* =========================================
-   ACCESSIBILITY & REDUCED MOTION
-========================================= */
+
 
 @media (prefers-reduced-motion: reduce) {
     .suggestion-card,
@@ -503,7 +459,6 @@
     }
 }
 
-/* Focus styles for accessibility */
 .suggestion-card:focus {
     outline: 2px solid #6366f1;
     outline-offset: 2px;
@@ -515,9 +470,7 @@
     outline-offset: 2px;
 }
 
-/* =========================================
-   DARK MODE SUPPORT WITH COLORS
-========================================= */
+
 
 @media (prefers-color-scheme: dark) {
     .suggestion-card {
@@ -561,7 +514,6 @@
         background: linear-gradient(90deg, transparent, #334155);
     }
 
-    /* Dark mode badge adjustments */
     .badge {
         filter: brightness(0.9);
     }
@@ -571,9 +523,7 @@
     }
 }
 
-/* =========================================
-   HIGH CONTRAST MODE SUPPORT
-========================================= */
+
 
 @media (prefers-contrast: high) {
     .suggestion-card {
@@ -604,9 +554,6 @@
         }
 }
 
-/* =========================================
-   PRINT STYLES
-========================================= */
 
 @media print {
     .suggestion-card {

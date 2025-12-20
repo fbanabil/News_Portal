@@ -10,14 +10,12 @@
     <div class="container-fluid px-0">
         <div id="newsCarousel" class="news-carousel-container">
             
-            <!-- Slide counter -->
             <div class="d-flex justify-content-center mb-3">
                 <div class="carousel-counter badge bg-light text-dark border">
                     <span id="currentSlide">1</span> / <span id="totalSlides">@totalItems</span>
                 </div>
             </div>
             
-            <!-- Carousel viewport -->
             <div class="carousel-viewport position-relative overflow-hidden">
                 <div class="carousel-track d-flex" id="carouselTrack">
                     @for (int i = 0; i < totalItems; i++)
@@ -31,7 +29,6 @@
                 </div>
             </div>
             
-            <!-- Controls -->
             <button class="carousel-control carousel-control-prev btn btn-light shadow-sm" 
                     type="button" 
                     id="prevBtn" 
@@ -46,7 +43,6 @@
                 <i class="bi bi-chevron-right"></i>
             </button>
             
-            <!-- Progress bar -->
             <div class="carousel-progress mt-3">
                 <div class="progress" style="height: 3px;">
                     <div class="progress-bar bg-primary" id="carouselProgressBar" style="width: 0%;"></div>
@@ -54,243 +50,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const carousel = document.getElementById('newsCarousel');
-            const track = document.getElementById('carouselTrack');
-            const slides = track.querySelectorAll('.carousel-slide');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const currentSlideSpan = document.getElementById('currentSlide');
-            const progressBar = document.getElementById('carouselProgressBar');
-            
-            const totalItems = @totalItems;
-            let currentIndex = 0;
-            let isAnimating = false;
-            let autoPlayInterval;
-            const slideInterval = 5000; // 5 seconds
-            const animationDuration = 600; // 600ms
-            
-            // Calculate responsive slide width
-            function getSlideWidth() {
-                const viewport = carousel.querySelector('.carousel-viewport');
-                const viewportWidth = viewport.offsetWidth;
-                
-                if (window.innerWidth >= 992) {
-                    return viewportWidth / 3; // Show 3 slides on large screens
-                } else if (window.innerWidth >= 768) {
-                    return viewportWidth / 2; // Show 2 slides on medium screens
-                } else {
-                    return viewportWidth; // Show 1 slide on small screens
-                }
-            }
-            
-            // Get visible slides count based on screen size
-            function getVisibleSlidesCount() {
-                if (window.innerWidth >= 992) return 3;
-                if (window.innerWidth >= 768) return 2;
-                return 1;
-            }
-            
-            // Update slide positions
-            function updateSlidePositions() {
-                const slideWidth = getSlideWidth();
-                slides.forEach((slide, index) => {
-                    slide.style.width = `${slideWidth}px`;
-                    slide.style.flex = 'none';
-                });
-                
-                // Position the track
-                const offset = -currentIndex * slideWidth;
-                track.style.transform = `translateX(${offset}px)`;
-            }
-            
-            // Update counter
-            function updateCounter() {
-                const visibleCount = getVisibleSlidesCount();
-                const displayIndex = Math.min(currentIndex + 1, totalItems - visibleCount + 1);
-                currentSlideSpan.textContent = displayIndex;
-            }
-            
-            // Reset progress bar
-            function resetProgress() {
-                progressBar.style.transition = 'none';
-                progressBar.style.width = '0%';
-                
-                setTimeout(() => {
-                    progressBar.style.transition = `width ${slideInterval}ms linear`;
-                    progressBar.style.width = '100%';
-                }, 50);
-            }
-            
-            // Pause progress bar
-            function pauseProgress() {
-                const currentWidth = progressBar.getBoundingClientRect().width;
-                const containerWidth = progressBar.parentElement.getBoundingClientRect().width;
-                const percentage = (currentWidth / containerWidth) * 100;
-                progressBar.style.transition = 'none';
-                progressBar.style.width = `${percentage}%`;
-            }
-            
-            // Go to next slide
-            function goNext() {
-                if (isAnimating) return;
-                
-                const visibleCount = getVisibleSlidesCount();
-                const maxIndex = totalItems - visibleCount;
-                
-                if (currentIndex >= maxIndex) {
-                    // Circular: go back to start
-                    currentIndex = 0;
-                } else {
-                    currentIndex++;
-                }
-                
-                animateSlide();
-            }
-            
-            // Go to previous slide
-            function goPrev() {
-                if (isAnimating) return;
-                
-                const visibleCount = getVisibleSlidesCount();
-                const maxIndex = totalItems - visibleCount;
-                
-                if (currentIndex <= 0) {
-                    // Circular: go to end
-                    currentIndex = maxIndex;
-                } else {
-                    currentIndex--;
-                }
-                
-                animateSlide();
-            }
-            
-            // Animate slide transition
-            function animateSlide() {
-                isAnimating = true;
-                
-                track.style.transition = `transform ${animationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
-                updateSlidePositions();
-                updateCounter();
-                
-                setTimeout(() => {
-                    isAnimating = false;
-                    track.style.transition = '';
-                }, animationDuration);
-                
-                resetProgress();
-            }
-            
-            // Auto play functionality
-            function startAutoPlay() {
-                stopAutoPlay();
-                autoPlayInterval = setInterval(goNext, slideInterval);
-                resetProgress();
-            }
-            
-            function stopAutoPlay() {
-                if (autoPlayInterval) {
-                    clearInterval(autoPlayInterval);
-                    autoPlayInterval = null;
-                }
-            }
-            
-            // Event listeners
-            nextBtn.addEventListener('click', () => {
-                goNext();
-                stopAutoPlay();
-                setTimeout(startAutoPlay, 2000); // Resume after 2 seconds
-            });
-            
-            prevBtn.addEventListener('click', () => {
-                goPrev();
-                stopAutoPlay();
-                setTimeout(startAutoPlay, 2000); // Resume after 2 seconds
-            });
-            
-            // Pause on hover
-            carousel.addEventListener('mouseenter', () => {
-                stopAutoPlay();
-                pauseProgress();
-            });
-            
-            carousel.addEventListener('mouseleave', () => {
-                startAutoPlay();
-            });
-            
-            // Keyboard navigation
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') {
-                    goPrev();
-                    stopAutoPlay();
-                    setTimeout(startAutoPlay, 2000);
-                } else if (e.key === 'ArrowRight') {
-                    goNext();
-                    stopAutoPlay();
-                    setTimeout(startAutoPlay, 2000);
-                }
-            });
-            
-            // Handle window resize
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    updateSlidePositions();
-                    updateCounter();
-                }, 250);
-            });
-            
-            // Touch/swipe support
-            let startX = 0;
-            let currentX = 0;
-            let isDragging = false;
-            
-            carousel.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-                isDragging = true;
-                stopAutoPlay();
-            });
-            
-            carousel.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                currentX = e.touches[0].clientX;
-                e.preventDefault();
-            });
-            
-            carousel.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                
-                const diffX = startX - currentX;
-                const threshold = 50;
-                
-                if (Math.abs(diffX) > threshold) {
-                    if (diffX > 0) {
-                        goNext();
-                    } else {
-                        goPrev();
-                    }
-                }
-                
-                isDragging = false;
-                setTimeout(startAutoPlay, 2000);
-            });
-            
-            // Initialize
-            updateSlidePositions();
-            updateCounter();
-            startAutoPlay();
-            
-            // Hide controls if not enough items
-            const visibleCount = getVisibleSlidesCount();
-            if (totalItems <= visibleCount) {
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
-            }
-        });
-    </script>
 }
 else
 {
@@ -302,3 +61,220 @@ else
     </div>
 }
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const carousel = document.getElementById('newsCarousel');
+        const track = document.getElementById('carouselTrack');
+        const slides = track.querySelectorAll('.carousel-slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSlideSpan = document.getElementById('currentSlide');
+        const progressBar = document.getElementById('carouselProgressBar');
+
+        const totalItems = @totalItems;
+        let currentIndex = 0;
+        let isAnimating = false;
+        let autoPlayInterval;
+        const slideInterval = 5000; 
+        const animationDuration = 600; 
+
+        function getSlideWidth() {
+            const viewport = carousel.querySelector('.carousel-viewport');
+            const viewportWidth = viewport.offsetWidth;
+
+            if (window.innerWidth >= 992) {
+                return viewportWidth / 3; 
+            } else if (window.innerWidth >= 768) {
+                return viewportWidth / 2;
+            } else {
+                return viewportWidth;
+            }
+        }
+
+        function getVisibleSlidesCount() {
+            if (window.innerWidth >= 992) return 3;
+            if (window.innerWidth >= 768) return 2;
+            return 1;
+        }
+
+        function updateSlidePositions() {
+            const slideWidth = getSlideWidth();
+            slides.forEach((slide, index) => {
+                slide.style.width = `${slideWidth}px`;
+                slide.style.flex = 'none';
+            });
+
+            const offset = -currentIndex * slideWidth;
+            track.style.transform = `translateX(${offset}px)`;
+        }
+
+        function updateCounter() {
+            const visibleCount = getVisibleSlidesCount();
+            const displayIndex = Math.min(currentIndex + 1, totalItems - visibleCount + 1);
+            currentSlideSpan.textContent = displayIndex;
+        }
+
+        function resetProgress() {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+
+            setTimeout(() => {
+                progressBar.style.transition = `width ${slideInterval}ms linear`;
+                progressBar.style.width = '100%';
+            }, 50);
+        }
+
+        function pauseProgress() {
+            const currentWidth = progressBar.getBoundingClientRect().width;
+            const containerWidth = progressBar.parentElement.getBoundingClientRect().width;
+            const percentage = (currentWidth / containerWidth) * 100;
+            progressBar.style.transition = 'none';
+            progressBar.style.width = `${percentage}%`;
+        }
+
+        function goNext() {
+            if (isAnimating) return;
+
+            const visibleCount = getVisibleSlidesCount();
+            const maxIndex = totalItems - visibleCount;
+
+            if (currentIndex >= maxIndex) {
+                currentIndex = 0;
+            } else {
+                currentIndex++;
+            }
+
+            animateSlide();
+        }
+
+        function goPrev() {
+            if (isAnimating) return;
+
+            const visibleCount = getVisibleSlidesCount();
+            const maxIndex = totalItems - visibleCount;
+
+            if (currentIndex <= 0) {
+                currentIndex = maxIndex;
+            } else {
+                currentIndex--;
+            }
+
+            animateSlide();
+        }
+
+        function animateSlide() {
+            isAnimating = true;
+
+            track.style.transition = `transform ${animationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+            updateSlidePositions();
+            updateCounter();
+
+            setTimeout(() => {
+                isAnimating = false;
+                track.style.transition = '';
+            }, animationDuration);
+
+            resetProgress();
+        }
+
+        function startAutoPlay() {
+            stopAutoPlay();
+            autoPlayInterval = setInterval(goNext, slideInterval);
+            resetProgress();
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            goNext();
+            stopAutoPlay();
+            setTimeout(startAutoPlay, 2000);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            goPrev();
+            stopAutoPlay();
+            setTimeout(startAutoPlay, 2000); 
+        });
+
+        // Pause on hover
+        carousel.addEventListener('mouseenter', () => {
+            stopAutoPlay();
+            pauseProgress();
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            startAutoPlay();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                goPrev();
+                stopAutoPlay();
+                setTimeout(startAutoPlay, 2000);
+            } else if (e.key === 'ArrowRight') {
+                goNext();
+                stopAutoPlay();
+                setTimeout(startAutoPlay, 2000);
+            }
+        });
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                updateSlidePositions();
+                updateCounter();
+            }, 250);
+        });
+
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        carousel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            stopAutoPlay();
+        });
+
+        carousel.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            e.preventDefault();
+        });
+
+        carousel.addEventListener('touchend', () => {
+            if (!isDragging) return;
+
+            const diffX = startX - currentX;
+            const threshold = 50;
+
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    goNext();
+                } else {
+                    goPrev();
+                }
+            }
+
+            isDragging = false;
+            setTimeout(startAutoPlay, 2000);
+        });
+
+        updateSlidePositions();
+        updateCounter();
+        startAutoPlay();
+
+        const visibleCount = getVisibleSlidesCount();
+        if (totalItems <= visibleCount) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+    });
+</script>

@@ -1,0 +1,69 @@
+﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
+
+@{
+    var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)
+        ? "https://via.placeholder.com/300x200?text=News"
+        : Model.TitleImageUrl;
+
+    var badgeClass = Model.NewsType.ToString().ToLowerInvariant() switch
+    {
+        "politics" => "badge-politics",
+        "sports" => "badge-sports",
+        "technology" => "badge-technology",
+        "business" => "badge-business",
+        "entertainment" => "badge-entertainment",
+        "science" => "badge-science",
+        "health" => "badge-health",
+        "world" => "badge-world",
+        _ => "badge-general"
+    };
+}
+
+<a asp-controller="AuthorActions"
+   asp-action="DetailedNews"
+   asp-area="Author"
+   asp-route-newsId="@Model.NewsId"
+   class="sidebar-news-card text-reset text-decoration-none"
+   data-news-type="@Model.NewsType.ToString().ToLowerInvariant()">
+
+    <div class="sidebar-news-content">
+        <div class="sidebar-news-image">
+            <img src="@imgSrc"
+                 alt="@Model.NewsTitle"
+                 loading="lazy"
+                 class="sidebar-news-img" />
+            <div class="sidebar-news-overlay"></div>
+        </div>
+
+        <div class="sidebar-news-info">
+            <h6 class="sidebar-news-title" title="@Model.NewsTitle">
+                @Model.NewsTitle
+            </h6>
+
+            <div class="sidebar-news-meta">
+                <span class="sidebar-news-date">
+                    <i class="bi bi-calendar-event"></i>
+                    @Model.PublishedDate.ToString("MMM dd")
+                </span>
+
+                <span class="sidebar-news-views">
+                    <i class="bi bi-eye"></i>
+                    @((Model.TotalViews) > 999 ? $"{(Model.TotalViews) / 1000.0:F1}k" : (Model.TotalViews).ToString())
+                </span>
+            </div>
+
+            <div class="sidebar-news-footer">
+                <span class="sidebar-news-badge @badgeClass">
+                    <i class="news-type-icon" aria-hidden="true"></i>
+                    @Model.NewsType
+                </span>
+
+                <span class="sidebar-news-excerpt">
+                    @((Model.NewsContent ?? string.Empty).Length > 60
+                                        ? Model.NewsContent!.Substring(0, 60) + "…"
+                                        : Model.NewsContent)
+                </span>
+            </div>
+        </div>
+    </div>
+</a>

@@ -62,7 +62,6 @@
 
 <div class="container-fluid">
     <div class="news-grid-container">
-        <!-- Main Content -->
         <div class="main-content">
             @if (Model == null || Model.Count == 0)
             {
@@ -86,7 +85,6 @@
                                 <img src="@(string.IsNullOrWhiteSpace(news.TitleImageUrl) ? "https://via.placeholder.com/400x200?text=News" : news.TitleImageUrl)"
                                      alt="@news.NewsTitle"
                                      loading="lazy" />
-                                @* <span class="news-badge">@news.NewsType</span> *@
                             </div>
                             <div class="news-card-body">
                                 <h5 class="news-card-title" title="@news.NewsTitle">@news.NewsTitle</h5>
@@ -112,7 +110,6 @@
                 </div>
             }
 
-            <!-- Enhanced Pagination -->
             @if (pageCount > 1)
             {
                 <nav class="d-flex justify-content-center mt-4" aria-label="Pagination">
@@ -161,7 +158,6 @@
             }
         </div>
 
-        <!-- Right Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
@@ -187,7 +183,6 @@
                 @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
             </div>
 
-            <!-- Quick Category Links -->
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-grid text-info"></i>
@@ -228,7 +223,6 @@
 
 @section Scripts {
     <script>
-        // Auto-dismiss enhanced alerts
         setTimeout(() => {
             document.querySelectorAll('.alert-enhanced').forEach(alert => {
                 const bsAlert = new bootstrap.Alert(alert);
@@ -236,7 +230,6 @@
             });
         }, 5000);
 
-        // Smooth scroll for pagination
         document.querySelectorAll('.pagination a').forEach(link => {
             link.addEventListener('click', () => {
                 setTimeout(() => {

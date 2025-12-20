@@ -1,16 +1,13 @@
 ﻿@{
     ViewBag.Title = "General";
-    ViewBag.NewsType = NewsType.General;
 }
 
-<!-- Newspaper Header -->
 <header class="newspaper-header">
     <h1 class="newspaper-title">Daily News Portal</h1>
     <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
     <div class="newspaper-line"></div>
 </header>
 
-<!-- Alerts -->
 @if (TempData["Message"] != null)
 {
     <div class="alert success-alert">
@@ -27,25 +24,19 @@
     </div>
 }
 
-<!-- Newspaper Layout -->
 <main class="newspaper-main">
-    <!-- Top News - Full Width Banner -->
     <section class="top-banner">
         <h2 class="section-title">Breaking News</h2>
         @await Component.InvokeAsync("Carousel")
     </section>
 
-    <!-- Main Content Area -->
     <div class="newspaper-content">
-        <!-- Left Column - Main Stories -->
         <div class="main-column">
-            <!-- Politics -->
             <article class="news-section politics">
                 <h3 class="category-title">Politics <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Politics, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
                 @await Component.InvokeAsync("OtherNews", NewsType.Politics)
             </article>
 
-            <!-- Technology & Sports - Side by Side -->
             <div class="two-column-section">
                 <article class="news-section technology">
                     <h3 class="category-title">Technology <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Technology, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
@@ -71,7 +62,6 @@
                 </article>
             </div>
 
-            <!-- Science & Health - Side by Side -->
             <div class="two-column-section">
                 <article class="news-section science">
                     <h3 class="category-title">Science <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Science, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
@@ -84,14 +74,12 @@
                 </article>
             </div>
 
-            <!-- World News - Full Width -->
             <article class="news-section world">
                 <h3 class="category-title">World News <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.World, pageNo = 1, pageSize = 18 })" class="see-more">See all →</a></h3>
                 @await Component.InvokeAsync("OtherNews", NewsType.World)
             </article>
         </div>
 
-        <!-- Right Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h4 class="sidebar-title">📌 Pinned</h4>
@@ -117,7 +105,6 @@
 
 @section Scripts {
     <script>
-        // Auto-dismiss alerts
         setTimeout(() => {
             document.querySelectorAll('.alert').forEach(alert => alert.style.display = 'none');
         }, 5000);

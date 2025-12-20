@@ -1,5 +1,4 @@
-﻿/* Scoped (optional) */
-.news-card { border-radius: .75rem; overflow:hidden; }
+﻿.news-card { border-radius: .75rem; overflow:hidden; }
 .news-card {
     cursor: pointer;
     transition: transform .25s, box-shadow .25s;

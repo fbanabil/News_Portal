@@ -10,6 +10,8 @@ namespace News_Portal.Core.Domain.RepositoryContracts
     public interface IImageRepository
     {
         Task AddImage(Images image);
+        Task DeleteImageFromImageTable(Guid imageId);
+        Task<Images> GetImageById(Guid imageId);
         Task<bool> ImageExistsById(Guid imageId);
     }
 }

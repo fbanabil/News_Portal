@@ -3,7 +3,6 @@
 
 @{
     var content = Model.NewsContent ?? string.Empty;
-    // slightly shorter so it fits well in the hero
     var snippet = content.Length > 3600 ? content.Substring(0, 3600) + "..." : content;
     var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = Model.NewsType.ToString();
