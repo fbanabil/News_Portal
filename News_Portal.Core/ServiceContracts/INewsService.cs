@@ -18,6 +18,7 @@ namespace News_Portal.Core.ServiceContracts
         Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, AuthorNewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10);
         Task<int> GetAuthorsNewsCountAsync(Guid id, AuthorNewsFilterParametersDTO parametersDTO);
         Task<AuthorsNewsDetailesToShowDTO> GetAuthorsNewsDetailsAsync(Guid newsId);
+        Task<(int, int, int, int)> GetAuthorsNewsSummaryAsync(Guid id);
         Task<List<HomePageNewsToShowDTO>> GetAuthorsTopNewsAsync(int size, Guid id);
 
         //Task<BestOfAuthorsNewsDTO> GetBestOfAuthorsNewsAsync(int size);

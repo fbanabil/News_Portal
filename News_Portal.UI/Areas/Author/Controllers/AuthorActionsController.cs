@@ -41,9 +41,20 @@ namespace News_Portal.UI.Areas.Author.Controllers
             authorNewsAllFiltersDTO.pageSize = pageSize;
 
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
+
             List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = await _newsService.GetAllAuthorsNewsAsync(user.Id, parametersDTO, sortBy, sortType, pageNo, pageSize);
+
             int totalNewsCount = await _newsService.GetAuthorsNewsCountAsync(user.Id, parametersDTO);
             ViewBag.PageCount = (int)Math.Ceiling((double)totalNewsCount / pageSize);
+
+
+            ( int TotalArticles, int TotalPublishedArticles, int TotalViews, int ThisMonth ) = await _newsService.GetAuthorsNewsSummaryAsync(user.Id);
+
+            ViewBag.TotalArticles = TotalArticles;
+            ViewBag.TotalPublishedArticles = (int)(((double)TotalPublishedArticles/(double)TotalArticles)*100);
+            ViewBag.TotalViews = TotalViews;
+            ViewBag.ThisMonth = ThisMonth;
+
             return View(authorNewsAllFiltersDTO);
         }
 
@@ -94,11 +105,18 @@ namespace News_Portal.UI.Areas.Author.Controllers
         }
 
 
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> AddNews()
         {
             return View();
         }
+
+
+
 
 
 
@@ -113,6 +131,7 @@ namespace News_Portal.UI.Areas.Author.Controllers
 
 
 
+
         [HttpGet]
         public async Task<IActionResult> EditNews(Guid newsId)
         {
@@ -123,6 +142,7 @@ namespace News_Portal.UI.Areas.Author.Controllers
 
 
 
+
         [HttpPost]
         public async Task<IActionResult> EditNews(NewsToEditDTO newsToEditDTO)
         {
@@ -130,6 +150,10 @@ namespace News_Portal.UI.Areas.Author.Controllers
             await _newsService.UpdateNewsAsync(newsToEditDTO, user!.Id);
             return RedirectToAction(nameof(DetailedNews), new { newsId = newsToEditDTO.NewsId });
         }
+
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> DeleteNews(Guid newsId)

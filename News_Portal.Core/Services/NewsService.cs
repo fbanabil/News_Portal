@@ -113,6 +113,20 @@ namespace News_Portal.Core.Services
 
 
 
+        public async Task<(int, int , int, int)> GetAuthorsNewsSummaryAsync(Guid id)
+        {
+            List<News> news = await _newsRepository.GetAllAuthorsNews(id);
+            int totalArticles = news.Count;
+            int totalPublishedArticles = news.Where(n => n.NewsStatus == NewsStatus.Published).Count();
+            int totalViews = news.Sum(n => n.TotalViews);
+            int thisMonth = news.Where(n => n?.PublishedDate != null && n.PublishedDate.Month == DateTime.UtcNow.Month && n.PublishedDate.Year == DateTime.UtcNow.Year).Count();
+            return (totalArticles, totalPublishedArticles, totalViews, thisMonth);
+        }
+
+
+
+
+
         public async Task<List<HomePageNewsToShowDTO>> GetAuthorsTopNewsAsync(int size, Guid id)
         {
             List<News> news = await _newsRepository.GetAllAuthorsNews(id);
