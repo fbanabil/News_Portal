@@ -1,8 +1,8 @@
 ﻿@model AuthorsNewsToShowDTO
 
-<a asp-controller="AuthorActions"
+<a asp-controller="AdminActions"
    asp-action="DetailedNews"
-   asp-area="Author"
+   asp-area="Admin"
    asp-route-newsId="@Model.NewsId"
    class="news-card-link text-decoration-none d-block"
    aria-label="Read '@Model.NewsTitle'">

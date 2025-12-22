@@ -206,6 +206,24 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
 
 
+        [HttpGet]
+        public async Task<IActionResult> IsAuthor(string AuthorEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(AuthorEmail);
+            if (user != null)
+            {
+                var isAuthor = await _userManager.IsInRoleAsync(user, UserTypes.Author.ToString());
+                var isAdmin = await _userManager.IsInRoleAsync(user, UserTypes.Admin.ToString());
+                if (isAuthor || isAdmin)
+                {
+                    return Json(true);
+                }
+            }
+            return Json(false);
+        }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> IsAnAuthor(string RemoveEmail)

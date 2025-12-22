@@ -6,7 +6,7 @@
 }
 
 <div class="author-news-container">
-    <div class="news-header">
+    @* <div class="news-header">
         <div class="news-stats">
             <h2 class="news-title">Your News Articles</h2>
             <div class="news-count">
@@ -14,7 +14,7 @@
                 <span class="count-label">articles found</span>
             </div>
         </div>
-    </div>
+    </div> *@
 
     <div class="news-content">
         @if (Model != null && Model.Any())
@@ -22,7 +22,7 @@
             <div class="news-list">
                 @foreach (var newsItem in Model)
                 {
-                    @await Html.PartialAsync("~/Areas/Author/Views/Shared/PartialViews/AuthorNewsCard.cshtml", newsItem)
+                    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/PartialViews/AdminNewsCard.cshtml", newsItem)
                 }
             </div>
 
@@ -41,13 +41,6 @@
                     </svg>
                 </div>
                 <h3 class="empty-title">No articles found</h3>
-                <p class="empty-message">Try adjusting your filters or create your first news article.</p>
-                <a href="@Url.Action("Create", "NewsManagement", new { area = "Author" })" class="btn-create">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Create New Article
-                </a>
             </div>
         }
     </div>

@@ -50,6 +50,14 @@ namespace News_Portal.Infrastructure.Repositories
 
 
 
+        public async Task<List<News>> GetAllNewsAsync()
+        {
+            return await _dbContext.News.Include(i=>i.Images).Include(i=>i.Comments).Include(i=>i.Author).ToListAsync();
+        }
+
+
+
+
         public async Task<News> GetNewsById(Guid newsId)
         {
             return await _dbContext.News.Include(i=>i.Author).Include(i=>i.Images).Include(i=>i.Comments).ThenInclude(i=>i.User).FirstOrDefaultAsync(n=>n.NewsId == newsId);

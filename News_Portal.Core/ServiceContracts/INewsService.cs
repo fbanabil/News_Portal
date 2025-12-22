@@ -15,7 +15,10 @@ namespace News_Portal.Core.ServiceContracts
         Task AddNews(News news);
         Task AddNewsByAuthor(NewsToAddDTO newsToAddDTO, Guid authoId);
         Task DeleteNewsAsync(Guid newsId, Guid id);
+        Task<int> GetAdminPageNewsCountAsync(Guid? id, NewsFilterParametersDTO? parametersDTO);
+        Task<AdminsNewsDetailesToShowDTO> GetAdminsNewsDetailsAsync(Guid newsId);
         Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, NewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10);
+        Task<List<AuthorsNewsToShowDTO>> GetAllNewsAsync(NewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo, int pageSize);
         Task<int> GetAuthorsNewsCountAsync(Guid id, NewsFilterParametersDTO parametersDTO);
         Task<AuthorsNewsDetailesToShowDTO> GetAuthorsNewsDetailsAsync(Guid newsId);
         Task<(int, int, int, int)> GetAuthorsNewsSummaryAsync(Guid id);

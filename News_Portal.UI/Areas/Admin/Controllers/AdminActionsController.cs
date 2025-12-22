@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.DTO.News;
+using News_Portal.Core.DTO.Profile;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
 using News_Portal.UI.Filters;
@@ -31,42 +34,47 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] NewsFilterParametersDTO? parametersDTO, [FromQuery] string? sortBy = "PublishedDate", [FromQuery] SortTypes sortType = SortTypes.Default, [FromQuery] int pageNo = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> Index([FromQuery] NewsFilterParametersDTO? parametersDTO, [FromQuery] string? AuthorEmail, [FromQuery] string? sortBy = "PublishedDate", [FromQuery] SortTypes sortType = SortTypes.Default, [FromQuery] int pageNo = 1, [FromQuery] int pageSize = 10)
         {
-            AuthorNewsAllFiltersDTO authorNewsAllFiltersDTO = new AuthorNewsAllFiltersDTO();
-            authorNewsAllFiltersDTO.parametersDTO = parametersDTO ?? new NewsFilterParametersDTO();
-            authorNewsAllFiltersDTO.sortBy = sortBy ?? "PublishedDate";
-            authorNewsAllFiltersDTO.sortType = sortType;
-            authorNewsAllFiltersDTO.pageNo = 1;
-            authorNewsAllFiltersDTO.pageSize = pageSize;
+            AdminNewsAllFiltersDTO adminNewsAllFiltersDTO = new AdminNewsAllFiltersDTO();
+            adminNewsAllFiltersDTO.parametersDTO = parametersDTO ?? new NewsFilterParametersDTO();
+            adminNewsAllFiltersDTO.sortBy = sortBy ?? "PublishedDate";
+            adminNewsAllFiltersDTO.sortType = sortType;
+            adminNewsAllFiltersDTO.pageNo = 1;
+            adminNewsAllFiltersDTO.pageSize = pageSize;
+            adminNewsAllFiltersDTO.AuthorEmail = AuthorEmail;
 
-            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
 
-            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = await _newsService.GetAllAuthorsNewsAsync(user.Id, parametersDTO, sortBy, sortType, pageNo, pageSize);
+            int totalNewsCount = 0;
 
-            int totalNewsCount = await _newsService.GetAuthorsNewsCountAsync(user.Id, parametersDTO);
+            if (AuthorEmail != null)
+            {
+                ApplicationUser? author = await _userManager.FindByEmailAsync(AuthorEmail);
+                if(author != null) totalNewsCount = await _newsService.GetAdminPageNewsCountAsync(author.Id, parametersDTO);
+            }
+            else
+            {
+                totalNewsCount = await _newsService.GetAdminPageNewsCountAsync(null, parametersDTO);
+            }
             ViewBag.PageCount = (int)Math.Ceiling((double)totalNewsCount / pageSize);
 
 
-            (int TotalArticles, int TotalPublishedArticles, int TotalViews, int ThisMonth) = await _newsService.GetAuthorsNewsSummaryAsync(user.Id);
+            IList<ApplicationUser>? authors = await _userManager.GetUsersInRoleAsync(UserTypes.Author.ToString());
+            List<AuthorsToShowDTO> allAuthors = authors.Select(u => u.ToAuthorsToShowDTO()).OrderBy(x=>x.AuthorName).ToList();            
+            ViewBag.AuthorsList = new SelectList(allAuthors, "AuthorEmail", "AuthorName", AuthorEmail);
 
-            ViewBag.TotalArticles = TotalArticles;
-            ViewBag.TotalPublishedArticles = (int)(((double)TotalPublishedArticles / (double)TotalArticles) * 100);
-            ViewBag.TotalViews = TotalViews;
-            ViewBag.ThisMonth = ThisMonth;
-
-            return View(authorNewsAllFiltersDTO);
+            return View(adminNewsAllFiltersDTO);
         }
 
 
 
 
         [HttpGet]
-        public IActionResult AuthorNewsList(NewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy = "PublishedDate", SortTypes sortOptions = SortTypes.Default, int pageNo = 1, int pageSize = 5)
+        public IActionResult AdminNewsList(NewsFilterParametersDTO NewsFilterParametersDTO, string sortBy = "PublishedDate", SortTypes sortOptions = SortTypes.Default, int pageNo = 1, int pageSize = 5)
         {
-            return ViewComponent("AuthorNews", new
+            return ViewComponent("AdminNews", new
             {
-                authorNewsFilterParametersDTO,
+                NewsFilterParametersDTO,
                 sortBy,
                 sortOptions,
                 pageNo,
@@ -77,11 +85,13 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
 
 
+
+
         [HttpGet]
         public async Task<IActionResult> DetailedNews(Guid newsId)
         {
-            AuthorsNewsDetailesToShowDTO authorsNewsDetailedDTO = await _newsService.GetAuthorsNewsDetailsAsync(newsId);
-            string? videoLink = authorsNewsDetailedDTO.VideoUrl ?? "";
+            AdminsNewsDetailesToShowDTO adminsNewsDetailedDTO = await _newsService.GetAdminsNewsDetailsAsync(newsId);
+            string? videoLink = adminsNewsDetailedDTO.VideoUrl ?? "";
             string youtubeEmbedUrl = "";
             if (videoLink.Contains("youtube.com/watch?v="))
             {
@@ -97,9 +107,11 @@ namespace News_Portal.UI.Areas.Admin.Controllers
                 youtubeEmbedUrl = $"https://www.youtube.com/embed/{idPart}";
             }
             ViewBag.VideoLink = youtubeEmbedUrl;
-            authorsNewsDetailedDTO.VideoUrl = youtubeEmbedUrl;
-            return View(authorsNewsDetailedDTO);
+            adminsNewsDetailedDTO.VideoUrl = youtubeEmbedUrl;
+            return View(adminsNewsDetailedDTO);
         }
+
+
 
 
 

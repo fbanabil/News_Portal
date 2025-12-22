@@ -40,7 +40,7 @@ namespace News_Portal.UI.Areas.Author.Controllers
 
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
 
-            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = await _newsService.GetAllAuthorsNewsAsync(user.Id, parametersDTO, sortBy, sortType, pageNo, pageSize);
+            //List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = await _newsService.GetAllAuthorsNewsAsync(user.Id, parametersDTO, sortBy, sortType, pageNo, pageSize);
 
             int totalNewsCount = await _newsService.GetAuthorsNewsCountAsync(user.Id, parametersDTO);
             ViewBag.PageCount = (int)Math.Ceiling((double)totalNewsCount / pageSize);

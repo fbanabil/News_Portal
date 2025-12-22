@@ -14,6 +14,7 @@ namespace News_Portal.Core.Domain.RepositoryContracts
         Task AddNews(News news);
         Task DeleteNewsAsync(Guid newsId);
         Task<List<News>> GetAllAuthorsNews(Guid authorId);
+        Task<List<News>> GetAllNewsAsync();
         Task<News> GetNewsById(Guid newsId);
         Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize);
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();

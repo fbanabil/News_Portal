@@ -1,4 +1,4 @@
-﻿@model AuthorNewsAllFiltersDTO
+﻿@model AdminNewsAllFiltersDTO
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
@@ -10,10 +10,12 @@
     Model.parametersDTO ??= new NewsFilterParametersDTO();
 
     if (Model.pageNo <= 0) Model.pageNo = 1;
-    if (Model.pageSize <= 0) Model.pageSize = 5;
+    if (Model.pageSize <= 0) Model.pageSize = 10;
     Model.sortBy ??= "PublishedDate";
 
     int pageCount = ViewBag.PageCount ?? 1;
+    // string presentStatus = ViewBag.PresentStatus;
+    NewsStatus? newsStatusFilter = Model.parametersDTO.NewsStatus;
 
 }
 
@@ -37,319 +39,378 @@
 <div class="author-news-main">
 
 
-        <main class="main-content">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="bi bi-pencil-square"></i>
-                    Admin Dashboard
-                </h2>
+    <main class="main-content">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="bi bi-pencil-square"></i>
+                Admin Dashboard
+            </h2>
+        </div>
+
+        <div class="author-news-content">
+
+            <div class="filters-container">
+                <form method="get"
+                      asp-area="Admin"
+                      asp-controller="AdminActions"
+                      asp-action="Index"
+                      class="filters-form"
+                      id="filtersForm">
+
+                    <div class="filter-header">
+                        <h4 class="filter-title">
+                            <i class="bi bi-funnel"></i>
+                            Filter & Search Articles
+                        </h4>
+                        <button type="button" class="btn-toggle-filters" id="btnToggleFilters" aria-expanded="false" aria-controls="filterFields" onclick="toggleFilters()">
+                            <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <div class="filter-fields" id="filterFields">
+
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label asp-for="parametersDTO.NewsTitle" class="filter-label">
+                                    <i class="bi bi-search"></i>
+                                    Article Title
+                                </label>
+                                <input asp-for="parametersDTO.NewsTitle"
+                                       class="filter-input"
+                                       placeholder="Search by title..."
+                                       value="@Model.parametersDTO?.NewsTitle" />
+                            </div>
+
+                            <div class="filter-group">
+                                <label asp-for="parametersDTO.NewsContent" class="filter-label">
+                                    <i class="bi bi-text-paragraph"></i>
+                                    Content
+                                </label>
+                                <input asp-for="parametersDTO.NewsContent"
+                                       class="filter-input"
+                                       placeholder="Search in content..."
+                                       value="@Model.parametersDTO?.NewsContent" />
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label asp-for="parametersDTO.NewsType" class="filter-label">
+                                    <i class="bi bi-tags"></i>
+                                    Category
+                                </label>
+                                <select asp-for="parametersDTO.NewsType" class="filter-select">
+                                    <option value="">All Categories</option>
+                                    @foreach (NewsType newsType in Enum.GetValues<NewsType>())
+                                    {
+                                        <option value="@newsType" selected="@(Model.parametersDTO?.NewsType == newsType)">
+                                            @newsType
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label asp-for="AuthorEmail" class="filter-label">
+                                    <i class="bi bi-envelope"></i>
+                                    Author Email
+                                </label>
+                                @*<input asp-for="AuthorEmail"
+                                       class="filter-input"
+                                       placeholder="Search by author email..."
+                                       value="@Model.AuthorEmail" />
+                                <span asp-validation-for="AuthorEmail" class="text-danger"></span>*@
+                                <select asp-for="AuthorEmail" class="filter-input" asp-items="@ViewBag.AuthorsList">
+                                    <option value="">-- Select Author --</option>
+                                </select>
+                                <span asp-validation-for="AuthorEmail" class="text-danger"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label asp-for="parametersDTO.NewsPriority" class="filter-label">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    Priority
+                                </label>
+                                <select asp-for="parametersDTO.NewsPriority" class="filter-select">
+                                    <option value="">All Priorities</option>
+                                    @foreach (NewsPriority priority in Enum.GetValues<NewsPriority>())
+                                    {
+                                        <option value="@priority" selected="@(Model.parametersDTO?.NewsPriority == priority)">
+                                            @priority
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+
+                            <div class="filter-group">
+                                <label asp-for="parametersDTO.PublishedDate" class="filter-label">
+                                    <i class="bi bi-calendar-event"></i>
+                                    Published Date
+                                </label>
+                                <input asp-for="parametersDTO.PublishedDate"
+                                       type="date"
+                                       class="filter-input"
+                                       value="@Model.parametersDTO?.PublishedDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label asp-for="sortBy" class="filter-label">
+                                    <i class="bi bi-sort-down"></i>
+                                    Sort By
+                                </label>
+                                <select asp-for="sortBy" class="filter-select">
+                                    <option value="PublishedDate" selected="@(Model.sortBy == "PublishedDate")">Published Date</option>
+                                    <option value="NewsTitle" selected="@(Model.sortBy == "NewsTitle")">Title</option>
+                                    <option value="TotalViews" selected="@(Model.sortBy == "TotalViews")">Total Views</option>
+                                    <option value="NewsStatus" selected="@(Model.sortBy == "NewsStatus")">Status</option>
+                                    <option value="NewsPriority" selected="@(Model.sortBy == "NewsPriority")">Priority</option>
+                                    <option value="NewsType" selected="@(Model.sortBy == "NewsType")">Category</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label asp-for="sortType" class="filter-label">
+                                    <i class="bi bi-arrow-up-down"></i>
+                                    Sort Order
+                                </label>
+                                <select asp-for="sortType" class="filter-select">
+                                    @foreach (SortTypes sortType in Enum.GetValues<SortTypes>())
+                                    {
+                                        <option value="@sortType" selected="@(Model.sortType == sortType)">
+                                            @sortType.GetDisplayName()
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label asp-for="pageSize" class="filter-label">
+                                    <i class="bi bi-list-ol"></i>
+                                    Items Per Page
+                                </label>
+                                <select asp-for="pageSize" class="filter-select" id="pageSizeSelect">
+                                    <option value="5" selected="@(Model.pageSize == 5)">5</option>
+                                    <option value="10" selected="@(Model.pageSize == 10)">10</option>
+                                    <option value="20" selected="@(Model.pageSize == 20)">20</option>
+                                    <option value="50" selected="@(Model.pageSize == 50)">50</option>
+                                </select>
+                            </div>
+                            <div>
+                                <input type="hidden" asp-for="parametersDTO.NewsStatus" />
+                            </div>
+
+                            <div class="filter-group filter-actions">
+                                <input type="hidden" asp-for="pageNo" value="@Model.pageNo" id="pageNoHidden" />
+
+                                <button type="submit" class="btn-filter-apply">
+                                    <i class="bi bi-search"></i>
+                                    Apply Filters
+                                </button>
+
+                                <a asp-area="Admin"
+                                   asp-controller="AdminActions"
+                                   asp-action="Index"
+                                   class="btn-filter-reset">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                    Reset
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
 
-            <div class="author-news-content">
-
-                <div class="filters-container">
-                    <form method="get"
-                          asp-area="Author"
-                          asp-controller="AuthorActions"
-                          asp-action="Index"
-                          class="filters-form"
-                          id="filtersForm">
-
-                        <div class="filter-header">
-                            <h4 class="filter-title">
-                                <i class="bi bi-funnel"></i>
-                                Filter & Search Articles
-                            </h4>
-                            <button type="button" class="btn-toggle-filters" onclick="toggleFilters()">
-                                <i class="bi bi-chevron-down"></i>
-                            </button>
-                        </div>
-
-                        <div class="filter-fields" id="filterFields">
-
-                            <div class="filter-row">
-                                <div class="filter-group">
-                                    <label asp-for="parametersDTO.NewsTitle" class="filter-label">
-                                        <i class="bi bi-search"></i>
-                                        Article Title
-                                    </label>
-                                    <input asp-for="parametersDTO.NewsTitle"
-                                           class="filter-input"
-                                           placeholder="Search by title..."
-                                           value="@Model.parametersDTO?.NewsTitle" />
-                                </div>
-
-                                <div class="filter-group">
-                                    <label asp-for="parametersDTO.NewsContent" class="filter-label">
-                                        <i class="bi bi-text-paragraph"></i>
-                                        Content
-                                    </label>
-                                    <input asp-for="parametersDTO.NewsContent"
-                                           class="filter-input"
-                                           placeholder="Search in content..."
-                                           value="@Model.parametersDTO?.NewsContent" />
-                                </div>
-                            </div>
-
-                            <div class="filter-row">
-                                <div class="filter-group">
-                                    <label asp-for="parametersDTO.NewsType" class="filter-label">
-                                        <i class="bi bi-tags"></i>
-                                        Category
-                                    </label>
-                                    <select asp-for="parametersDTO.NewsType" class="filter-select">
-                                        <option value="">All Categories</option>
-                                        @foreach (NewsType newsType in Enum.GetValues<NewsType>())
-                                        {
-                                            <option value="@newsType" selected="@(Model.parametersDTO?.NewsType == newsType)">
-                                                @newsType
-                                            </option>
-                                        }
-                                    </select>
-                                </div>
-
-                                <div class="filter-group">
-                                    <label asp-for="parametersDTO.NewsStatus" class="filter-label">
-                                        <i class="bi bi-flag"></i>
-                                        Status
-                                    </label>
-                                    <select asp-for="parametersDTO.NewsStatus" class="filter-select">
-                                        <option value="">All Statuses</option>
-                                        @foreach (NewsStatus status in Enum.GetValues<NewsStatus>())
-                                        {
-                                            <option value="@status" selected="@(Model.parametersDTO?.NewsStatus == status)">
-                                                @status
-                                            </option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="filter-row">
-                                <div class="filter-group">
-                                    <label asp-for="parametersDTO.NewsPriority" class="filter-label">
-                                        <i class="bi bi-exclamation-triangle"></i>
-                                        Priority
-                                    </label>
-                                    <select asp-for="parametersDTO.NewsPriority" class="filter-select">
-                                        <option value="">All Priorities</option>
-                                        @foreach (NewsPriority priority in Enum.GetValues<NewsPriority>())
-                                        {
-                                            <option value="@priority" selected="@(Model.parametersDTO?.NewsPriority == priority)">
-                                                @priority
-                                            </option>
-                                        }
-                                    </select>
-                                </div>
-
-                                <div class="filter-group">
-                                    <label asp-for="parametersDTO.PublishedDate" class="filter-label">
-                                        <i class="bi bi-calendar-event"></i>
-                                        Published Date
-                                    </label>
-                                    <input asp-for="parametersDTO.PublishedDate"
-                                           type="date"
-                                           class="filter-input"
-                                           value="@Model.parametersDTO?.PublishedDate?.ToString("yyyy-MM-dd")" />
-                                </div>
-                            </div>
-
-                            <div class="filter-row">
-                                <div class="filter-group">
-                                    <label asp-for="sortBy" class="filter-label">
-                                        <i class="bi bi-sort-down"></i>
-                                        Sort By
-                                    </label>
-                                    <select asp-for="sortBy" class="filter-select">
-                                        <option value="PublishedDate" selected="@(Model.sortBy == "PublishedDate")">Published Date</option>
-                                        <option value="NewsTitle" selected="@(Model.sortBy == "NewsTitle")">Title</option>
-                                        <option value="TotalViews" selected="@(Model.sortBy == "TotalViews")">Total Views</option>
-                                        <option value="NewsStatus" selected="@(Model.sortBy == "NewsStatus")">Status</option>
-                                        <option value="NewsPriority" selected="@(Model.sortBy == "NewsPriority")">Priority</option>
-                                        <option value="NewsType" selected="@(Model.sortBy == "NewsType")">Category</option>
-                                    </select>
-                                </div>
-
-                                <div class="filter-group">
-                                    <label asp-for="sortType" class="filter-label">
-                                        <i class="bi bi-arrow-up-down"></i>
-                                        Sort Order
-                                    </label>
-                                    <select asp-for="sortType" class="filter-select">
-                                        @foreach (SortTypes sortType in Enum.GetValues<SortTypes>())
-                                        {
-                                            <option value="@sortType" selected="@(Model.sortType == sortType)">
-                                                @sortType.GetDisplayName()
-                                            </option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="filter-row">
-                                <div class="filter-group">
-                                    <label asp-for="pageSize" class="filter-label">
-                                        <i class="bi bi-list-ol"></i>
-                                        Items Per Page
-                                    </label>
-                                    <select asp-for="pageSize" class="filter-select" id="pageSizeSelect">
-                                        <option value="5" selected="@(Model.pageSize == 5)">5</option>
-                                        <option value="10" selected="@(Model.pageSize == 10)">10</option>
-                                        <option value="20" selected="@(Model.pageSize == 20)">20</option>
-                                        <option value="50" selected="@(Model.pageSize == 50)">50</option>
-                                    </select>
-                                </div>
-
-                                <div class="filter-group filter-actions">
-                                    <input type="hidden" asp-for="pageNo" value="@Model.pageNo" id="pageNoHidden" />
-
-                                    <button type="submit" class="btn-filter-apply">
-                                        <i class="bi bi-search"></i>
-                                        Apply Filters
-                                    </button>
-
-                                    <a asp-area="Author"
-                                       asp-controller="AuthorActions"
-                                       asp-action="Index"
-                                       class="btn-filter-reset">
-                                        <i class="bi bi-arrow-clockwise"></i>
-                                        Reset
-                                    </a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
+            <div class="articles-section">
+                <div class="articles-header">
+                    <h3>📰 News Articles</h3>
+                    <div class="articles-summary">
+                        <span class="current-filters">
+                            Sorted by @Model.sortBy (@Model.sortType)
+                            | @Model.pageSize items per page
+                            | Page @Model.pageNo of @pageCount
+                        </span>
+                    </div>
                 </div>
 
-                <div class="articles-section">
-                    <div class="articles-header">
-                        <h3>📰 Your Articles</h3>
-                        <div class="articles-summary">
-                            <span class="current-filters">
-                                Sorted by @Model.sortBy (@Model.sortType)
-                                | @Model.pageSize items per page
-                                | Page @Model.pageNo of @pageCount
-                            </span>
-                        </div>
-                    </div>
+                <div class="articles-list" id="adminNewsHost">
+                    @await Component.InvokeAsync("AdminNews", new {
+                    AdminNewsFilterParametersDTO = Model.parametersDTO,
+                                        authorEmail = Model.AuthorEmail,
+                                        sortBy = Model.sortBy,
+                                        sortOptions = Model.sortType,
+                                        pageNo = Model.pageNo,
+                                        pageSize = Model.pageSize
+                                        })
+                </div>
 
-                    <div class="articles-list" id="authorNewsHost">
-                        @await Component.InvokeAsync("AuthorNews", new {
-                        authorNewsFilterParametersDTO = Model.parametersDTO,
-                                                sortBy = Model.sortBy,
-                                                sortOptions = Model.sortType,
-                                                pageNo = Model.pageNo,
-                                                pageSize = Model.pageSize
-                                                })
-                    </div>
+                <div class="pagination-wrapper" id="paginationSection">
+                    @if (pageCount > 1)
+                    {
+                        <nav class="pagination-nav" aria-label="Article pagination">
+                            <ul class="pagination-enhanced">
+                                @if (Model.pageNo > 2)
+                                {
+                                    <li class="page-item">
+                                        <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
+                                            <i class="bi bi-chevron-double-left"></i>
+                                            First
+                                        </button>
+                                    </li>
+                                }
 
-                    <div class="pagination-wrapper" id="paginationSection">
-                        @if (pageCount > 1)
-                        {
-                            <nav class="pagination-nav" aria-label="Article pagination">
-                                <ul class="pagination-enhanced">
-                                    @if (Model.pageNo > 2)
+                                @if (Model.pageNo > 1)
+                                {
+                                    <li class="page-item">
+                                        <button onclick="goToPageWithScroll(@(Model.pageNo - 1))" class="page-link" title="Previous Page">
+                                            <i class="bi bi-chevron-left"></i>
+                                            Previous
+                                        </button>
+                                    </li>
+                                }
+
+                                @{
+                                    int startPage = Math.Max(1, Model.pageNo - 2);
+                                    int endPage = Math.Min(pageCount, Model.pageNo + 2);
+                                }
+
+                                @if (startPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <button onclick="goToPageWithScroll(1)" class="page-link">1</button>
+                                    </li>
+                                    @if (startPage > 2)
                                     {
-                                        <li class="page-item">
-                                            <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
-                                                <i class="bi bi-chevron-double-left"></i>
-                                                First
-                                            </button>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
                                         </li>
                                     }
+                                }
 
-                                    @if (Model.pageNo > 1)
-                                    {
-                                        <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@(Model.pageNo - 1))" class="page-link" title="Previous Page">
-                                                <i class="bi bi-chevron-left"></i>
-                                                Previous
-                                            </button>
-                                        </li>
-                                    }
-
-                                    @{
-                                        int startPage = Math.Max(1, Model.pageNo - 2);
-                                        int endPage = Math.Min(pageCount, Model.pageNo + 2);
-                                    }
-
-                                    @if (startPage > 1)
-                                    {
-                                        <li class="page-item">
-                                            <button onclick="goToPageWithScroll(1)" class="page-link">1</button>
-                                        </li>
-                                        @if (startPage > 2)
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == Model.pageNo ? "active" : "")">
+                                        @if (i == Model.pageNo)
                                         {
-                                            <li class="page-item disabled">
-                                                <span class="page-link">...</span>
-                                            </li>
+                                            <span class="page-link">@i</span>
                                         }
-                                    }
-
-                                    @for (int i = startPage; i <= endPage; i++)
-                                    {
-                                        <li class="page-item @(i == Model.pageNo ? "active" : "")">
-                                            @if (i == Model.pageNo)
-                                            {
-                                                <span class="page-link">@i</span>
-                                            }
-                                            else
-                                            {
-                                                <button onclick="goToPageWithScroll(@i)" class="page-link">@i</button>
-                                            }
-                                        </li>
-                                    }
-
-                                    @if (endPage < pageCount)
-                                    {
-                                        @if (endPage < pageCount - 1)
+                                        else
                                         {
-                                            <li class="page-item disabled">
-                                                <span class="page-link">...</span>
-                                            </li>
+                                            <button onclick="goToPageWithScroll(@i)" class="page-link">@i</button>
                                         }
-                                        <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@pageCount)" class="page-link">@pageCount</button>
-                                        </li>
-                                    }
+                                    </li>
+                                }
 
-                                    @if (Model.pageNo < pageCount)
+                                @if (endPage < pageCount)
+                                {
+                                    @if (endPage < pageCount - 1)
                                     {
-                                        <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@(Model.pageNo + 1))" class="page-link" title="Next Page">
-                                                Next
-                                                <i class="bi bi-chevron-right"></i>
-                                            </button>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
                                         </li>
                                     }
+                                    <li class="page-item">
+                                        <button onclick="goToPageWithScroll(@pageCount)" class="page-link">@pageCount</button>
+                                    </li>
+                                }
 
-                                    @if (Model.pageNo < pageCount - 1)
-                                    {
-                                        <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@pageCount)" class="page-link" title="Last Page">
-                                                Last
-                                                <i class="bi bi-chevron-double-right"></i>
-                                            </button>
-                                        </li>
-                                    }
-                                </ul>
-                            </nav>
+                                @if (Model.pageNo < pageCount)
+                                {
+                                    <li class="page-item">
+                                        <button onclick="goToPageWithScroll(@(Model.pageNo + 1))" class="page-link" title="Next Page">
+                                            Next
+                                            <i class="bi bi-chevron-right"></i>
+                                        </button>
+                                    </li>
+                                }
+
+                                @if (Model.pageNo < pageCount - 1)
+                                {
+                                    <li class="page-item">
+                                        <button onclick="goToPageWithScroll(@pageCount)" class="page-link" title="Last Page">
+                                            Last
+                                            <i class="bi bi-chevron-double-right"></i>
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
 
 
-                        }
-                    </div>
-
+                    }
                 </div>
 
             </div>
-        </main>
 
-    
+        </div>
+    </main>
+
+
 </div>
 
 @section Scripts {
     <script>
+        // Robust toggle implementation:
+        // - toggles 'show' class and uses max-height transition for smooth open/close
+        // - uses aria-expanded for accessibility
+        // - avoids relying on computed style string equality which may be empty or overridden by CSS
+
+        function toggleFilters() {
+            const filterFields = document.getElementById('filterFields');
+            const toggleBtn = document.getElementById('btnToggleFilters');
+            const toggleIcon = document.querySelector('#btnToggleFilters i');
+
+            if (!filterFields || !toggleBtn) return;
+
+            const isOpen = filterFields.classList.contains('show');
+
+            if (!isOpen) {
+                // Open
+                filterFields.classList.add('show');
+                filterFields.style.display = 'block';
+                filterFields.style.overflow = 'hidden';
+                // compute full height and animate max-height
+                const fullHeight = filterFields.scrollHeight + 'px';
+                filterFields.style.maxHeight = '0px';
+                // trigger a frame so transition runs
+                requestAnimationFrame(() => {
+                    filterFields.style.transition = 'max-height 260ms ease';
+                    filterFields.style.maxHeight = fullHeight;
+                });
+
+                toggleIcon.className = 'bi bi-chevron-up';
+                toggleBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                // Close
+                // set to current height then animate to 0
+                filterFields.style.maxHeight = filterFields.scrollHeight + 'px';
+                requestAnimationFrame(() => {
+                    filterFields.style.transition = 'max-height 200ms ease';
+                    filterFields.style.maxHeight = '0px';
+                });
+
+                filterFields.addEventListener('transitionend', function handler() {
+                    filterFields.style.display = 'none';
+                    filterFields.style.maxHeight = '';
+                    filterFields.style.transition = '';
+                    filterFields.style.overflow = '';
+                    filterFields.classList.remove('show');
+                    filterFields.removeEventListener('transitionend', handler);
+                });
+
+                toggleIcon.className = 'bi bi-chevron-down';
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        }
+
         async function goToPageWithScroll(pageNo) {
             showLoadingIndicator();
 
@@ -382,7 +443,7 @@
         }
 
         async function goToPage(pageNo) {
-            const host = document.getElementById('authorNewsHost');
+            const host = document.getElementById('adminNewsHost');
             if (!host) return;
 
             const pageNoHidden = document.getElementById('pageNoHidden');
@@ -391,7 +452,7 @@
              const params = new URLSearchParams(window.location.search);
             params.set('pageNo', pageNo);
 
-            const url = '@Url.Action("AuthorNewsList", "AuthorActions", new { area = "Author" })' + '?' + params.toString();
+            const url = '@Url.Action("AdminNewsList", "AdminActions", new { area = "Admin" })' + '?' + params.toString();
 
             const response = await fetch(url, {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -551,29 +612,21 @@
             }
         }
 
-        function toggleFilters() {
-            const filterFields = document.getElementById('filterFields');
-            const toggleBtn = document.querySelector('.btn-toggle-filters i');
-
-            if (filterFields.style.display === 'none' || !filterFields.classList.contains('show')) {
-                filterFields.style.display = 'block';
-                filterFields.classList.add('show');
-                toggleBtn.className = 'bi bi-chevron-up';
-            } else {
-                filterFields.style.display = 'none';
-                filterFields.classList.remove('show');
-                toggleBtn.className = 'bi bi-chevron-down';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             const filterFields = document.getElementById('filterFields');
-            const toggleBtn = document.querySelector('.btn-toggle-filters i');
+            const toggleBtn = document.getElementById('btnToggleFilters');
 
-            if (filterFields && toggleBtn) {
+            if (filterFields) {
+                // start closed
                 filterFields.style.display = 'none';
+                filterFields.style.overflow = 'hidden';
+                filterFields.style.maxHeight = '0px';
                 filterFields.classList.remove('show');
-                toggleBtn.className = 'bi bi-chevron-down';
+            }
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                const icon = toggleBtn.querySelector('i');
+                if (icon) icon.className = 'bi bi-chevron-down';
             }
         });
     </script>

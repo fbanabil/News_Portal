@@ -79,6 +79,37 @@ namespace News_Portal.Core.Services
 
 
 
+        public async Task<int> GetAdminPageNewsCountAsync(Guid? id, NewsFilterParametersDTO? parametersDTO)
+        {
+            List<News> news = new List<News>();
+            if (id != null)
+            {
+                news = await _newsRepository.GetAllAuthorsNews(id.Value);
+            }
+            else
+            {
+                news = await _newsRepository.GetAllNewsAsync();
+            }
+            if (parametersDTO != null)
+            {
+                news = await _newsHelper_01.FilterNews(news, parametersDTO);
+            }
+            return news.Count;
+        }
+
+
+
+
+
+        public async Task<AdminsNewsDetailesToShowDTO> GetAdminsNewsDetailsAsync(Guid newsId)
+        {
+            News news = await _newsRepository.GetNewsById(newsId);
+            return news.ToAdminsNewsDetailesToShowDTO();
+        }
+
+
+
+
         public async Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, NewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10)
         {
             List<News> news = await _newsRepository.GetAllAuthorsNews(userId);
@@ -89,6 +120,20 @@ namespace News_Portal.Core.Services
 
             return authorsNewsToShowDTOs;
         }
+
+
+
+
+
+        public async Task<List<AuthorsNewsToShowDTO>> GetAllNewsAsync(NewsFilterParametersDTO newsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo, int pageSize)
+        {
+            List<News> news = await _newsRepository.GetAllNewsAsync();
+            news = await _newsHelper_01.SortNews(news, sortBy, sortOptions);
+            news = await _newsHelper_01.FilterNews(news, newsFilterParametersDTO);
+            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = news.Skip(pageSize * (pageNo - 1)).Take(pageSize).Select(n => n.ToAuthorsNewsToShowDTO()).ToList();
+            return authorsNewsToShowDTOs;
+        }
+
 
 
 

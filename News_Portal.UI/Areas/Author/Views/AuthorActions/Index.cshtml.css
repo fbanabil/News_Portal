@@ -202,7 +202,7 @@
 .filter-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 20px 30px;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -211,7 +211,7 @@
 .filter-title {
     margin: 0;
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 400;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -508,13 +508,13 @@
 .section-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 30px;
+    padding: 10px;
     text-align: center;
 }
 
 .section-title {
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     display: flex;
     align-items: center;

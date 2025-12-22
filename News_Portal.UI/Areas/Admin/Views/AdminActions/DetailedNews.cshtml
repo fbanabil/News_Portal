@@ -1,7 +1,8 @@
 ﻿@using News_Portal.Core.DTO.Comment
-@model AuthorsNewsDetailesToShowDTO
+@model AdminsNewsDetailesToShowDTO
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    SideBarDTO sideBarDTO=new SideBarDTO();
 }
 @{
     ViewData["Title"] = Model.NewsTitle ?? "News Details";
@@ -46,7 +47,6 @@
 }
 
 <div class="author-news-main">
-    <div class="author-news-container">
 
         <main class="main-content">
             <header class="news-hero">
@@ -201,7 +201,7 @@
                             }
                         }
                     </div>
-                    <div class="article-footer">
+                    @* <div class="article-footer">
                         <button type="button"
                                 class="btn btn-outline-primary btn-comments"
                                 data-bs-toggle="modal"
@@ -210,143 +210,22 @@
                             View Comments
                             (<span id="comments-toggle-count">@commentsCount</span>)
                         </button>
-                    </div>
+                    </div> *@
                 </article>
             }
         </main>
 
 
-        <aside class="sidebar">
+        @* <aside class="sidebar">
             <div class="sidebar-section">
-                <h4 class="sidebar-title">
-                    <i class="bi bi-lightning"></i>
-                    Quick Actions
-                </h4>
-                <div class="quick-actions">
-                    <a class="action-btn primary"
-                       href="@Url.Action("EditNews", "AuthorActions", new { area = "Author", newsId = Model.NewsId })">
-                        <i class="bi bi-pencil-square"></i>
-                        Edit Article
-                    </a>
-
-
-                    <a href="@Url.Action("DeleteNews", "AuthorActions", new { area = "Author", newsId = Model.NewsId })"
-                       class="action-btn secondary">
-                        <i class="bi bi-trash3"></i>
-                        Delete Article
-                    </a>
-
-                    <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
-                       class="action-btn primary">
-                        <i class="bi bi-file-earmark-text"></i>
-                        View My Articles
-                    </a>
-
-
-                </div>
+                @await Html.PartialAsync("PartialViews/_RightSidebar")
             </div>
+        </aside> *@
 
-            <div class="sidebar-section">
-                <h4 class="sidebar-title">
-                    <i class="bi bi-trophy"></i>
-                    Your Top Articles
-                </h4>
-                <div class="best-news-content">
-                    <div class="content-placeholder">
-                        @await Component.InvokeAsync("AuthorsBest", new { size = 10 })
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-    </div>
+   
 </div>
 
 
-
-<div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="commentsModalLabel">
-                    <i class="bi bi-chat-dots me-2"></i>
-                    Comments (<span id="comments-count-modal">@commentsCount</span>)
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-                <div id="comments-container" class="comments-list">
-                    @if (commentsCount == 0)
-                    {
-                        <div class="text-center py-5" id="no-comments-alert">
-                            <i class="bi bi-chat-dots display-4 text-muted mb-3"></i>
-                            <h6 class="text-muted">No comments yet</h6>
-                            <p class="text-muted small mb-0">Be the first to share your thoughts about this article.</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div id="comments-list">
-                            @foreach (var c in Model.Comments!.OrderByDescending(c => c.CommentDate))
-                            {
-                                @await Html.PartialAsync("~/Views/Shared/PartialViews/_Comment.cshtml", c)
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="modal-footer bg-light">
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-
-                    CommentToAddDTO commentToaddDTO = new CommentToAddDTO();
-                    commentToaddDTO.NewsId = Model.NewsId;
-
-
-                    <div class="w-100">
-                        <form asp-controller="Home" asp-action="AddComment" method="post" id="comment-form">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="NewsId" value="@Model.NewsId" />
-
-                            <div class="input-group">
-                                <textarea name="CommentText"
-                                      id="CommentText"
-                                      class="form-control"
-                                      rows="2"
-                                      placeholder="Share your thoughts about this article..."
-                                      style="resize: none;"></textarea>
-                                <button type="submit" class="btn btn-primary" id="submit-btn">
-                                    <i class="bi bi-send"></i>
-                                </button>
-                            </div>
-                            <span asp-validation-for="@commentToaddDTO.CommentText"
-                                  class="text-danger small"></span>
-                            <small class="text-muted d-block mt-1">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Commenting as <strong>@ViewBag.PresentUserName</strong>
-                            </small>
-                        </form>
-                    </div>
-                }
-                else
-                {
-                    <div class="w-100">
-                        <div class="alert alert-info mb-0 d-flex align-items-center">
-                            <i class="bi bi-info-circle me-2"></i>
-                            <span class="me-auto">You must be logged in to post comments.</span>
-                            <a asp-area="Identity"
-                               asp-controller="Account"
-                               asp-action="AuthLogin"
-                               class="btn btn-primary btn-sm">
-                                <i class="bi bi-box-arrow-in-right me-1"></i>Login
-                            </a>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script>
