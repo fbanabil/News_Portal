@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace News_Portal.Core.DTO.News
 {
-    public class AuthorNewsFilterParametersDTO
+    public class NewsFilterParametersDTO
     {
         public string? NewsTitle { get; set; }
         public string? NewsContent { get; set; }

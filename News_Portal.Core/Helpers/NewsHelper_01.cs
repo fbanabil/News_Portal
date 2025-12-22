@@ -43,7 +43,7 @@ namespace News_Portal.Core.Helpers
             return await Task.FromResult(news);
         }
 
-        public async Task<List<News>> FilterNews(List<News> news, AuthorNewsFilterParametersDTO authorNewsFilterParametersDTO)
+        public async Task<List<News>> FilterNews(List<News> news, NewsFilterParametersDTO authorNewsFilterParametersDTO)
         {
             news = news.Where(n =>
                 (string.IsNullOrEmpty(authorNewsFilterParametersDTO.NewsTitle) || n.NewsTitle.Contains(authorNewsFilterParametersDTO.NewsTitle, StringComparison.OrdinalIgnoreCase)) &&

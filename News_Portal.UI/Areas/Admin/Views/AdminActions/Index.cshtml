@@ -1,8 +1,11 @@
 ﻿@model AuthorNewsAllFiltersDTO
-@using News_Portal.Core.Enums
-
 @{
-    ViewBag.Title = "Author Actions";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@using News_Portal.Core.Enums
+@{
+    ViewBag.Title = "Admin Actions";
 
     Model.parametersDTO ??= new NewsFilterParametersDTO();
 
@@ -11,8 +14,9 @@
     Model.sortBy ??= "PublishedDate";
 
     int pageCount = ViewBag.PageCount ?? 1;
-    
+
 }
+
 
 
 @if (TempData["Message"] != null)
@@ -31,15 +35,14 @@
 }
 
 <div class="author-news-main">
-    <div class="author-news-container">
+
 
         <main class="main-content">
             <div class="section-header">
                 <h2 class="section-title">
                     <i class="bi bi-pencil-square"></i>
-                    Author Dashboard
+                    Admin Dashboard
                 </h2>
-                <p class="section-subtitle">Manage your articles and track performance</p>
             </div>
 
             <div class="author-news-content">
@@ -333,7 +336,7 @@
                                 </ul>
                             </nav>
 
-                           
+
                         }
                     </div>
 
@@ -342,89 +345,19 @@
             </div>
         </main>
 
-        <aside class="sidebar">
-
-            <div class="sidebar-section">
-                <h4 class="sidebar-title">
-                    <i class="bi bi-graph-up"></i>
-                    Quick Stats
-                </h4>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number">@ViewBag.TotalArticles</span>
-                        <span class="stat-label">Total Articles</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">@ViewBag.TotalViews</span>
-                        <span class="stat-label">Total Views</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">@ViewBag.ThisMonth</span>
-                        <span class="stat-label">This Month</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">@ViewBag.TotalPublishedArticles %</span>
-                        <span class="stat-label">Published</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <h4 class="sidebar-title">
-                    <i class="bi bi-lightning"></i>
-                    Quick Actions
-                </h4>
-                <div class="quick-actions">
-                    <a href="@Url.Action("AddNews", "AuthorActions", new { area = "Author" })"
-                        class="action-btn primary">
-                        <i class="bi bi-plus-circle"></i>
-                        Create New Article
-                    </a>
-                    <a href="@Url.Action("Index","Home")" class="action-btn secondary">
-                        <i class="bi bi-eye"></i>
-                        View All Articles
-                    </a>
-                    @*
-                    <a href="#" class="action-btn primary">
-                        <i class="bi bi-bar-chart"></i>
-                        Analytics
-                    </a>
-                    <a href="#" class="action-btn secondary">
-                        <i class="bi bi-gear"></i>
-                        Settings
-                    </a>
-                    *@
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <h4 class="sidebar-title">
-                    <i class="bi bi-trophy"></i>
-                    Your Top Articles
-                </h4>
-               
-                <div class="best-news-content">
-                    <div class="content-placeholder">
-                        @await Component.InvokeAsync("AuthorsBest", new { size = 10 })
-                    </div>
-                </div>
-            </div>
-
-        </aside>
-
-    </div>
+    
 </div>
 
 @section Scripts {
     <script>
         async function goToPageWithScroll(pageNo) {
             showLoadingIndicator();
-            
+
             try {
                 await scrollToPercentage(10);
-                
+
                 await goToPage(pageNo);
-                
+
             } catch (error) {
                 console.error('Error navigating to page:', error);
                 showError('Failed to load page. Please try again.');
@@ -438,12 +371,12 @@
                 const documentHeight = document.documentElement.scrollHeight;
                 const windowHeight = window.innerHeight;
                 const targetPosition = (documentHeight - windowHeight) * (percentage / 100);
-                
+
                 window.scrollTo({
                     top: Math.max(0, targetPosition),
                     behavior: 'smooth'
                 });
-                
+
                 setTimeout(resolve, 500);
             });
         }
@@ -460,10 +393,10 @@
 
             const url = '@Url.Action("AuthorNewsList", "AuthorActions", new { area = "Author" })' + '?' + params.toString();
 
-            const response = await fetch(url, { 
-                headers: { 'X-Requested-With': 'XMLHttpRequest' } 
+            const response = await fetch(url, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
-            
+
             if (!response.ok) {
                 throw new Error('Failed to fetch page data');
             }
@@ -483,7 +416,7 @@
                 const totalItems = @(ViewBag.TotalItems ?? Model.pageSize * pageCount);
                 const startItem = (currentPage - 1) * pageSize + 1;
                 const endItem = Math.min(currentPage * pageSize, totalItems);
-                
+
                 pageInfo.innerHTML = `Showing <strong>${startItem}</strong> to <strong>${endItem}</strong> of <strong>${totalItems}</strong> articles`;
             }
 
@@ -563,7 +496,7 @@
             const params = new URLSearchParams(window.location.search);
             params.set('pageSize', pageSize);
             params.set('pageNo', '1'); // Reset to first page
-            
+
             window.location.href = window.location.pathname + '?' + params.toString();
         }
 
@@ -573,7 +506,7 @@
                 paginationWrapper.style.opacity = '0.6';
                 paginationWrapper.style.pointerEvents = 'none';
             }
-            
+
             const spinner = document.createElement('div');
             spinner.id = 'pagination-loading';
             spinner.innerHTML = `
@@ -581,9 +514,9 @@
                     <div style="width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
                     <span style="margin-left: 10px; color: #667eea;">Loading...</span>
                 </div>
-              
+
             `;
-            
+
             const articlesSection = document.querySelector('.articles-list');
             if (articlesSection) {
                 articlesSection.appendChild(spinner);
@@ -596,7 +529,7 @@
                 paginationWrapper.style.opacity = '1';
                 paginationWrapper.style.pointerEvents = 'auto';
             }
-            
+
             const spinner = document.getElementById('pagination-loading');
             if (spinner) {
                 spinner.remove();
@@ -610,7 +543,7 @@
                 ⚠ ${message}
                 <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
             `;
-            
+
             const mainContent = document.querySelector('.main-content');
             if (mainContent) {
                 mainContent.insertBefore(errorAlert, mainContent.firstChild);

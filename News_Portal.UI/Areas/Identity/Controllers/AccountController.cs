@@ -205,6 +205,44 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         }
 
 
+
+
+        [HttpGet]
+        public async Task<IActionResult> IsAnAuthor(string RemoveEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(RemoveEmail);
+            if (user != null)
+            {
+                var isAuthor = await _userManager.IsInRoleAsync(user, UserTypes.Author.ToString());
+                if (isAuthor)
+                {
+                    return Json(true);
+                }
+            }
+            return Json(false);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ValidAuthorEmailToAdd(string AddEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(AddEmail);
+            if(user == null)
+            {
+                return Json(false);
+            }
+            var isAuthor = await _userManager.IsInRoleAsync(user, UserTypes.Author.ToString());
+            if (isAuthor)
+            {
+                return Json(false);
+            }
+            return Json(true);
+        }
+
+
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLogin(string provider, string returnUrl = null)
@@ -213,6 +251,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
+
+
 
 
         [HttpGet]

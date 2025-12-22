@@ -1,0 +1,49 @@
+﻿@model AuthorsNewsToShowDTO
+
+<a asp-controller="AuthorActions"
+   asp-action="DetailedNews"
+   asp-area="Author"
+   asp-route-newsId="@Model.NewsId"
+   class="news-card-link text-decoration-none d-block"
+   aria-label="Read '@Model.NewsTitle'">
+
+    <article class="news-card-horizontal">
+
+        <div class="news-media" aria-hidden="true">
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <img src="@Model.Images.First().ImageUrl" alt="@Model.NewsTitle" loading="lazy" />
+            }
+            else
+            {
+                <div class="news-media-placeholder">No Image</div>
+            }
+        </div>
+
+        <div class="news-body">
+            <header class="news-header">
+                <h3 class="news-title">@Model.NewsTitle</h3>
+
+                <div class="news-meta">
+                    <span class="meta-pill">@Model.NewsType</span>
+                    <span class="meta-pill status">@Model.NewsStatus</span>
+                    <span class="meta-date">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                </div>
+            </header>
+
+            <p class="news-excerpt">
+                @(Model.NewsContent?.Length > 170
+                                ? Model.NewsContent.Substring(0, 170) + "..."
+                                : Model.NewsContent)
+            </p>
+
+            <div class="news-footer">
+                <span class="read-more">
+                    Read details <span aria-hidden="true">→</span>
+                </span>
+            </div>
+        </div>
+
+    </article>
+</a>
+

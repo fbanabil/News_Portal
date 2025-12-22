@@ -1,29 +1,31 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Identity.Client;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
 using News_Portal.UI.Filters;
 
-namespace News_Portal.UI.Areas.Author.Controllers
+namespace News_Portal.UI.Areas.Admin.Controllers
 {
-    [Area("Author")]
+    [Area("Admin")]
     [Route("[area]/[controller]/[action]")]
     [TypeFilter(typeof(ModelStateValidationFilter))]
-    [Authorize(Roles = "Author")]
-    public class AuthorActionsController : Controller
+    [Authorize(Roles = "Admin")]
+    public class AdminActionsController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly INewsService _newsService;
 
-        public AuthorActionsController(UserManager<ApplicationUser> userManager, INewsService newsService)
+        private readonly INewsService _newsService;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public AdminActionsController(INewsService newsService, UserManager<ApplicationUser> userManager)
         {
-            _userManager = userManager;
             _newsService = newsService;
+            _userManager = userManager;
         }
+
 
 
 
@@ -46,17 +48,15 @@ namespace News_Portal.UI.Areas.Author.Controllers
             ViewBag.PageCount = (int)Math.Ceiling((double)totalNewsCount / pageSize);
 
 
-            ( int TotalArticles, int TotalPublishedArticles, int TotalViews, int ThisMonth ) = await _newsService.GetAuthorsNewsSummaryAsync(user.Id);
+            (int TotalArticles, int TotalPublishedArticles, int TotalViews, int ThisMonth) = await _newsService.GetAuthorsNewsSummaryAsync(user.Id);
 
             ViewBag.TotalArticles = TotalArticles;
-            ViewBag.TotalPublishedArticles = (int)(((double)TotalPublishedArticles/(double)TotalArticles)*100);
+            ViewBag.TotalPublishedArticles = (int)(((double)TotalPublishedArticles / (double)TotalArticles) * 100);
             ViewBag.TotalViews = TotalViews;
             ViewBag.ThisMonth = ThisMonth;
 
             return View(authorNewsAllFiltersDTO);
         }
-
-
 
 
 
@@ -73,7 +73,6 @@ namespace News_Portal.UI.Areas.Author.Controllers
                 pageSize
             });
         }
-
 
 
 
@@ -104,61 +103,59 @@ namespace News_Portal.UI.Areas.Author.Controllers
 
 
 
-
-
-
-        [HttpGet]
-        public async Task<IActionResult> AddNews()
+        [HttpPost]
+        public async Task<IActionResult> AddAdmin(string email)
         {
-            return View();
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                var result = await _userManager.AddToRoleAsync(user, "Admin");
+
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    return BadRequest("User is already an Admin.");
+                }
+                if (result.Succeeded)
+                {
+                    return Ok($"User with email {email} has been added as Admin.");
+                }
+                else
+                {
+                    return BadRequest("Failed to add user to Admin role.");
+                }
+            }
+            else
+            {
+                return NotFound($"User with email {email} not found.");
+            }
         }
-
-
-
-
 
 
         [HttpPost]
-        public async Task<IActionResult> AddNews(NewsToAddDTO newsToAddDTO)
+        public async Task<IActionResult> RemoveAdmin(string email)
         {
-            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
-            await _newsService.AddNewsByAuthor(newsToAddDTO, user!.Id);
-            return RedirectToAction(nameof(Index));
-        }
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                if (!await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    return BadRequest("User is not an Admin.");
+                }
+                var result = await _userManager.RemoveFromRoleAsync(user, "Admin");
+                if (result.Succeeded)
+                {
+                    return Ok($"User with email {email} has been removed from Admin role.");
+                }
+                else
+                {
+                    return BadRequest("Failed to remove user from Admin role.");
+                }
+            }
+            else
+            {
+                return NotFound($"User with email {email} not found.");
+            }
 
-
-
-
-
-        [HttpGet]
-        public async Task<IActionResult> EditNews(Guid newsId)
-        {
-            NewsToEditDTO newsToEditDTO = await _newsService.GetNewsForEditAsync(newsId);
-            return View(newsToEditDTO);
-
-        }
-
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> EditNews(NewsToEditDTO newsToEditDTO)
-        {
-            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
-            await _newsService.UpdateNewsAsync(newsToEditDTO, user!.Id);
-            return RedirectToAction(nameof(DetailedNews), new { newsId = newsToEditDTO.NewsId });
-        }
-
-
-
-
-
-        [HttpGet]
-        public async Task<IActionResult> DeleteNews(Guid newsId)
-        {
-            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
-            await _newsService.DeleteNewsAsync(newsId, user!.Id);
-            return RedirectToAction(nameof(Index));
         }
     }
 }

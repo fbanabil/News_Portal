@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    AuthorAddRemoveDTO adminHomePageDTO = new AuthorAddRemoveDTO();
+}
+
+<div class="container-fluid mt-3">
+    <div class="row gx-4">
+        <main role="main" class="col-12 col-md-8 col-lg-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
+
+        <aside class="col-12 col-md-4 col-lg-3">
+            @await Html.PartialAsync("_RightSidebar", adminHomePageDTO)
+        </aside>
+    </div>
+</div>
+@await RenderSectionAsync("Scripts", required: false)
+@* If admin pages need per-page scripts they can still declare @section Scripts { ... } and the root layout will render them. *@

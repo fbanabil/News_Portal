@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace News_Portal.Core.DTO.News
 {
-    public class AuthorNewsAllFiltersDTO
+    public class AdminNewsAllFiltersDTO
     {
         public NewsFilterParametersDTO? parametersDTO;
+        public string? AuthorEmail;
         public string? sortBy;
         public SortTypes sortType;
         public int pageNo;
         public int pageSize;
+
     }
 }

@@ -19,7 +19,7 @@ namespace News_Portal.UI.Areas.Author.ViewComponents
             _userManager = userManager;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(AuthorNewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy="", SortTypes sortOptions = SortTypes.Default, int pageNo=1, int pageSize=10)
+        public async Task<IViewComponentResult> InvokeAsync(NewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy="", SortTypes sortOptions = SortTypes.Default, int pageNo=1, int pageSize=10)
         {
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
             List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = await _newsService.GetAllAuthorsNewsAsync(user.Id, authorNewsFilterParametersDTO, sortBy, sortOptions,pageNo,pageSize);

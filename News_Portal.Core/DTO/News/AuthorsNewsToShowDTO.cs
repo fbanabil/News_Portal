@@ -1,5 +1,7 @@
 ﻿using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.IdentityEntities;
+using News_Portal.Core.DTO.Comment;
+using News_Portal.Core.DTO.Image;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using System;
@@ -37,8 +39,8 @@ namespace News_Portal.Core.DTO.News
 
         public ApplicationUser? Author { get; set; }
 
-        public virtual ICollection<Images>? Images { get; set; }
-        public virtual ICollection<Comments>? Comments { get; set; }
+        public virtual ICollection<ImageToShowDTO>? Images { get; set; }
+        public virtual ICollection<CommentToShowDTO>? Comments { get; set; }
     }
 }
 public static class AuthorsNewsToShowDTOExtensions
@@ -58,8 +60,8 @@ public static class AuthorsNewsToShowDTOExtensions
             NewsStatus = news.NewsStatus,
             NewsPriority = news.NewsPriority,
             Author = news.Author,
-            Images = news.Images,
-            Comments = news.Comments,
+            Images = news?.Images?.Select(img => img.ToImageToShowDTO()).ToList(),
+            Comments = news?.Comments?.Select(c=> c.ToCommentToShowDTO()).ToList(),
             VideoUrl = news?.VideoUrl
         };
     }

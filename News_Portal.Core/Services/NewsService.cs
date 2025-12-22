@@ -79,7 +79,7 @@ namespace News_Portal.Core.Services
 
 
 
-        public async Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, AuthorNewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10)
+        public async Task<List<AuthorsNewsToShowDTO>> GetAllAuthorsNewsAsync(Guid userId, NewsFilterParametersDTO authorNewsFilterParametersDTO, string sortBy, SortTypes sortOptions, int pageNo = 1, int pageSize = 10)
         {
             List<News> news = await _newsRepository.GetAllAuthorsNews(userId);
             news = await _newsHelper_01.SortNews(news, sortBy, sortOptions);
@@ -93,7 +93,7 @@ namespace News_Portal.Core.Services
 
 
 
-        public async Task<int> GetAuthorsNewsCountAsync(Guid id, AuthorNewsFilterParametersDTO parametersDTO)
+        public async Task<int> GetAuthorsNewsCountAsync(Guid id, NewsFilterParametersDTO parametersDTO)
         {
             List<News> news = await _newsRepository.GetAllAuthorsNews(id);
             news = await _newsHelper_01.FilterNews(news, parametersDTO);
