@@ -40,7 +40,7 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             adminNewsAllFiltersDTO.parametersDTO = parametersDTO ?? new NewsFilterParametersDTO();
             adminNewsAllFiltersDTO.sortBy = sortBy ?? "PublishedDate";
             adminNewsAllFiltersDTO.sortType = sortType;
-            adminNewsAllFiltersDTO.pageNo = 1;
+            adminNewsAllFiltersDTO.pageNo = pageNo;
             adminNewsAllFiltersDTO.pageSize = pageSize;
             adminNewsAllFiltersDTO.AuthorEmail = AuthorEmail;
 
@@ -50,7 +50,7 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             if (AuthorEmail != null)
             {
                 ApplicationUser? author = await _userManager.FindByEmailAsync(AuthorEmail);
-                if(author != null) totalNewsCount = await _newsService.GetAdminPageNewsCountAsync(author.Id, parametersDTO);
+                if (author != null) totalNewsCount = await _newsService.GetAdminPageNewsCountAsync(author.Id, parametersDTO);
             }
             else
             {
@@ -60,7 +60,7 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
 
             IList<ApplicationUser>? authors = await _userManager.GetUsersInRoleAsync(UserTypes.Author.ToString());
-            List<AuthorsToShowDTO> allAuthors = authors.Select(u => u.ToAuthorsToShowDTO()).OrderBy(x=>x.AuthorName).ToList();            
+            List<AuthorsToShowDTO> allAuthors = authors.Select(u => u.ToAuthorsToShowDTO()).OrderBy(x => x.AuthorName).ToList();
             ViewBag.AuthorsList = new SelectList(allAuthors, "AuthorEmail", "AuthorName", AuthorEmail);
 
             return View(adminNewsAllFiltersDTO);
@@ -70,7 +70,7 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult AdminNewsList(NewsFilterParametersDTO NewsFilterParametersDTO, string sortBy = "PublishedDate", SortTypes sortOptions = SortTypes.Default, int pageNo = 1, int pageSize = 5)
+        public IActionResult AdminNewsList(NewsFilterParametersDTO NewsFilterParametersDTO, string sortBy = "PublishedDate", SortTypes sortOptions = SortTypes.Default, int pageNo = 1, int pageSize = 10)
         {
             return ViewComponent("AdminNews", new
             {
@@ -90,7 +90,11 @@ namespace News_Portal.UI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailedNews(Guid newsId)
         {
-            AdminsNewsDetailesToShowDTO adminsNewsDetailedDTO = await _newsService.GetAdminsNewsDetailsAsync(newsId);
+            AdminsNewsDetailesToShowDTO? adminsNewsDetailedDTO = await _newsService.GetAdminsNewsDetailsAsync(newsId);
+            if (adminsNewsDetailedDTO == null)
+            {
+                return null;
+            }
             string? videoLink = adminsNewsDetailedDTO.VideoUrl ?? "";
             string youtubeEmbedUrl = "";
             if (videoLink.Contains("youtube.com/watch?v="))
@@ -108,6 +112,7 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             }
             ViewBag.VideoLink = youtubeEmbedUrl;
             adminsNewsDetailedDTO.VideoUrl = youtubeEmbedUrl;
+            ViewBag.adminsNewsDetailedDTO = adminsNewsDetailedDTO;
             return View(adminsNewsDetailedDTO);
         }
 
@@ -156,10 +161,12 @@ namespace News_Portal.UI.Areas.Admin.Controllers
                 var result = await _userManager.RemoveFromRoleAsync(user, "Admin");
                 if (result.Succeeded)
                 {
+                    TempData["SuccessMessage"] = "Admin role removed successfully.";
                     return Ok($"User with email {email} has been removed from Admin role.");
                 }
                 else
                 {
+                    TempData["ErrorMessage"] = "Failed to remove user from Admin role.";
                     return BadRequest("Failed to remove user from Admin role.");
                 }
             }
@@ -167,7 +174,77 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             {
                 return NotFound($"User with email {email} not found.");
             }
-
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeNewsStatus(Guid newsId, NewsStatus newStatus)
+        {
+            bool isUpdated = await _newsService.ChangeNewsStatusAsync(newsId, newStatus);
+            if (isUpdated)
+            {
+                TempData["SuccessMessage"] = "News status updated successfully.";
+                return Ok($"News status updated to {newStatus}.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to update news status.";
+                return BadRequest("Failed to update news status.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeNewsPriority(Guid newsId, NewsPriority newPriority)
+        {
+            bool isUpdated = await _newsService.ChangeNewsPriorityAsync(newsId, newPriority);
+            if (isUpdated)
+            {
+                TempData["SuccessMessage"] = "News priority updated successfully.";
+                return Ok($"News priority updated to {newPriority}.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to update news priority.";
+                return BadRequest("Failed to update news priority.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeNewsType(Guid newsId, NewsType newType)
+        {
+            bool isUpdated = await _newsService.ChangeNewsTypeAsync(newsId, newType);
+            if (isUpdated)
+            {
+                TempData["SuccessMessage"] = "News type updated successfully.";
+                return Ok($"News type updated to {newType}.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to update news type.";
+                return BadRequest("Failed to update news type.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteNewsPermanently(Guid newsId, string? returnUrl)
+        {
+            bool isDeleted = await _newsService.DeleteNewsByNewsIdAsync(newsId);
+            if (isDeleted)
+            {
+                TempData["SuccessMessage"] = "News deleted successfully.";
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                return Ok("News deleted successfully.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to delete news.";
+                return BadRequest("Failed to delete news.");
+            }
+        }
+
     }
 }

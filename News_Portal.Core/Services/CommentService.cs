@@ -23,5 +23,13 @@ namespace News_Portal.Core.Services
             await _commentRepository.AddCommentAsync(commentToAdd);
             return commentToAdd.ToCommentToShowDTO();
         }
+
+
+
+
+        public async Task DeleteCommentById(Guid commentId)
+        {
+            await _commentRepository.DeleteCommentById(commentId);
+        }
     }
 }

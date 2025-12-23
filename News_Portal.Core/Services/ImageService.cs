@@ -209,5 +209,7 @@ namespace News_Portal.Core.Services
             await DeleteFromCloudinary(images.ImageUrl);
             await _imageRepository.DeleteImageFromImageTable(imageId);
         }
+
+
     }
 }

@@ -1,27 +1,44 @@
 ﻿@model List<HomePageNewsToShowDTO>
 
-<div class="container-fluid px-0">
-    <div class="split-featured-grid">
+@if (Model == null || Model.Count == 0)
+{
+    <!-- No items to show -->
+}
+else
+{
+    <div class="container-fluid px-0">
+        <div class="split-featured-grid">
+            @if (Model.Count > 1)
+            {
+                <div class="sf-item sf-left-top">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+                </div>
+            }
 
-        <div class="sf-item sf-left-top">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+            @if (Model.Count > 2)
+            {
+                <div class="sf-item sf-left-middle">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+                </div>
+            }
+
+            @if (Model.Count > 3)
+            {
+                <div class="sf-item sf-left-bottom">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
+                </div>
+            }
+
+            <div class="sf-item sf-right-main">
+                @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
+            </div>
+
+            @if (Model.Count > 4)
+            {
+                <div class="sf-item sf-right-bottom">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[4])
+                </div>
+            }
         </div>
-
-        <div class="sf-item sf-left-middle">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
-        </div>
-
-        <div class="sf-item sf-left-bottom">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
-        </div>
-
-        <div class="sf-item sf-right-main">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
-        </div>
-
-        <div class="sf-item sf-right-bottom">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[4])
-        </div>
-
     </div>
-</div>
+}

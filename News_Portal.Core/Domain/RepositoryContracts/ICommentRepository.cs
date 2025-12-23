@@ -13,5 +13,6 @@ namespace News_Portal.Core.Domain.RepositoryContracts
         Task AddComment(Comments comment);
         Task AddCommentAsync(Comments commentToAddDTO);
         Task<bool> CommentExistsById(Guid commentId);
+        Task DeleteCommentById(Guid commentId);
     }
 }

@@ -26,13 +26,15 @@ namespace News_Portal.Core.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NewsHelper_01 _newsHelper_01;
         private readonly IImageService _imageService;
-        public NewsService(INewsRepository newsRepository,UserManager<ApplicationUser> userManager, IImageService imageService)
+        private readonly ICommentService _commentService;
+        public NewsService(INewsRepository newsRepository,UserManager<ApplicationUser> userManager, IImageService imageService, ICommentService commentService)
         {
             _newsDemoData = new NewsDemoData();
             _newsRepository = newsRepository;
             _userManager = userManager;
             _newsHelper_01 = new NewsHelper_01();
             _imageService = imageService;
+            _commentService = commentService;
         }
 
 
@@ -70,9 +72,99 @@ namespace News_Portal.Core.Services
 
 
 
+        public async Task<bool> ChangeNewsPriorityAsync(Guid newsId, NewsPriority newPriority)
+        {
+            News news = await _newsRepository.GetNewsById(newsId);
+            if (news != null)
+            {
+                news.NewsPriority = newPriority;
+                news.LastUpdate = DateTime.UtcNow;
+                await _newsRepository.UpdateNews(news);
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+
+        public async Task<bool> ChangeNewsStatusAsync(Guid newsId, NewsStatus newStatus)
+        {
+            News news = await _newsRepository.GetNewsById(newsId);
+            if (news != null)
+            {
+                news.NewsStatus = newStatus;
+                news.LastUpdate = DateTime.UtcNow;
+                if (newStatus == NewsStatus.Published)
+                {
+                    news.PublishedDate = DateTime.UtcNow;
+                }
+                await _newsRepository.UpdateNews(news);
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+
+        public async Task<bool> ChangeNewsTypeAsync(Guid newsId, NewsType newType)
+        {
+            News news = await _newsRepository.GetNewsById(newsId);
+            if (news != null)
+            {
+                news.NewsType = newType;
+                news.LastUpdate = DateTime.UtcNow;
+                await _newsRepository.UpdateNews(news);
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+
         public async Task DeleteNewsAsync(Guid newsId, Guid id)
         {
             await _newsRepository.DeleteNewsAsync(newsId);
+        }
+
+
+
+
+
+        public async Task<bool> DeleteNewsByNewsIdAsync(Guid newsId)
+        {
+            try
+            {
+                News news =  await _newsRepository.GetNewsById(newsId);
+                if(news.Images!=null)
+                {
+                    foreach (Images img in news.Images)
+                    {
+                        await _imageService.DeleteImageById(img.ImageId);
+                    }
+                }
+                
+                if(news.Comments!=null)
+                {
+                    foreach (Comments comment in news.Comments)
+                    {
+                        await _commentService.DeleteCommentById(comment.CommentId);
+                    }
+                }
+
+                await _newsRepository.DeleteNewsAsync(newsId);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 
@@ -116,7 +208,7 @@ namespace News_Portal.Core.Services
             news = await _newsHelper_01.SortNews(news, sortBy, sortOptions);
             news = await _newsHelper_01.FilterNews(news, authorNewsFilterParametersDTO);
 
-            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = news.Skip(pageSize*(pageNo-1)).Take(pageSize).Select(n => n.ToAuthorsNewsToShowDTO()).ToList();
+            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = news.OrderByDescending(p=>p.PublishedDate).Skip(pageSize*(pageNo-1)).Take(pageSize).Select(n => n.ToAuthorsNewsToShowDTO()).ToList();
 
             return authorsNewsToShowDTOs;
         }
@@ -130,7 +222,7 @@ namespace News_Portal.Core.Services
             List<News> news = await _newsRepository.GetAllNewsAsync();
             news = await _newsHelper_01.SortNews(news, sortBy, sortOptions);
             news = await _newsHelper_01.FilterNews(news, newsFilterParametersDTO);
-            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = news.Skip(pageSize * (pageNo - 1)).Take(pageSize).Select(n => n.ToAuthorsNewsToShowDTO()).ToList();
+            List<AuthorsNewsToShowDTO> authorsNewsToShowDTOs = news.OrderByDescending(p => p.PublishedDate).Skip(pageSize * (pageNo - 1)).Take(pageSize).Select(n => n.ToAuthorsNewsToShowDTO()).ToList();
             return authorsNewsToShowDTOs;
         }
 
@@ -197,7 +289,7 @@ namespace News_Portal.Core.Services
         public async Task<List<HomePageNewsToShowDTO>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize)
         {
             List<News> news = await _newsRepository.GetNewsByTypeAsync(newsType, pageNo, pageSize);
-            List<HomePageNewsToShowDTO> homePageNewsToShowDTOs = news.Select(n=> n.ToHomePageNewsToShowDTO()).ToList();
+            List<HomePageNewsToShowDTO> homePageNewsToShowDTOs = news.OrderByDescending(p => p.PublishedDate).Select(n=> n.ToHomePageNewsToShowDTO()).ToList();
             return homePageNewsToShowDTOs;
         }
 
@@ -251,7 +343,7 @@ namespace News_Portal.Core.Services
         public async Task<List<HomePageNewsToShowDTO>> GetTopOfWeekNewsAsync()
         {
             List<News> news = await _newsRepository.GetTopOfWeekNewsAsync();
-            List<HomePageNewsToShowDTO> homePageNewsToShowDTOs = news.Select(n => n.ToHomePageNewsToShowDTO()).ToList();
+            List<HomePageNewsToShowDTO> homePageNewsToShowDTOs = news.OrderByDescending(p => p.PublishedDate).Select(n => n.ToHomePageNewsToShowDTO()).ToList();
             return homePageNewsToShowDTOs;
         }
 

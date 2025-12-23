@@ -1,4 +1,6 @@
 @model SideBarDTO
+@using News_Portal.Core.Enums
+@using System.Text.Json
 
 
 @if (ViewBag.Title == "Admin Actions")
@@ -88,18 +90,329 @@
         </div>
     </div>
 
+
+
 }
 else
 {
-    <div class="admin-sidebar">
-        <div class="card mb-3 shadow-sm">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <strong class="mb-0">Admin</strong>
-                <small class="text-muted">Manage your work</small>
+    Model.adminsNewsDetailedDTO = ViewBag.adminsNewsDetailedDTO;
+
+    string returnUrl = ViewBag.PreviousUrl;
+
+    var dto = Model.adminsNewsDetailedDTO as News_Portal.Core.DTO.News.AdminsNewsDetailesToShowDTO;
+    if (dto == null)
+    {
+        <div class="admin-sidebar">
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <strong class="mb-0">Admin</strong>
+                    <small class="text-muted">Manage your work</small>
+                </div>
+                <div class="card-body">
+                    <div class="text-muted">No news selected.</div>
+                </div>
             </div>
         </div>
-    </div>
+    }
+    else
+    {
+        Func<NewsStatus, string> badgeClass = s => s switch
+        {
+            NewsStatus.Pending => "bg-secondary",
+            NewsStatus.Published => "bg-success",
+            NewsStatus.Rejected => "bg-danger",
+            NewsStatus.Hidden => "bg-dark",
+            NewsStatus.Blacklisted => "bg-warning text-dark",
+            _ => "bg-secondary"
+        };
+
+
+        if (dto != null)
+        {
+            <div class="admin-sidebar">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <strong class="mb-0">Admin</strong>
+                        <small class="text-muted">Manage your work</small>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="mb-1">Current</h6>
+                            <div>
+                                <span id="newsStatusBadge" class="badge @badgeClass(dto.NewsStatus)">@dto.NewsStatus</span>
+                                <span id="newsPriorityBadge" class="badge ms-2">@dto.NewsPriority</span>
+                                <span id="newsTypeBadge" class="badge ms-2">@dto.NewsType</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="mb-2">Change Status</h6>
+                            <div id="changeStatusContainer" class="d-flex flex-wrap gap-2">
+                                @foreach (NewsStatus status in Enum.GetValues(typeof(NewsStatus)))
+                                {
+                                    if (status == dto.NewsStatus) { continue; }
+
+                                    <form method="post"
+                                          asp-area="Admin"
+                                          asp-controller="AdminActions"
+                                          asp-action="ChangeNewsStatus"
+                                          class="d-inline ajax-change-status">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="newsId" value="@dto.NewsId" />
+                                        <input type="hidden" name="newStatus" value="@status" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Change status to @status">
+                                            <span class="badge rounded-pill @badgeClass(status) me-1">@status</span>
+                                            Set
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="mb-2">Change Priority</h6>
+                            <form method="post"
+                                  asp-area="Admin"
+                                  asp-controller="AdminActions"
+                                  asp-action="ChangeNewsPriority"
+                                  class="ajax-change-priority">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="newsId" value="@dto.NewsId" />
+                                <div class="input-group">
+                                    <select name="newPriority" class="form-select form-select-sm" aria-label="Change priority">
+                                        @foreach (NewsPriority p in Enum.GetValues(typeof(NewsPriority)))
+                                        {
+                                            <option value="@p" selected="@(p == dto.NewsPriority)">@p</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary" title="Update priority">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="mb-2">Change Type</h6>
+                            <form method="post"
+                                  asp-area="Admin"
+                                  asp-controller="AdminActions"
+                                  asp-action="ChangeNewsType"
+                                  class="ajax-change-type">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="newsId" value="@dto.NewsId" />
+                                <div class="input-group">
+                                    <select name="newType" class="form-select form-select-sm" aria-label="Change type">
+                                        @foreach (NewsType t in Enum.GetValues(typeof(NewsType)))
+                                        {
+                                            <option value="@t" selected="@(t == dto.NewsType)">@t</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary" title="Update type">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="mb-2 text-danger">Delete</h6>
+                            <form method="post"
+                                  asp-area="Admin"
+                                  asp-controller="AdminActions"
+                                  asp-action="DeleteNewsPermanently"
+                                  asp-route-returnUrl="@ViewBag.PreviousUrl"
+                                  class="ajax-delete-news"
+                                  onsubmit="return confirm('Permanently delete this news? This action cannot be undone.');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="newsId" value="@dto.NewsId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash me-1"></i> Delete Permanently
+                                </button>
+                            </form>
+                            <div class="small text-muted mt-1">This action removes the news permanently.</div>
+                        </div>
+
+                        <div class="text-muted small">
+                            Actions will post to the AdminActions controller. Ensure the following POST endpoints exist:
+                            ChangeNewsStatus(newsId: Guid, newStatus: NewsStatus),
+                            ChangeNewsPriority(newsId: Guid, newPriority: NewsPriority),
+                            ChangeNewsType(newsId: Guid, newType: NewsType),
+                            DeleteNewsPermanently(newsId: Guid).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                (function () {
+                    // Serialized enum values for rebuilding controls client-side
+                    const NEWS_STATUSES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsStatus))));
+                    const NEWS_PRIORITIES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsPriority))));
+                    const NEWS_TYPES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsType))));
+
+                    function getBadgeClass(status) {
+                        return {
+                            "Pending": "bg-secondary",
+                            "Published": "bg-success",
+                            "Rejected": "bg-danger",
+                            "Hidden": "bg-dark",
+                            "Blacklisted": "bg-warning text-dark"
+                        }[status] || "bg-secondary";
+                    }
+
+                    function showToast(message, isError) {
+                        // Minimal inline toast: you can replace with site's notification system
+                        const el = document.createElement('div');
+                        el.className = 'toast-notification ' + (isError ? 'toast-error' : 'toast-success');
+                        el.style.cssText = 'position:fixed;right:20px;top:20px;z-index:2000;padding:8px 12px;border-radius:6px;background:' + (isError ? '#f8d7da' : '#d1e7dd') + ';color:#000;border:1px solid rgba(0,0,0,0.05);';
+                        el.textContent = message || (isError ? 'Error' : 'Done');
+                        document.body.appendChild(el);
+                        setTimeout(() => el.remove(), 3000);
+                    }
+
+                    async function postForm(form) {
+                        const url = form.action;
+                        const formData = new FormData(form);
+                        // include anti-forgery token already present in the form via @Html.AntiForgeryToken()
+                        const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+                        try {
+                            const resp = await fetch(url, { method: 'POST', body: formData, headers: headers, credentials: 'same-origin' });
+                            // Try JSON
+                            const text = await resp.text();
+                            try {
+                                const json = JSON.parse(text);
+                                return { ok: resp.ok, json };
+                            } catch {
+                                return { ok: resp.ok, text };
+                            }
+                        } catch (err) {
+                            return { ok: false, error: err };
+                        }
+                    }
+
+                    function rebuildStatusControls(currentStatus, newsId) {
+                        const container = document.getElementById('changeStatusContainer');
+                        if (!container) return;
+                        container.innerHTML = '';
+                        NEWS_STATUSES.forEach(s => {
+                            if (s === currentStatus) return;
+                            const form = document.createElement('form');
+                            form.method = 'post';
+                            form.action = '@Url.Action("ChangeNewsStatus", "AdminActions", "Admin")'.replace('/AdminActions/ChangeNewsStatus', '/AdminActions/ChangeNewsStatus'); // keep shape; will work with relative route
+                            form.className = 'd-inline ajax-change-status';
+                            // anti forgery token - clone from existing form if present
+                            const existingToken = document.querySelector('.ajax-change-status input[name="__RequestVerificationToken"], form input[name="__RequestVerificationToken"]');
+                            if (existingToken) {
+                                const tokenInput = existingToken.cloneNode(true);
+                                form.appendChild(tokenInput);
+                            }
+                            const newsIdInput = document.createElement('input');
+                            newsIdInput.type = 'hidden';
+                            newsIdInput.name = 'newsId';
+                            newsIdInput.value = newsId;
+                            const newStatusInput = document.createElement('input');
+                            newStatusInput.type = 'hidden';
+                            newStatusInput.name = 'newStatus';
+                            newStatusInput.value = s;
+                            const btn = document.createElement('button');
+                            btn.type = 'submit';
+                            btn.className = 'btn btn-sm btn-outline-secondary';
+                            btn.title = `Change status to ${s}`;
+                            const badge = document.createElement('span');
+                            badge.className = 'badge rounded-pill ' + getBadgeClass(s) + ' me-1';
+                            badge.textContent = s;
+                            btn.appendChild(badge);
+                            btn.appendChild(document.createTextNode(' Set'));
+                            form.appendChild(newsIdInput);
+                            form.appendChild(newStatusInput);
+                            form.appendChild(btn);
+                            container.appendChild(form);
+                        });
+                    }
+
+                    // Delegated submit handling
+                    document.addEventListener('submit', function (e) {
+                        const form = e.target;
+                        if (!form) return;
+                        if (form.classList.contains('ajax-change-status') ||
+                            form.classList.contains('ajax-change-priority') ||
+                            form.classList.contains('ajax-change-type')) {
+                            e.preventDefault();
+                            (async () => {
+                                const result = await postForm(form);
+                                if (!result.ok) {
+                                    showToast('Request failed', true);
+                                    return;
+                                }
+
+                                if (result.json) {
+                                    const payload = result.json;
+                                    if (payload.success) {
+                                        // Update badges if present in payload, else try to infer from form fields
+                                        const newStatus = payload.newsStatus ?? form.querySelector('input[name="newStatus"]')?.value;
+                                        const newPriority = payload.newsPriority ?? form.querySelector('select[name="newPriority"]')?.value;
+                                        const newType = payload.newsType ?? form.querySelector('select[name="newType"]')?.value;
+
+                                        if (newStatus) {
+                                            const statusBadge = document.getElementById('newsStatusBadge');
+                                            if (statusBadge) {
+                                                statusBadge.textContent = newStatus;
+                                                statusBadge.className = 'badge ' + getBadgeClass(newStatus);
+                                            }
+                                            // rebuild status buttons
+                                            const newsId = form.querySelector('input[name="newsId"]')?.value;
+                                            rebuildStatusControls(newStatus, newsId);
+                                        }
+                                        if (newPriority) {
+                                            const priorityBadge = document.getElementById('newsPriorityBadge');
+                                            if (priorityBadge) {
+                                                priorityBadge.textContent = newPriority;
+                                            }
+                                            // update select values
+                                            document.querySelectorAll('.ajax-change-priority select[name="newPriority"]').forEach(sel => sel.value = newPriority);
+                                        }
+                                        if (newType) {
+                                            const typeBadge = document.getElementById('newsTypeBadge');
+                                            if (typeBadge) {
+                                                typeBadge.textContent = newType;
+                                            }
+                                            document.querySelectorAll('.ajax-change-type select[name="newType"]').forEach(sel => sel.value = newType);
+                                        }
+
+                                        @* // Delete action may return { success:true, deleted:true, redirectUrl:... }
+                                        if (payload.deleted || payload.redirectUrl) {
+                                            if (payload.redirectUrl) {
+                                                window.location.href = payload.redirectUrl;
+                                                return;
+                                            }
+                                            // fallback: navigate to admin index
+                                            window.location.href = '@Url.Action("Index", "AdminActions", new { area = "Admin" })';
+                                            return;
+                                        } *@
+
+                                        showToast(payload.message ?? 'Updated', false);
+                                    } else {
+                                        showToast(payload.message ?? 'Operation failed', true);
+                                        // if server suggests redirect (e.g. re-login), perform it
+                                        if (payload.redirectUrl) window.location.href = payload.redirectUrl;
+                                    }
+                                } else if (result.text) {
+                                    // Non-JSON response. If server responded with a redirect HTML/page, do a full reload
+                                    // If the response contains a small success message, show it.
+                                    // Conservative approach: reload to sync UI
+                                    window.location.reload();
+                                } else if (result.error) {
+                                    showToast(result.error.message ?? 'Network error', true);
+                                }
+                            })();
+                        }
+                    }, { capture: false });
+
+                })();
+            </script>
+        }
+    }
 }
-
-
-

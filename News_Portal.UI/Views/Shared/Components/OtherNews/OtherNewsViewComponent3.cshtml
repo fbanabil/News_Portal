@@ -1,27 +1,29 @@
 ﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
 
-<section class="hero-section">
-    <div class="hero-container">
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", @Model[0])
-    </div>
-    <div class="compact-grid">
-        <article class="compact-item" data-index="1">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[1])
-        </article>
+@if (Model == null || Model.Count == 0)
+{
+    <!-- No items to show -->
+}
+else
+{
+    <section class="hero-section">
+        <div class="hero-container">
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
+        </div>
 
-        <article class="compact-item" data-index="2">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[2])
-        </article>
-
-        <article class="compact-item" data-index="3">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[3])
-        </article>
-
-        <article class="compact-item" data-index="4">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[4])
-        </article>
-    </div>
-</section>
+        @if (Model.Count > 1)
+        {
+            <div class="compact-grid">
+                @for (int i = 1; i <= 4 && i < Model.Count; i++)
+                {
+                    <article class="compact-item" data-index="@i">
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[i])
+                    </article>
+                }
+            </div>
+        }
+    </section>
+}
 
 
 

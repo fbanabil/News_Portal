@@ -17,6 +17,8 @@
     // string presentStatus = ViewBag.PresentStatus;
     NewsStatus? newsStatusFilter = Model.parametersDTO.NewsStatus;
 
+    string currentUrl = Context.Request.Path + Context.Request.QueryString;
+
 }
 
 
@@ -249,6 +251,7 @@
                                         sortOptions = Model.sortType,
                                         pageNo = Model.pageNo,
                                         pageSize = Model.pageSize
+                                        
                                         })
                 </div>
 

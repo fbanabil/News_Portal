@@ -37,5 +37,15 @@ namespace News_Portal.Infrastructure.Repositories
             Comments? comment = await _dbContext.Comments.FindAsync(commentId);
             return comment != null;
         }
+
+        public async Task DeleteCommentById(Guid commentId)
+        {
+            Comments? comment = await _dbContext.Comments.FindAsync(commentId);
+            if (comment != null)
+            {
+                _dbContext.Comments.Remove(comment);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
     }
 }

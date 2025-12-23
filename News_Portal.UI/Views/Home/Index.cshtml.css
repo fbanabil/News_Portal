@@ -22,11 +22,11 @@ body {
     text-align: center;
     padding: 20px 0;
     border-bottom: 3px solid #000;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 
 .newspaper-title {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: bold;
     margin: 0;
     text-transform: uppercase;
@@ -35,7 +35,7 @@ body {
 }
 
 .newspaper-date {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 10px 0;
     font-style: italic;
 }
@@ -84,8 +84,8 @@ body {
 }
 
 .top-banner {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
     border-bottom: 2px solid #000;
 }
 
@@ -100,13 +100,14 @@ body {
 }
 
 .section-title {
-    font-size: 2.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-transform: uppercase;
     border-bottom: 3px solid #000;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
     letter-spacing: 1px;
+    text-align: center
 }
 
 .category-title {

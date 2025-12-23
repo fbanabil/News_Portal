@@ -46,8 +46,13 @@ namespace News_Portal.Core.DTO.News
 
 public static class AdminsNewsDetailesToShowDTOExtensions
 {
-    public static AdminsNewsDetailesToShowDTO ToAdminsNewsDetailesToShowDTO(this News news)
+    public static AdminsNewsDetailesToShowDTO? ToAdminsNewsDetailesToShowDTO(this News news)
     {
+        if(news == null)
+        {
+            return null;
+        }
+
         return new AdminsNewsDetailesToShowDTO
         {
             NewsId = news.NewsId,

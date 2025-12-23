@@ -77,7 +77,8 @@ namespace News_Portal.Infrastructure.Repositories
 
         public async Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync()
         {
-            return await _dbContext.News.Include(i => i.Images).OrderByDescending(n => n.PublishedDate)
+            return await _dbContext.News.Include(i => i.Images).OrderByDescending(n => n.TotalViews)
+                .Where(t=> DateTime.UtcNow.Month-t.PublishedDate.Month <= 12)
                 .Take(9)
                 .Select(n => n.ToHomePageNewsToShowDTO())
                 .ToListAsync();
@@ -103,7 +104,7 @@ namespace News_Portal.Infrastructure.Repositories
             if(type == TopOfXType.Week)
             {
                 return _dbContext.News.Include(i => i.Images)
-                    .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-7))
+                    .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-30))
                     .OrderByDescending(n => n.TotalViews)
                     .Take(cnt)
                     .Select(n => n.ToHomePageNewsToShowDTO())

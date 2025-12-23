@@ -41,7 +41,6 @@ namespace News_Portal.UI.Areas.Admin.ViewComponents
             {
                 authorsNewsToShowDTOs = await _newsService.GetAllNewsAsync(adminNewsFilterParametersDTO, sortBy, sortOptions, pageNo, pageSize);
             }
-
             return View("AdminNewsViewComponent", authorsNewsToShowDTOs);
         }
     }

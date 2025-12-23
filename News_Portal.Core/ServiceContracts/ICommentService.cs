@@ -10,5 +10,6 @@ namespace News_Portal.Core.ServiceContracts
     public interface ICommentService
     {
         Task<CommentToShowDTO> AddCommentAsync(CommentToAddDTO commentToAddDTO, Guid id);
+        Task DeleteCommentById(Guid commentId);
     }
 }
