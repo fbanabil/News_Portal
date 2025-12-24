@@ -32,12 +32,53 @@ namespace News_Portal.Infrastructure.Repositories
 
 
 
-        public async Task DeleteNewsAsync(Guid newsId)
+
+        public async Task AddPinnedNewsAsync(PinnedNews pinnedNews)
         {
-            await _dbContext.News.Where(n => n.NewsId == newsId).ExecuteDeleteAsync();
+            await _dbContext.PinnedNews.AddAsync(pinnedNews);
+            await _dbContext.SaveChangesAsync();
         }
 
 
+
+
+
+        public async Task DeleteNewsAsync(Guid newsId)
+        {
+            News? news = await _dbContext.News.FirstOrDefaultAsync(n => n.NewsId == newsId);
+            if(news != null)
+            {
+                _dbContext.News.Remove(news);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+
+
+
+
+        public async Task DeletePinnedNewsAsync(Guid id)
+        {
+            News? news = await _dbContext.News.FirstOrDefaultAsync(n => n.NewsId == id);
+            if (news != null)
+            {
+                PinnedNews? pinnedNews = await _dbContext.PinnedNews.FirstOrDefaultAsync(n => n.NewsId == news.NewsId);
+                if (pinnedNews != null)
+                {
+                    _dbContext.PinnedNews.Remove(pinnedNews);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+        }
+
+
+
+
+
+        public async Task DeletePinnedNewsByNewsIdAsync(Guid newsId)
+        {
+            await _dbContext.PinnedNews.Where(n => n.NewsId == newsId).ExecuteDeleteAsync();
+        }
 
 
 
@@ -54,6 +95,16 @@ namespace News_Portal.Infrastructure.Repositories
         {
             return await _dbContext.News.Include(i=>i.Images).Include(i=>i.Comments).Include(i=>i.Author).ToListAsync();
         }
+
+
+
+
+
+        public async Task<List<PinnedNews>> GetAllPinnedNewsAsync()
+        {
+            return  await _dbContext.PinnedNews.ToListAsync();
+        }
+
 
 
 
@@ -101,7 +152,17 @@ namespace News_Portal.Infrastructure.Repositories
 
         public Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt)
         {
-            if(type == TopOfXType.Week)
+            if(type == TopOfXType.Pinned)
+            {
+                var pinnedNewsIds = _dbContext.PinnedNews.Select(p => p.NewsId).ToList();
+                return _dbContext.News.Include(i => i.Images)
+                    .Where(n => pinnedNewsIds.Contains(n.NewsId))
+                    .OrderByDescending(n => n.TotalViews)
+                    .Take(1)
+                    .Select(n => n.ToHomePageNewsToShowDTO())
+                    .ToListAsync();
+            }
+            else if(type == TopOfXType.Week)
             {
                 return _dbContext.News.Include(i => i.Images)
                     .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-30))

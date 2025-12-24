@@ -1,6 +1,9 @@
 ﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
 
 @{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+
     var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)
         ? "https://via.placeholder.com/300x200?text=News"
         : Model.TitleImageUrl;
@@ -39,7 +42,7 @@
                     @Model.NewsTitle
                 </h6>
                 <p class="small text-muted mb-1">
-                    <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                    <span class="me-2">@(isBangla? Model.PublishedDate.GetBengaliDate() : Model.PublishedDate.ToString("MMM dd, yyyy"))</span>
                     @* <span class="badge @badgeClass">
                         <i class="news-type-icon me-1" aria-hidden="true"></i>
                         @Model.NewsType

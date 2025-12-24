@@ -1,5 +1,3 @@
-
-
 .suggestion-card {
     border-radius: 0.75rem;
     overflow: hidden;
@@ -468,59 +466,6 @@
 .suggestion-card:focus-visible {
     outline: 2px solid #6366f1;
     outline-offset: 2px;
-}
-
-
-
-@media (prefers-color-scheme: dark) {
-    .suggestion-card {
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        border-color: rgba(75, 85, 99, 0.3);
-    }
-
-        .suggestion-card .card-body {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        }
-
-        .suggestion-card .card-title {
-            color: #f8fafc;
-        }
-
-        .suggestion-card:hover .card-title {
-            color: #a5b4fc;
-        }
-
-        .suggestion-card .text-muted {
-            color: #94a3b8 !important;
-        }
-
-        .suggestion-card:hover .text-muted {
-            color: #cbd5e1 !important;
-        }
-
-        .suggestion-card .card-text {
-            color: #94a3b8;
-        }
-
-        .suggestion-card:hover .card-text {
-            color: #cbd5e1;
-        }
-
-    .two-line-clamp::after {
-        background: linear-gradient(90deg, transparent, #334155);
-    }
-
-    .suggestion-card:hover .two-line-clamp::after {
-        background: linear-gradient(90deg, transparent, #334155);
-    }
-
-    .badge {
-        filter: brightness(0.9);
-    }
-
-    .suggestion-card:hover .badge {
-        filter: brightness(1.1);
-    }
 }
 
 

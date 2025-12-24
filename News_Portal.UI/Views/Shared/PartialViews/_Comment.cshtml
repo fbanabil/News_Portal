@@ -1,5 +1,8 @@
 ﻿@model News_Portal.Core.DTO.Comment.CommentToShowDTO  
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 @{
     var commenter = Model.UserName ?? "Anonymous";
 }
@@ -9,7 +12,7 @@
         <div class="d-flex flex-column">
             <strong class="small">@commenter</strong>
             <span class="text-muted small">
-                @Model.CommentDate.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
+                @(isBangla ? Model.CommentDate.ConvertFrmonEnglishToBangla() : Model.CommentDate.ToLocalTime().ToString("MMM dd, yyyy HH:mm"))
             </span>
         </div>
         <span class="badge text-bg-light text-muted small">

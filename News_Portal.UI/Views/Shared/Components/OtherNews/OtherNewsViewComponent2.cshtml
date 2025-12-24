@@ -1,8 +1,12 @@
 ﻿@model List<HomePageNewsToShowDTO>
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 @if (Model == null || Model.Count == 0)
 {
-    <!-- No items to show -->
+    
 }
 else
 {

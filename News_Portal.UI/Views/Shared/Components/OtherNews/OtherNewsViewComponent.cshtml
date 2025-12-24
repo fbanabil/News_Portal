@@ -1,15 +1,19 @@
 ﻿@model List<HomePageNewsToShowDTO>
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 <div class="two-col-featured">
     <div class="tc-main">
         @if (Model != null && Model.Count > 0)
         {
-            
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml",Model[0])}
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
+        }
         else
         {
             <div class="placeholder-content">
-                <span>No featured news available</span>
+                <span>@(isBangla ? "কোনো প্রধান সংবাদ উপলব্ধ নেই।" : "No featured news available")</span>
             </div>
         }
     </div>
@@ -17,15 +21,12 @@
     <div class="tc-side tc-side-top">
         @if (Model != null && Model.Count > 1)
         {
-            @await Html.PartialAsync(
-            "~/Views/Shared/PartialViews/HomePageItemCard2.cshtml",
-                Model[1]
-                )
-                }
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+        }
         else
         {
             <div class="placeholder-content">
-                <span>No news available</span>
+                <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
             </div>
         }
     </div>
@@ -33,15 +34,12 @@
     <div class="tc-side tc-side-middle">
         @if (Model != null && Model.Count > 2)
         {
-            @await Html.PartialAsync(
-            "~/Views/Shared/PartialViews/HomePageItemCard2.cshtml",
-                Model[2]
-                )
-                }
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+        }
         else
         {
             <div class="placeholder-content">
-                <span>No news available</span>
+                <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
             </div>
         }
     </div>
@@ -49,15 +47,12 @@
     <div class="tc-side tc-side-bottom">
         @if (Model != null && Model.Count > 3)
         {
-            @await Html.PartialAsync(
-            "~/Views/Shared/PartialViews/HomePageItemCard2.cshtml",
-                Model[3]
-                )
-                }
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
+        }
         else
         {
             <div class="placeholder-content">
-                <span>No news available</span>
+                <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
             </div>
         }
     </div>

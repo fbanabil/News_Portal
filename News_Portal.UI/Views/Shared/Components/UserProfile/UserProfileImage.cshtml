@@ -1,16 +1,22 @@
-@model ApplicationUser
+﻿@model ApplicationUser
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 <div class="d-flex align-items-center">
     @if (Model != null)
     {
-        <a asp-area="Identity" asp-controller="Profile" asp-action="ProfileDetails" class="d-flex align-items-center text-decoration-none" style="color: inherit;">
+        <a asp-area="Identity" asp-controller="Profile" asp-action="ProfileDetails"
+           class="d-flex align-items-center text-decoration-none" style="color: inherit;"
+           aria-label="@(isBangla ? $"প্রোফাইল দেখুন — {Model.PersonName ?? Model.Email ?? (isBangla ? "অজানা ব্যবহারকারী" : "Anonymous User")}" : $"View profile — {Model.PersonName ?? Model.Email ?? "Anonymous User"}")">
             <img src="@(Model.PersonImageUrl ?? ViewBag.ProfileImageUrl)"
-                 alt="@(Model.PersonName ?? "User Profile")" 
+                 alt="@(Model.PersonName ?? (isBangla ? "ইউজার পরিচিতি" : "User Profile"))"
                  class="rounded-circle me-2" 
                  style="width: 32px; height: 32px; object-fit: cover; cursor: pointer;" 
                  onerror="this.src='@ViewBag.ProfileImageUrl'" />
-            <span class="text-truncate" style="max-width: 120px; cursor: pointer;" title="@(Model.PersonName ?? Model.Email)">
-                @(Model.PersonName ?? Model.Email ?? "Anonymous User")
+            <span class="text-truncate" style="max-width: 120px; cursor: pointer;" title="@(Model.PersonName ?? Model.Email ?? (isBangla ? "অজানা ব্যবহারকারী" : "Anonymous User"))">
+                @(Model.PersonName ?? Model.Email ?? (isBangla ? "অজানা ব্যবহারকারী" : "Anonymous User"))
             </span>
         </a>
     }
@@ -18,11 +24,11 @@
     {
         <div class="d-flex align-items-center">
             <img src="@ViewBag.ProfileImageUrl"
-                 alt="User Profile" 
+                 alt="@(isBangla ? "ইউজার পরিচিতি" : "User Profile")" 
                  class="rounded-circle me-2" 
                  style="width: 32px; height: 32px; object-fit: cover;" />
             <span class="text-truncate" style="max-width: 120px;">
-                Anonymous User
+                @(isBangla ? "অজানা ব্যবহারকারী" : "Anonymous User")
             </span>
         </div>
     }

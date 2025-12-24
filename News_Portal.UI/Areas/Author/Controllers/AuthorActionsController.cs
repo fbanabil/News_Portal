@@ -134,6 +134,7 @@ namespace News_Portal.UI.Areas.Author.Controllers
         public async Task<IActionResult> EditNews(Guid newsId)
         {
             NewsToEditDTO newsToEditDTO = await _newsService.GetNewsForEditAsync(newsId);
+            ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
             return View(newsToEditDTO);
 
         }

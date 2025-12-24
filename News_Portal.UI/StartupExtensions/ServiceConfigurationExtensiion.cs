@@ -1,10 +1,12 @@
 ﻿using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
-using News_Portal.Core.DemoData;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.Domain.RepositoryContracts;
 using News_Portal.Core.ServiceContracts;
@@ -13,7 +15,6 @@ using News_Portal.Infrastructure.DbContext;
 using News_Portal.Infrastructure.Repositories;
 using News_Portal.UI.Samples;
 using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace News_Portal.UI.StartupExtensions
 {
@@ -94,6 +95,31 @@ namespace News_Portal.UI.StartupExtensions
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath= "/Identity/Account/AuthLogin";
+
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = context =>
+                    {
+                        var tempFactory = context.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
+                        var tempData = tempFactory.GetTempData(context.HttpContext);
+                        tempData["Error"] = "Please sign in to continue.";
+                        tempData.Save();
+
+                        context.Response.Redirect(context.RedirectUri);
+                        return Task.CompletedTask;
+                    },
+
+                    OnRedirectToAccessDenied = context =>
+                    {
+                        var tempFactory = context.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
+                        var tempData = tempFactory.GetTempData(context.HttpContext);
+                        tempData["Error"] = "You do not have permission to access this resource.";
+                        tempData.Save();
+
+                        context.Response.Redirect(context.RedirectUri);
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         }

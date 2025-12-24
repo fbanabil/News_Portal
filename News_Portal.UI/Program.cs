@@ -1,3 +1,4 @@
+using News_Portal.UI.Middlewares;
 using News_Portal.UI.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapGet("/", () => Results.Redirect("/Home/Index"));
 

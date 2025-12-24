@@ -37,6 +37,9 @@ namespace News_Portal.Core.ServiceContracts
         Task<List<HomePageNewsToShowDTO>> GetSuggestionNewsByTypeAsync(NewsType newsType);
         Task<List<HomePageNewsToShowDTO>> GetTopNewsAsync(TopOfXType type, int cnt);
         Task<int> GetTotalNewsCountByTypeAsync(NewsType newsType);
+        Task<bool> IsNewsPinnedAsync(Guid newsId);
+        Task<bool> PinNewsAsync(Guid newsId);
+        Task<bool> UnpinNewsAsync(Guid newsId);
         Task UpdateNewsAsync(NewsToEditDTO newsToEditDTO, Guid id);
     }
 }

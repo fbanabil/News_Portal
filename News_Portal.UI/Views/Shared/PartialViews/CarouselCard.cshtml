@@ -1,5 +1,8 @@
 ﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 <a asp-controller="Home" asp-action="Details" asp-route-newsId="@Model.NewsId"
    class="news-card-compact text-decoration-none d-block"
    aria-label="Read '@Model.NewsTitle'">
@@ -11,7 +14,7 @@
                  loading="lazy" />
         </div>
         <div class="position-absolute top-0 end-0 m-2">
-            <span class="news-badge">@Model.NewsType</span>
+            <span class="news-badge">@(isBangla? Model.NewsType.GetDisplayName() : Model.NewsType.ToString())</span>
         </div>
     </div>
 
@@ -21,7 +24,7 @@
         </h6>
 
         <div class="card-meta d-flex justify-content-between align-items-center">
-            <span class="card-date">@Model.PublishedDate.ToString("MMM dd")</span>
+            <span class="card-date">@(isBangla ? (Model.PublishedDate.GetBengaliDate()) : Model.PublishedDate.ToString("MMM dd"))</span>
         </div>
 
         <p class="card-text">
@@ -31,7 +34,7 @@
         </p>
 
         <div class="card-footer-info d-flex justify-content-between align-items-center">
-            <span class="view-count">@Model.TotalViews.ToString("N0")</span>
+            <span class="view-count">@(isBangla? Model.TotalViews.ToString("N0").ToBanglaDigits() : Model.TotalViews.ToString("N0"))</span>
             <i class="bi bi-arrow-right read-more-arrow"></i>
         </div>
     </div>

@@ -1,0 +1,62 @@
+﻿@using News_Portal.Core.Enums
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+<footer class="site-footer border-top text-muted" role="contentinfo">
+    <div class="container py-5">
+        <div class="row gy-4">
+            <div class="col-12 col-md-4">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="d-inline-block mb-2 site-brand">
+                    <i class="bi bi-newspaper fs-4 me-2"></i>
+                    <span class="fs-5 fw-semibold">@(isBangla ? "নিউজ পোর্টাল" : "News Portal")</span>
+                </a>
+                <p class="text-muted small mt-2">
+                    @(isBangla
+                        ? "রাজনীতি, ব্যবসা, প্রযুক্তি, ক্রীড়া এবং আরও বিভিন্ন বিষয়ে সময়োপযোগী, নির্ভুল ও কিউরেটেড সংবাদ। সংক্ষিপ্ত সারাংশ এবং সরাসরি সূত্রের মাধ্যমে আপডেট থাকুন।"
+                        : "Timely, accurate and curated news across politics, business, technology, sports and more. Stay informed with concise summaries and direct sources.")
+                </p>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <h6 class="mb-3">@(isBangla ? "বিভাগসমূহ" : "Sections")</h6>
+                <ul class="list-unstyled footer-links">
+                    <li><a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Politics asp-route-pageNo="1" asp-route-pageSize="12"><i class="bi bi-bank me-2"></i>@(isBangla ? "রাজনীতি" : "Politics")</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Business asp-route-pageNo="1" asp-route-pageSize="12"><i class="bi bi-briefcase me-2"></i>@(isBangla ? "ব্যবসা" : "Business")</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Science asp-route-pageNo="1" asp-route-pageSize="12"><i class="bi bi-journal-text me-2"></i>@(isBangla ? "বিজ্ঞান" : "Science")</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Health asp-route-pageNo="1" asp-route-pageSize="12"><i class="bi bi-heart-pulse me-2"></i>@(isBangla ? "স্বাস্থ্য" : "Health")</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Sports asp-route-pageNo="1" asp-route-pageSize="12"><i class="bi bi-trophy me-2"></i>@(isBangla ? "ক্রীড়া" : "Sports")</a></li>
+                </ul>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <h6 class="mb-3">@(isBangla ? "যোগাযোগ ও অনুসরণ" : "Contact & Follow")</h6>
+                <address class="small text-muted">
+                    @(isBangla ? "নিউজ পোর্টাল সদর দফতর" : "News Portal HQ")<br />
+                    123 Media Way, Suite 400<br />
+                    @(isBangla ? "কোনো শহর, দেশ" : "Anytown, Country")<br />
+                    <a href="mailto:contact@newsportal.example" class="footer-link">contact@newsportal.example</a>
+                </address>
+
+                <div class="mt-3 social-icons">
+                    <a class="btn btn-outline-secondary btn-sm me-2" href="#" aria-label="Follow on Twitter"><i class="bi bi-twitter"></i></a>
+                    <a class="btn btn-outline-secondary btn-sm me-2" href="#" aria-label="Follow on Facebook"><i class="bi bi-facebook"></i></a>
+                    <a class="btn btn-outline-secondary btn-sm me-2" href="#" aria-label="Follow on LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a class="btn btn-outline-secondary btn-sm" href="#" aria-label="RSS"><i class="bi bi-rss"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start small text-muted">
+                @(isBangla ? "&copy; 2025 নিউজ পোর্টাল। সর্বস্বত্ব সংরক্ষিত।" : "&copy; 2025 News Portal. All rights reserved.")
+            </div>
+            <div class="col-md-6 text-center text-md-end small">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="footer-link me-3"><i class="bi bi-house-door me-1"></i>@(isBangla ? "সাধারণ" : "General")</a>
+                <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.World asp-route-pageNo="1" asp-route-pageSize="12" class="footer-link"><i class="bi bi-globe me-1"></i>@(isBangla ? "বিশ্ব" : "World")</a>
+            </div>
+        </div>
+    </div>
+</footer>

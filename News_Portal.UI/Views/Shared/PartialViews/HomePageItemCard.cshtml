@@ -1,11 +1,14 @@
 ﻿@using News_Portal.Core.DTO.News
 @model HomePageNewsToShowDTO
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 @{
     var content = Model.NewsContent ?? string.Empty;
     var snippet = content.Length > 1500 ? content.Substring(0, 1500) + "..." : content;
-    var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
-    var category = Model.NewsType.ToString();
+    var dateText = isBangla ? Model.PublishedDate.GetBengaliDate(): Model.PublishedDate.ToString("MMM dd, yyyy");
+    var category = isBangla ? Model.NewsType.GetDisplayName() : Model.NewsType.ToString();
 }
 
 <a asp-action="Details" asp-controller="Home" asp-route-newsId="@Model.NewsId" class="news-card-compact text-decoration-none d-block">

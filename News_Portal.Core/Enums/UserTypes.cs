@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace News_Portal.Core.Enums
 {
     public enum UserTypes
     {
-        User, Author, Admin
+        [Display(Name = "ব্যবহারকারী")]
+        User,
+
+        [Display(Name = "লেখক")]
+        Author,
+
+        [Display(Name = "প্রশাসক")]
+        Admin
     }
 }

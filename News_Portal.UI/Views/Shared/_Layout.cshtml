@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using News_Portal.Core.Enums
+@using System.ComponentModel.DataAnnotations
+@using System.Linq
+@using System.Text.Json
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,119 +10,60 @@
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    @* <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/News_Portal.UI.styles.css" asp-append-version="true" />
 </head>
+
+
+@{
+    var cookieLang = Context.Request.Cookies["Language"];
+    if (!string.IsNullOrEmpty(cookieLang))
+    {
+        ViewBag.Language = cookieLang;
+    }
+    else if (ViewBag.Language == null)
+    {
+        ViewBag.Language = Languages.Bangla.ToString();
+    }
+
+    var lang = (string)(ViewBag.Language ?? Languages.Bangla.ToString());
+    var banglaDisplay = Languages.Bangla.GetDisplayName();
+    var englishShort = "EN";
+    var currentLabel = (lang == Languages.Bangla.ToString()) ? banglaDisplay : englishShort;
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+
+
+
 <body>
+    
     <header>
         <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-newspaper me-2"></i>News Portal
+                    <i class="bi bi-newspaper me-2"></i>@(isBangla ? "নিউজ পোর্টাল" : "News Portal")
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-general" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-house-door"></i>General
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-politics"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Politics
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-bank"></i>Politics
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-sports"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Sports
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-trophy"></i>Sports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-technology"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Technology
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-cpu"></i>Technology
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-entertainment"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Entertainment
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-film"></i>Entertainment
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-health"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Health
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-heart-pulse"></i>Health
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-business"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Business
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-briefcase"></i>Business
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-science"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.Science
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-flask"></i>Science
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark nav-icon-world"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="GetNews"
-                               asp-route-newsType=@NewsType.World
-                               asp-route-pageNo="1"
-                               asp-route-pageSize="12">
-                                <i class="bi bi-globe"></i>World
-                            </a>
-                        </li>
-                    </ul>
+                    
+                    @await Html.PartialAsync("PartialViews/_LayoutLinks")
+
+                    
 
                     <ul class="navbar-nav ms-auto">
-                        @if ((ViewBag.Title == "Login" || ViewBag.Title == "Register")){}
+
+                        <li class="nav-item d-flex align-items-center ms-2 me-2">
+                            <div class="form-check form-switch" title="Toggle Language">
+                                <input class="form-check-input lang-switch-input" type="checkbox" id="langSwitch" @(lang == Languages.Bangla.ToString() ? "checked" : "") />
+                                <label class="form-check-label mb-0 ms-2 lang-switch-label" for="langSwitch" id="langLabel">@currentLabel</label>
+                            </div>
+                        </li>
+
+                        @if ((ViewBag.Title == "Login" || ViewBag.Title == "Register")){ }
                         else if (!(User?.Identity?.IsAuthenticated ?? false))
                         {
                             <li class="nav-item me-2">
@@ -126,23 +71,49 @@
                                    asp-area="Identity"
                                    asp-controller="Account"
                                    asp-action="AuthLogin">
-                                    <i class="bi bi-person-plus me-1"></i>Login/Register
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    @if(isBangla)
+                                    {
+                                        @:লগ-ইন/রেজিস্টার
+                                    }
+                                    else
+                                    {
+                                        @:Login/Register
+                                    }
+                                    
                                 </a>
                             </li>
                         }
                         else
                         {
+
+
+                            
+
                             <li class="nav-item">
                                 <div class="user-profile-container">
                                     @await Component.InvokeAsync("UserProfile")
                                 </div>
                             </li>
+
+                            
+
                             <li class="nav-item">
                                 <div class="logout-btn-container">
                                     <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                         <button type="submit" class="logout-btn" title="Logout">
                                             <i class="bi bi-box-arrow-right"></i>
-                                            <span class="d-none d-md-inline">Logout</span>
+                                            <span class="d-none d-md-inline">
+                                                @if(isBangla)
+                                                {
+                                                    @: লগ-আউট
+                                                }
+                                                else
+                                                {
+                                                    @:Logout
+                                                }
+                                                
+                                                </span>
                                         </button>
                                     </form>
                                 </div>
@@ -159,41 +130,42 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - News Portal - 
-            <a asp-area="" asp-controller="Home" asp-action="Index">
-                <i class="bi bi-house-door me-1"></i>General
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Politics asp-route-pageNo="1" asp-route-pageSize="12">
-                <i class="bi bi-bank me-1"></i>Politics
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Sports asp-route-pageNo="1" asp-route-pageSize="12>
-                <i class="bi bi-trophy me-1"></i>Sports
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Technology asp-route-pageNo="1" asp-route-pageSize="12">
-                <i class="bi bi-cpu me-1"></i>Technology
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Entertainment asp-route-pageNo="1" asp-route-pageSize="18">
-                <i class="bi bi-film me-1"></i>Entertainment
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Health asp-route-pageNo="1" asp-route-pageSize="12">
-                <i class="bi bi-heart-pulse me-1"></i>Health
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Business asp-route-pageNo="1" asp-route-pageSize="12">
-                <i class="bi bi-briefcase me-1"></i>Business
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.Science asp-route-pageNo="1" asp-route-pageSize="12">
-                <i class="bi bi-flask me-1"></i>Science
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="GetNews" asp-route-newsType=@NewsType.World asp-route-pageNo="1" asp-route-pageSize="12">
-                <i class="bi bi-globe me-1"></i>World
-            </a>
-        </div>
-    </footer>
+    @await Html.PartialAsync("PartialViews/_Footer")
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        (function () {
+            // select all switches/labels across the page (including partials)
+            var switches = document.querySelectorAll('.lang-switch-input');
+            var labels = document.querySelectorAll('.lang-switch-label');
+            if (!switches || switches.length === 0) return;
+
+            // server-provided strings (serialized to safe JS literals)
+            var banglaName = @Html.Raw(JsonSerializer.Serialize(banglaDisplay));
+            var englishShort = @Html.Raw(JsonSerializer.Serialize(englishShort));
+
+            function setUI(isBangla) {
+                switches.forEach(function (s) { s.checked = isBangla; });
+                labels.forEach(function (l) { l.textContent = isBangla ? banglaName : englishShort; });
+            }
+
+            var initialIsBangla = @Html.Raw(JsonSerializer.Serialize(lang == Languages.Bangla.ToString()));
+            setUI(initialIsBangla);
+
+            switches.forEach(function (s) {
+                s.addEventListener('change', function () {
+                    var isBangla = this.checked;
+                    var maxAge = 60 * 60 * 24 * 365;
+                    document.cookie = 'Language=' + (isBangla ? 'Bangla' : 'English') + ';path=/;max-age=' + maxAge + ';SameSite=Lax';
+                    setUI(isBangla);
+                    location.reload();
+                }, { passive: true });
+            });
+        })();
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,11 +1,15 @@
 ﻿@using News_Portal.Core.DTO.News
 @model HomePageNewsToShowDTO
-
+@using System.Globalization
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 @{
     var content = Model.NewsContent ?? string.Empty;
     var snippet = content.Length > 1200 ? content.Substring(0, 1200) + "..." : content;
-    var dateText = Model.PublishedDate.ToString("MMM dd, yyyy");
-    var category = Model.NewsType.ToString().ToLower();
+    var dateText = isBangla ? Model.PublishedDate.GetBengaliDate() : Model.PublishedDate.ToString("MMM dd, yyyy");
+    var category = isBangla ? Model.NewsType.GetDisplayName() : Model.NewsType.ToString();
 }
 
 @functions {
@@ -25,12 +29,7 @@
         };
     }
 
-    private string FormatNumber(int number)
-    {
-        if (number >= 1000000) return $"{number / 1000000.0:F1}M";
-        if (number >= 1000) return $"{number / 1000.0:F1}K";
-        return number.ToString();
-    }
+    
 }
 <a asp-action="Details" asp-controller="Home" asp-route-newsId="@Model.NewsId" class="news-card-compact text-decoration-none d-block">
 
@@ -53,7 +52,7 @@
             <div class="card-placeholder">
                 <div class="placeholder-content">
                     <span class="placeholder-icon">@GetCategoryIcon(category)</span>
-                    <span class="placeholder-text">@Model.NewsType.ToString()</span>
+                        <span class="placeholder-text">@(isBangla? Model.NewsType.GetDisplayName(): Model.NewsType.ToString())</span>
                 </div>
             </div>
         }
@@ -64,7 +63,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z" />
                 </svg>
-                Trending
+                    @(isBangla ? "চলমান" : "Trending")
             </div>
         }
     </div>
@@ -108,7 +107,7 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                         </svg>
-                        @FormatNumber(Model.TotalViews)
+                            @(isBangla? Model.TotalViews.ToString().ToBanglaDigits() : Model.TotalViews)
                     </span>
                 }
             </div>

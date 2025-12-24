@@ -1,4 +1,8 @@
 ﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 <div class="col-10 col-sm-6 col-lg-4">
     <a asp-controller="Home" asp-action="Details" asp-route-newsId="@Model.NewsId"
@@ -13,14 +17,15 @@
         <div class="card-body d-flex flex-column">
             <h6 class="card-title text-truncate mb-1" title="@Model.NewsTitle">@Model.NewsTitle</h6>
             <p class="small text-muted mb-2">
-                <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                <span class="me-2">@(isBangla? Model.PublishedDate.GetBengaliDate() : Model.PublishedDate.ToString("MMM dd, yyyy"))</span>
             </p>
             <p class="card-text small flex-grow-1 mb-2">
                 @((Model.NewsContent ?? string.Empty).Length > 160
                     ? Model.NewsContent!.Substring(0,160) + "…"
                     : Model.NewsContent)
             </p>
-            <span class="small text-muted">@Model.TotalViews.ToString("N0") views</span>
+            <span class="small text-muted">
+                @(isBangla ? Model.TotalViews.ToString().ToBanglaDigits() + " ভিউ" : Model.TotalViews.ToString("N0")+  " views")</span>
             <span class="stretched-link"></span>
         </div>
     </a>

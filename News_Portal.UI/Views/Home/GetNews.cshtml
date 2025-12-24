@@ -1,8 +1,12 @@
 ﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
-@using News_Portal.Core.Enums
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+
 @{
     ViewBag.Title = ViewBag.NewsType?.ToString() ?? "News";
-    var title = ViewBag.NewsType?.ToString() ?? "News";
+    NewsType title = Model[0].NewsType;
     int pageNo = ViewBag.PageNo is int p ? p : 1;
     int pageSize = ViewBag.PageSize is int ps ? ps : 12;
     int pageCount = ViewBag.PageCount is int pc ? pc : 1;
@@ -14,7 +18,7 @@
         "technology" => "bi bi-cpu",
         "business" => "bi bi-briefcase",
         "entertainment" => "bi bi-film",
-        "science" => "bi bi-flask",
+        "science" => "bi bi-journal-text",
         "health" => "bi bi-heart-pulse",
         "world" => "bi bi-globe",
         _ => "bi bi-newspaper"
@@ -48,12 +52,27 @@
                 <i class="@categoryIcon me-3"></i>
                 <div>
                     <h2 class="category-title mb-1">@title</h2>
-                    <small class="text-muted">Page @pageNo of @pageCount</small>
+                    <small class="text-muted"> @(isBangla ? "পেজ " + @pageCount.ToString().ToBanglaDigits() + " এর ভেতরে " + @pageNo.ToString().ToBanglaDigits()  : "Page" + @pageNo.ToString() + "of" + @pageCount.ToString()) </small>
                 </div>
             </div>
             <div class="category-stats">
                 <span class="badge bg-light text-dark">
-                    @((pageNo - 1) * pageSize + 1) - @(Math.Min(pageNo * pageSize, (Model?.Count ?? 0) + (pageNo - 1) * pageSize)) articles
+                    @{
+                        int pa = ((pageNo - 1) * pageSize + 1);
+                        int qa = (Math.Min(pageNo * pageSize, (Model?.Count ?? 0) + (pageNo - 1) * pageSize));
+                    }
+                                        
+                    @if(isBangla)
+                    {
+                        @pa.ToString().ToBanglaDigits() @:-  @qa.ToString().ToBanglaDigits() 
+                        @:সংবাদ
+                    }
+                    else
+                    {
+                          @pa.ToString() @:-  @qa.ToString() 
+                          @:articles
+                    }
+                    
                 </span>
             </div>
         </div>
@@ -69,8 +88,8 @@
                     <div class="no-news-icon">
                         <i class="bi bi-newspaper"></i>
                     </div>
-                    <h4 class="text-muted">No @title News Available</h4>
-                    <p class="text-muted">Check back later for the latest updates in @title.ToLower().</p>
+                    <h4 class="text-muted">@(isBangla?"কোন "+ title.ToString() +" সংবাদ নেই":"No"+ title.ToString() +"News Available") </h4>
+                    <p class="text-muted">@(isBangla?"Check back later for the latest updates in "+ @title.GetDisplayName().ToLower():"Check back later for the latest updates in "+@title.ToString().ToLower())</p>
                 </div>
             }
             else
@@ -89,7 +108,7 @@
                             <div class="news-card-body">
                                 <h5 class="news-card-title" title="@news.NewsTitle">@news.NewsTitle</h5>
                                 <div class="news-card-meta">
-                                    <span><i class="bi bi-calendar3 me-1"></i>@news.PublishedDate.ToString("MMM dd, yyyy")</span>
+                                    <span><i class="bi bi-calendar3 me-1"></i>@(isBangla? news.PublishedDate.GetBengaliDate() : news.PublishedDate.ToString("MMM dd, yyyy"))</span>
                                     <span><i class="bi bi-person me-1"></i>@author?.PersonName</span>
                                 </div>
                                 <p class="news-card-content">
@@ -100,9 +119,10 @@
                         <div class="news-card-footer">
                             <div class="view-count">
                                 <i class="bi bi-eye"></i>
-                                @news.TotalViews.ToString("N0")
+                                @(isBangla? news.TotalViews.ToString("N0").ToBanglaDigits() : news.TotalViews.ToString("N0"))
+                                
                             </div>
-                            <small class="text-primary">Read more →</small>
+                            <small class="text-primary">@(isBangla?"আরো পড়ি":"Read more") →</small>
                         </div>
                     </div>
                 </a>
@@ -127,7 +147,7 @@
                                asp-route-newsType="@routeType"
                                asp-route-pageNo="@(pageNo - 1)"
                                asp-route-pageSize="@pageSize">
-                                <i class="bi bi-chevron-left"></i> Previous
+                                <i class="bi bi-chevron-left"></i> @(isBangla?"পূর্ববর্তী":"Previous") 
                             </a>
                         </li>
 
@@ -139,7 +159,7 @@
                                    asp-action="GetNews"
                                    asp-route-newsType="@routeType"
                                    asp-route-pageNo="@i"
-                                   asp-route-pageSize="@pageSize">@i</a>
+                                   asp-route-pageSize="@pageSize">@(isBangla?i.ToString().ToBanglaDigits():i)</a>
                             </li>
                         }
 
@@ -150,7 +170,7 @@
                                asp-route-newsType="@routeType"
                                asp-route-pageNo="@(pageNo + 1)"
                                asp-route-pageSize="@pageSize">
-                                Next <i class="bi bi-chevron-right"></i>
+                                @(isBangla?"পরবর্তী":"Next")  <i class="bi bi-chevron-right"></i>
                             </a>
                         </li>
                     </ul>
@@ -162,7 +182,7 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-pin-angle-fill text-primary"></i>
-                    Trending Now
+                    @(isBangla?"এই মুহূর্তে জনপ্রিয়":"Trending Now") 
                 </h4>
                 @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
             </div>
@@ -170,7 +190,7 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-graph-up text-success"></i>
-                    Most Popular
+                    @(isBangla?"অনেক জনপ্রিয়":"Most Popular")
                 </h4>
                 @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
             </div>
@@ -178,7 +198,7 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-trophy text-warning"></i>
-                    All Time Favorites
+                    @(isBangla?"সর্বকালের প্রিয়":"All Time Favorites")
                 </h4>
                 @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 2 })
             </div>
@@ -186,7 +206,8 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-grid text-info"></i>
-                    Browse Categories
+                    @(isBangla?"বিভাগসমূহ ব্রাউজ করুন ":"Browse Categories")
+                     
                 </h4>
                 <div class="d-flex flex-wrap gap-2">
                     @{
@@ -212,7 +233,8 @@
                            asp-route-pageSize="18"
                            class="btn btn-outline-@category.Color btn-sm">
                             <i class="@category.Icon me-1"></i>
-                            @category.Type
+                            @(isBangla ? @category.Type.GetDisplayName() : @category.Type)
+                            
                         </a>
                     }
                 </div>

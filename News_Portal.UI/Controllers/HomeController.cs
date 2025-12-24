@@ -10,6 +10,7 @@ using News_Portal.UI.Filters;
 using News_Portal.UI.Samples;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Diagnostics;
 
 
 namespace News_Portal.UI.Controllers
@@ -65,6 +66,8 @@ namespace News_Portal.UI.Controllers
             }
             ViewBag.VideoLink = youtubeEmbedUrl;
             detailedNewsToShowDTOs.VideoUrl = youtubeEmbedUrl;
+
+            ViewBag.CurrentUserId = user?.Id;
             return View(detailedNewsToShowDTOs);
         }
 
@@ -102,6 +105,22 @@ namespace News_Portal.UI.Controllers
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
             CommentToShowDTO commentToShowDTO = await _commentService.AddCommentAsync(commentToAddDTO,user.Id);
             return PartialView("~/Views/Shared/PartialViews/_Comment.cshtml",commentToShowDTO);
+        }
+
+        //[Route("Home/Error")]
+        [HttpGet]
+        public IActionResult Error()
+        {
+            // Try to read the exception (may be null when middleware redirected)
+            var exFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var errorMessage = exFeature?.Error?.Message;
+            var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+            Response.StatusCode = StatusCodes.Status500InternalServerError;
+            ViewData["ErrorMessage"] = errorMessage ?? "An unexpected error occurred.";
+            ViewData["RequestId"] = requestId;
+
+            return View();
         }
     }
 }

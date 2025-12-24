@@ -24,6 +24,7 @@ namespace News_Portal.Infrastructure.DbContext
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Images> Images { get; set; }
         public virtual DbSet<Comments> Comments { get; set; }
+        public virtual DbSet<PinnedNews> PinnedNews { get; set; }
 
 
 
@@ -37,6 +38,7 @@ namespace News_Portal.Infrastructure.DbContext
             modelbuilder.Entity<News>().ToTable("News");
             modelbuilder.Entity<Images>().ToTable("Images");
             modelbuilder.Entity<Comments>().ToTable("Comments");
+            modelbuilder.Entity<PinnedNews>().ToTable("PinnedNews");
 
         }
 

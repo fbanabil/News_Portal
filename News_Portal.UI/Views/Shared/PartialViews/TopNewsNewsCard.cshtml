@@ -1,4 +1,8 @@
 ﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 @{
     var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)
@@ -18,6 +22,7 @@
         _ => "badge-general"
     };
 }
+
 
 <a asp-controller="Home"
    asp-action="Details"
@@ -39,10 +44,10 @@
                     @Model.NewsTitle
                 </h6>
                 <p class="small text-muted mb-1">
-                    <span class="me-2">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                    <span class="me-2"> @(isBangla? @Model.PublishedDate.GetBengaliDate() : @Model.PublishedDate.ToString("MMM dd, yyyy"))</span>
                     <span class="badge @badgeClass">
                         <i class="news-type-icon me-1" aria-hidden="true"></i>
-                        @Model.NewsType
+                        @(isBangla? Model.NewsType.GetDisplayName(): Model.NewsType)
                     </span>
                 </p>
                 <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">

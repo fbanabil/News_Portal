@@ -1,6 +1,8 @@
 ﻿@model List<HomePageNewsToShowDTO>
 
 @{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
     var items = (Model ?? new List<HomePageNewsToShowDTO>()).Take(6).ToList();
 }
 
@@ -8,19 +10,19 @@
     <div class="d-flex align-items-center gap-2">
         <h2 class="h5 mb-0 suggestion-title">
             <span class="heading-icon" aria-hidden="true">💡</span>
-            Suggested for you
+            @(isBangla ? "আপনার জন্য সুপারিশ" : "Suggested for you")
         </h2>
     </div>
     @if (items.Count > 0)
     {
-        <span class="small text-muted">Showing @items.Count items</span>
+        <span class="small text-muted">@(isBangla ? $"দেখানো হচ্ছে {items.Count.ToString().ToBanglaDigits()} টি সংবাদ" : $"Showing {items.Count} news")</span>
     }
 </div>
 <div class="suggestion-accent" role="presentation"></div>
 
 @if (items.Count == 0)
 {
-    <div class="alert alert-light border mb-0 mt-2">No suggestions available.</div>
+    <div class="alert alert-light border mb-0 mt-2">@((isBangla) ? "কোনো সুপারিশ উপলব্ধ নেই।" : "No suggestions available.")</div>
 }
 else
 {

@@ -110,7 +110,7 @@
 }
 
     .badge-politics::before {
-        content: '???';
+        content: '';
         margin-right: 4px;
     }
 
@@ -121,7 +121,7 @@
 }
 
     .badge-sports::before {
-        content: '?';
+        content: '';
         margin-right: 4px;
     }
 
@@ -132,7 +132,7 @@
 }
 
     .badge-technology::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 
@@ -143,7 +143,7 @@
 }
 
     .badge-business::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 
@@ -154,7 +154,7 @@
 }
 
     .badge-entertainment::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 
@@ -165,7 +165,7 @@
 }
 
     .badge-science::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 
@@ -176,7 +176,7 @@
 }
 
     .badge-health::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 
@@ -187,7 +187,7 @@
 }
 
     .badge-world::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 
@@ -198,7 +198,7 @@
 }
 
     .badge-general::before {
-        content: '??';
+        content: '';
         margin-right: 4px;
     }
 

@@ -1,7 +1,7 @@
 ﻿.simple-category-header {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-bottom: 1px solid #dee2e6;
-    padding: 2rem 0;
+    padding: .3rem 0;
     margin-bottom: 2rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     position: relative;

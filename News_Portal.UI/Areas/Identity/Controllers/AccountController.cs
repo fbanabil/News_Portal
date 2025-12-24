@@ -425,5 +425,13 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 return View("ResetPassword", forgotPasswordResetDTO);
             }
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            Response.StatusCode = StatusCodes.Status403Forbidden;
+            ViewData["Message"] = "You do not have permission to access this resource.";
+            return View();
+        }
     }
 }

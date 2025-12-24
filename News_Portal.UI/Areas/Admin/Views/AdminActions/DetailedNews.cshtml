@@ -31,6 +31,8 @@
 
     var previousUrl = Context.Request.Headers["Referer"].ToString();
     ViewBag.PreviousUrl = !string.IsNullOrWhiteSpace(previousUrl) ? previousUrl : Url.Action("Index", "AdminActions", new { area = "Admin" });
+
+    bool isPinned = ViewBag.IsPinned ?? false;
 }
 
 

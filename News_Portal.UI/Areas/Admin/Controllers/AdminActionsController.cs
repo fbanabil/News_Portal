@@ -113,6 +113,10 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             ViewBag.VideoLink = youtubeEmbedUrl;
             adminsNewsDetailedDTO.VideoUrl = youtubeEmbedUrl;
             ViewBag.adminsNewsDetailedDTO = adminsNewsDetailedDTO;
+
+            bool isPined = await _newsService.IsNewsPinnedAsync(newsId);
+            ViewBag.IsPinned = isPined;
+
             return View(adminsNewsDetailedDTO);
         }
 
@@ -246,5 +250,39 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> PinNews(Guid newsId)
+        {
+            bool isPinned = await _newsService.PinNewsAsync(newsId);
+            if (isPinned)
+            {
+                TempData["SuccessMessage"] = "News pinned successfully.";
+                return Ok("News pinned successfully.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to pin news.";
+                return BadRequest("Failed to pin news.");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UnpinNews(Guid newsId)
+        {
+            bool isUnpinned = await _newsService.UnpinNewsAsync(newsId);
+            if (isUnpinned)
+            {
+                TempData["SuccessMessage"] = "News unpinned successfully.";
+                return Ok("News unpinned successfully.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to unpin news.";
+                return BadRequest("Failed to unpin news.");
+            }
+
+        }
     }
 }

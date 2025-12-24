@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
-using News_Portal.Core.DemoData;
 using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.Domain.RepositoryContracts;
@@ -21,7 +20,6 @@ namespace News_Portal.Core.Services
 {
     public class NewsService : INewsService
     {
-        private readonly NewsDemoData _newsDemoData;
         private readonly INewsRepository _newsRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NewsHelper_01 _newsHelper_01;
@@ -29,7 +27,6 @@ namespace News_Portal.Core.Services
         private readonly ICommentService _commentService;
         public NewsService(INewsRepository newsRepository,UserManager<ApplicationUser> userManager, IImageService imageService, ICommentService commentService)
         {
-            _newsDemoData = new NewsDemoData();
             _newsRepository = newsRepository;
             _userManager = userManager;
             _newsHelper_01 = new NewsHelper_01();
@@ -50,22 +47,27 @@ namespace News_Portal.Core.Services
 
         public async Task AddNewsByAuthor(NewsToAddDTO newsToAddDTO, Guid authorId)
         {
+
             News news = newsToAddDTO.ToNews();       
             news.Comments = new List<Comments>();
             news.AuthorId = authorId;
 
             await _newsRepository.AddNews(news);
 
-            foreach (var img in newsToAddDTO.Images)
+            if(newsToAddDTO.Images != null)
             {
-                string uploadPath = await _imageService.UploadNewsImageToCloudinary(img);
-                Images image = new Images();
-                image.ImageUrl = uploadPath;
-                image.ImageId = Guid.NewGuid();
-                image.NewsId = news.NewsId;
+                foreach (var img in newsToAddDTO.Images)
+                {
+                    string uploadPath = await _imageService.UploadNewsImageToCloudinary(img);
+                    Images image = new Images();
+                    image.ImageUrl = uploadPath;
+                    image.ImageId = Guid.NewGuid();
+                    image.NewsId = news.NewsId;
 
-                await _imageService.AddImage(image);
+                    await _imageService.AddImage(image);
+                }
             }
+            
         }
 
 
@@ -129,6 +131,11 @@ namespace News_Portal.Core.Services
 
         public async Task DeleteNewsAsync(Guid newsId, Guid id)
         {
+            News news = await _newsRepository.GetNewsById(newsId);
+            if(news.AuthorId != id)
+            {
+                throw new UnauthorizedAccessException("You are not authorized to delete this news.");
+            }
             await _newsRepository.DeleteNewsAsync(newsId);
         }
 
@@ -359,9 +366,68 @@ namespace News_Portal.Core.Services
 
 
 
+        public async Task<bool> IsNewsPinnedAsync(Guid newsId)
+        {
+            List<PinnedNews> pinnedNewsList = await _newsRepository.GetAllPinnedNewsAsync();
+            foreach (PinnedNews pn in pinnedNewsList)
+            {
+                if (pn.NewsId == newsId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+
+
+        public async Task<bool> PinNewsAsync(Guid newsId)
+        {
+            //remove existing pinned news
+            List<PinnedNews> pinnedNewsList = await _newsRepository.GetAllPinnedNewsAsync();
+            foreach (PinnedNews pn in pinnedNewsList)
+            {
+                await _newsRepository.DeletePinnedNewsAsync(pn.Id);
+            }
+            //add new pinned news
+            PinnedNews pinnedNews = new PinnedNews();
+            pinnedNews.Id = Guid.NewGuid();
+            pinnedNews.NewsId = newsId;
+            await _newsRepository.AddPinnedNewsAsync(pinnedNews);
+            return true;
+        }
+
+
+
+
+
+        public async Task<bool> UnpinNewsAsync(Guid newsId)
+        {
+            try
+            {
+                await _newsRepository.DeletePinnedNewsByNewsIdAsync(newsId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+
+
+
         public async Task UpdateNewsAsync(NewsToEditDTO newsToEditDTO, Guid id)
         {
             News news = await _newsRepository.GetNewsById(newsToEditDTO.NewsId);
+
+            if(news.AuthorId != id)
+            {
+                throw new UnauthorizedAccessException("You are not authorized to edit this news.");
+            }
 
             if (newsToEditDTO.ExistingImages == null)
             {
@@ -406,5 +472,6 @@ namespace News_Portal.Core.Services
             }
 
         }
+
     }
 }

@@ -1,4 +1,8 @@
 ﻿@model List<HomePageNewsToShowDTO>
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 @{
     var items = Model ?? new List<HomePageNewsToShowDTO>();
@@ -11,8 +15,9 @@
         <div id="newsCarousel" class="news-carousel-container">
             
             <div class="d-flex justify-content-center mb-3">
-                <div class="carousel-counter badge bg-light text-dark border">
-                    <span id="currentSlide">1</span> / <span id="totalSlides">@totalItems</span>
+                <div class="carousel-counter badge bg-light text-dark border" role="status" aria-live="polite">
+                    <span class="visually-hidden">@(isBangla ? "স্লাইড" : "Slide")</span>
+                    <span id="currentSlide">1</span> / <span id="totalSlides">@totalItems.ToString().ToBanglaDigits()</span>
                 </div>
             </div>
             
@@ -32,20 +37,20 @@
             <button class="carousel-control carousel-control-prev btn btn-light shadow-sm" 
                     type="button" 
                     id="prevBtn" 
-                    aria-label="Previous">
+                    aria-label="@(isBangla ? "পূর্ববর্তী" : "Previous")">
                 <i class="bi bi-chevron-left"></i>
             </button>
             
             <button class="carousel-control carousel-control-next btn btn-light shadow-sm" 
                     type="button" 
                     id="nextBtn" 
-                    aria-label="Next">
+                    aria-label="@(isBangla ? "পরবর্তী" : "Next")">
                 <i class="bi bi-chevron-right"></i>
             </button>
             
             <div class="carousel-progress mt-3">
                 <div class="progress" style="height: 3px;">
-                    <div class="progress-bar bg-primary" id="carouselProgressBar" style="width: 0%;"></div>
+                    <div class="progress-bar bg-primary" id="carouselProgressBar" style="width: 0%;" aria-label="@(isBangla ? "স্লাইড অগ্রগতি" : "Carousel progress")"></div>
                 </div>
             </div>
         </div>
@@ -56,7 +61,7 @@ else
     <div class="text-center py-5">
         <div class="text-muted">
             <i class="bi bi-newspaper fs-1 mb-3 d-block"></i>
-            <p class="mb-0">No news available at the moment.</p>
+            <p class="mb-0">@(isBangla ? "এই মুহূর্তে কোনো সংবাদ উপলব্ধ নেই।" : "No news available at the moment.")</p>
         </div>
     </div>
 }

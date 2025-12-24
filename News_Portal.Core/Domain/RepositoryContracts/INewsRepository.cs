@@ -12,9 +12,13 @@ namespace News_Portal.Core.Domain.RepositoryContracts
     public interface INewsRepository
     {
         Task AddNews(News news);
+        Task AddPinnedNewsAsync(PinnedNews pinnedNews);
         Task DeleteNewsAsync(Guid newsId);
+        Task DeletePinnedNewsAsync(Guid id);
+        Task DeletePinnedNewsByNewsIdAsync(Guid newsId);
         Task<List<News>> GetAllAuthorsNews(Guid authorId);
         Task<List<News>> GetAllNewsAsync();
+        Task<List<PinnedNews>> GetAllPinnedNewsAsync();
         Task<News> GetNewsById(Guid newsId);
         Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize);
         Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync();
