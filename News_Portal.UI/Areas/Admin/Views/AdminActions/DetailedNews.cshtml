@@ -5,6 +5,11 @@
     SideBarDTO sideBarDTO=new SideBarDTO();
 }
 @{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+
+@{
     ViewData["Title"] = Model.NewsTitle ?? "News Details";
 
     var galleryId = $"newsGallery_{Model.NewsId}";
@@ -57,19 +62,19 @@
             <header class="news-hero">
                 <div class="news-meta-bar">
                     <div class="meta-left">
-                        <span class="news-category">@Model.NewsType</span>
-                        <span class="news-badge status-badge">@Model.NewsStatus</span>
-                        <span class="news-badge priority-badge">@Model.NewsPriority</span>
+                    <span class="news-category">@(isBangla? Model.NewsType.GetDisplayName() : Model.NewsType)</span>
+                    <span class="news-badge status-badge">@(isBangla? Model.NewsStatus.GetDisplayName() : Model.NewsStatus)</span>
+                    <span class="news-badge priority-badge">@(isBangla? Model.NewsPriority.GetDisplayName() : Model.NewsPriority)</span>
                     </div>
 
                     <div class="news-dates">
                         <span class="published-date">
                             <i class="bi bi-calendar3"></i>
-                            Published @Model.PublishedDate.ToString("MMM dd, yyyy")
+                        @(isBangla ? "প্রকাশিত " + Model.PublishedDate.GetBengaliDate() : "Published " + Model.PublishedDate.ToString("MMM dd, yyyy"))
                         </span>
                         <span class="updated-date">
                             <i class="bi bi-clock-history"></i>
-                            Updated @Model.LastUpdate.ToString("MMM dd, yyyy HH:mm")
+                        @(isBangla ? "আপডেট হয়েছে " + Model.LastUpdate.GetBengaliDate() : "Updated at" + Model.LastUpdate.ToString("MMM dd, yyyy HH:mm"))
                         </span>
                     </div>
                 </div>
@@ -84,11 +89,12 @@
                     <div class="article-stats">
                         <span class="views-count">
                             <i class="bi bi-eye"></i>
-                            @Model.TotalViews.ToString("N0") views
+                        @(isBangla ? "দেখা হয়েছে " + @Model.TotalViews.ToString("N0").ToBanglaDigits() : "Viewed " + @Model.TotalViews.ToString("N0")))
+                            
                         </span>
                         <span class="comments-info">
                             <i class="bi bi-chat-dots"></i>
-                            <span id="comments-count">@commentsCount</span> comments
+                        <span id="comments-count">@(isBangla? commentsCount.ToString().ToBanglaDigits() : commentsCount)</span> comments
                         </span>
                     </div>
                 </div>
@@ -147,12 +153,12 @@
                         <button class="carousel-control-prev" type="button"
                                 data-bs-target="#@galleryId" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
+                        <span class="visually-hidden">@(isBangla ?"পূর্ববর্তী": "Previous")</span>
                         </button>
                         <button class="carousel-control-next" type="button"
                                 data-bs-target="#@galleryId" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
+                            <span class="visually-hidden">@(isBangla? "পরবর্তী" : "Next")</span>
                         </button>
 
                         <div class="auto-slide-control">
@@ -163,7 +169,7 @@
 
                         <div class="video-status-indicator d-none" id="videoStatusIndicator">
                             <i class="bi bi-play-circle-fill me-2"></i>
-                            <span>Video Playing</span>
+                        <span>@(isBangla ? "ভিডিও চলছে" : "Video Playing")</span>
                         </div>
                     </div>
                 }
@@ -196,13 +202,13 @@
                     <div class="card-body p-3 p-md-4 news-article-scroll">
                         @if (contentLines.Count == 0)
                         {
-                            <p class="text-muted mb-0">No content available.</p>
+                            <p class="text-muted mb-0">@(isBangla? "কোন নিউজ নেই।":" No content available.")</p>
                         }
                         else
                         {
                             foreach (var line in contentLines)
                             {
-                                <p class="fs-6 lh-base mb-3">@line</p>
+                            <p class="fs-6 lh-base mb-3">@(isBangla? line.ToString().ToBanglaDigits() : line)</p>
                             }
                         }
                     </div>

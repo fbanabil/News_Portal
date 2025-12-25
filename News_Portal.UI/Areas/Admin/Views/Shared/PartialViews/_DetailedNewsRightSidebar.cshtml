@@ -1,13 +1,37 @@
-
+﻿@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 <div class="admin-sidebar">
     <div class="card mb-3 shadow-sm">
         <div class="card-header d-flex align-items-center justify-content-between">
-            <strong class="mb-0">Actions on News</strong>
+            <strong class="mb-0">@(isBangla ? "সংবাদের উপর কার্যক্রম" : "Actions on News")</strong>
         </div>
 
+        <div class="card-body">
+            <div class="mb-2 text-muted small">
+                @(isBangla
+                    ? "নির্বাচিত সংবাদের জন্য উপলব্ধ কার্যক্রম:"
+                    : "Available actions for the selected news:")
+            </div>
+
+            <ul class="list-unstyled small">
+                <li>• @(isBangla ? "স্ট্যাটাস পরিবর্তন" : "Change Status")</li>
+                <li>• @(isBangla ? "প্রায়োরিটি পরিবর্তন" : "Change Priority")</li>
+                <li>• @(isBangla ? "টাইপ পরিবর্তন" : "Change Type")</li>
+                <li>• @(isBangla ? "পিন করুন / পিন সরান" : "Pin / Unpin")</li>
+                <li class="text-danger">• @(isBangla ? "স্থায়ীভাবে মুছুন" : "Delete Permanently")</li>
+            </ul>
+
+            <div class="text-muted small mt-2">
+                @(isBangla
+                    ? "অ্যাকশনগুলো AdminActions কন্ট্রোলারে পোস্ট করবে।"
+                    : "Actions will post to the AdminActions controller.")
+            </div>
+        </div>
     </div>
 </div>
 
 
-
+    
 

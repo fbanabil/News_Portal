@@ -1,4 +1,9 @@
 ﻿@model List<AuthorsNewsToShowDTO>
+
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 @{
     int pageCount = ViewBag.PageCount ?? 1;
     int currentPage = ViewBag.CurrentPage ?? 1;
@@ -40,7 +45,7 @@
                               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
-                <h3 class="empty-title">No articles found</h3>
+                <h3 class="empty-title">@(isBangla ? "কোন আর্টিকেল পাওয়া যাইনি" : "No articles found")</h3>
             </div>
         }
     </div>
@@ -49,10 +54,6 @@
         <div class="loading-spinner">
             <div class="spinner"></div>
         </div>
-        <p>Loading articles...</p>
+        <p>@(isBangla ? "আর্টিকেল লোডিং" : "Loading articles...")</p>
     </div>
 </div>
-
-<style>
-    
-</style>

@@ -1,21 +1,26 @@
-@{
+﻿@{
     Layout = "_Layout";
     ViewData["Title"] = "Error";
     var message = ViewData["ErrorMessage"] as string ?? "An unexpected error occurred.";
     var requestId = ViewData["RequestId"] as string ?? string.Empty;
 }
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h1 class="h4 mb-3">Something went wrong</h1>
+                    <h1 class="h4 mb-3">@(isBangla ? "কিছু একটা ভুল হয়েছে" : "Something went wrong")</h1>
                     <p class="text-muted mb-3">@message</p>
                     @if (!string.IsNullOrEmpty(requestId))
                     {
-                        <p class="small text-muted">Request ID: <code>@requestId</code></p>
+                        <p class="small text-muted">@(isBangla ? "রিকুয়েস্ট আইডি" : "Request ID:") <code>@requestId</code></p>
                     }
-                    <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Back to Home</a>
+                    <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">@(isBangla ? "হোম এ ফিরে যাই" : "Back to Home")</a>
                 </div>
             </div>
         </div>

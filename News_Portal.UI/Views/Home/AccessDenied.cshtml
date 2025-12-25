@@ -1,7 +1,11 @@
 ﻿@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
     Layout = "_Layout";
-    ViewData["Title"] = "Access Denied";
-    var message = ViewData["Message"] as string ?? "You are not authorized to view this page.";
+    ViewData["Title"] = isBangla ? "অ্যাক্সেস নিষিদ্ধ" : "Access Denied";
+    var message = ViewData["Message"] as string ?? (isBangla ? "আপনার এই পাতা দেখতে অনুমতি নেই।" : "You are not authorized to view this page.");
 }
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -9,10 +13,20 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <i class="bi bi-shield-lock display-6 text-danger mb-3"></i>
-                    <h1 class="h4 mb-2">Access denied</h1>
+                    <h1 class="h4 mb-2">@(isBangla ? "অ্যাক্সেস নিষিদ্ধ" : "Access denied")</h1>
                     <p class="text-muted mb-3">@message</p>
-                    <a class="btn btn-outline-primary me-2" asp-area="" asp-controller="Home" asp-action="Index">Return to Home</a>
-                    <a class="btn btn-outline-secondary" href="mailto:contact@newsportal.example">Contact Support</a>
+                    <a class="btn btn-outline-primary me-2"
+                       asp-area=""
+                       asp-controller="Home"
+                       asp-action="Index"
+                       title="@(isBangla ? "হোমে ফিরে যান" : "Return to Home")">
+                        @(isBangla ? "হোমে ফিরে যান" : "Return to Home")
+                    </a>
+                    <a class="btn btn-outline-secondary"
+                       href="mailto:contact@newsportal.example"
+                       title="@(isBangla ? "সাপোর্টের সাথে যোগাযোগ করুন" : "Contact Support")">
+                        @(isBangla ? "সাপোর্টের সাথে যোগাযোগ করুন" : "Contact Support")
+                    </a>
                 </div>
             </div>
         </div>

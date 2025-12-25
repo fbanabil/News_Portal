@@ -1,11 +1,14 @@
 ﻿@model AuthorsNewsToShowDTO
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 <a asp-controller="AdminActions"
    asp-action="DetailedNews"
    asp-area="Admin"
    asp-route-newsId="@Model.NewsId"
    class="news-card-link text-decoration-none d-block"
-   aria-label="Read '@Model.NewsTitle'">
+   aria-label="@(isBangla ? $"বিস্তারিত: {Model.NewsTitle}" : $"Read '{Model.NewsTitle}'")">
 
     <article class="news-card-horizontal">
 
@@ -16,7 +19,7 @@
             }
             else
             {
-                <div class="news-media-placeholder">No Image</div>
+                <div class="news-media-placeholder">@(isBangla ? "কোন ছবি নেই" : "No Image")</div>
             }
         </div>
 
@@ -25,9 +28,15 @@
                 <h3 class="news-title">@Model.NewsTitle</h3>
 
                 <div class="news-meta">
-                    <span class="meta-pill">@Model.NewsType</span>
-                    <span class="meta-pill status">@Model.NewsStatus</span>
-                    <span class="meta-date">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                    <span class="meta-pill">
+                        @(isBangla ? Model.NewsType.GetDisplayName() : Model.NewsType.ToString())
+                    </span>
+                    <span class="meta-pill status">
+                        @(isBangla ? Model.NewsStatus.GetDisplayName() : Model.NewsStatus.ToString())
+                    </span>
+                    <span class="meta-date">
+                        @(isBangla ? Model.PublishedDate.GetBengaliDate() : Model.PublishedDate.ToString("MMM dd, yyyy"))
+                    </span>
                 </div>
             </header>
 
@@ -39,7 +48,7 @@
 
             <div class="news-footer">
                 <span class="read-more">
-                    Read details <span aria-hidden="true">→</span>
+                    @(isBangla ? "বিস্তারিত দেখুন" : "Read details") <span aria-hidden="true">→</span>
                 </span>
             </div>
         </div>

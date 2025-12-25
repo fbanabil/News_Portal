@@ -2,10 +2,15 @@
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
 @using News_Portal.Core.Enums
+
 @{
-    ViewBag.Title = "Admin Actions";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+
+    string L(string en, string bn) => isBangla ? bn : en;
+
+    ViewBag.Title = isBangla ? "এডমিনের কাজ" : "Admin Actions";
 
     Model.parametersDTO ??= new NewsFilterParametersDTO();
 
@@ -19,7 +24,10 @@
 
     string currentUrl = Context.Request.Path + Context.Request.QueryString;
 
+
 }
+
+
 
 
 
@@ -38,14 +46,13 @@
     </div>
 }
 
+
 <div class="author-news-main">
-
-
     <main class="main-content">
         <div class="section-header">
             <h2 class="section-title">
                 <i class="bi bi-pencil-square"></i>
-                Admin Dashboard
+                @L("Admin Dashboard", "এডমিন ড্যাশবোর্ড")
             </h2>
         </div>
 
@@ -62,7 +69,7 @@
                     <div class="filter-header">
                         <h4 class="filter-title">
                             <i class="bi bi-funnel"></i>
-                            Filter & Search Articles
+                            @L("Filter & Search Articles", "ফিল্টার ও নিবন্ধ অনুসন্ধান")
                         </h4>
                         <button type="button" class="btn-toggle-filters" id="btnToggleFilters" aria-expanded="false" aria-controls="filterFields" onclick="toggleFilters()">
                             <i class="bi bi-chevron-down" aria-hidden="true"></i>
@@ -75,22 +82,22 @@
                             <div class="filter-group">
                                 <label asp-for="parametersDTO.NewsTitle" class="filter-label">
                                     <i class="bi bi-search"></i>
-                                    Article Title
+                                    @L("Article Title", "শিরোনাম")
                                 </label>
                                 <input asp-for="parametersDTO.NewsTitle"
                                        class="filter-input"
-                                       placeholder="Search by title..."
+                                       placeholder="@(L("Search by title...", "শিরোনামে অনুসন্ধান..."))"
                                        value="@Model.parametersDTO?.NewsTitle" />
                             </div>
 
                             <div class="filter-group">
                                 <label asp-for="parametersDTO.NewsContent" class="filter-label">
                                     <i class="bi bi-text-paragraph"></i>
-                                    Content
+                                    @L("Content", "বিষয়বস্তু")
                                 </label>
                                 <input asp-for="parametersDTO.NewsContent"
                                        class="filter-input"
-                                       placeholder="Search in content..."
+                                       placeholder="@(L("Search in content...", "বিষয়বস্তুতে অনুসন্ধান..."))"
                                        value="@Model.parametersDTO?.NewsContent" />
                             </div>
                         </div>
@@ -99,15 +106,24 @@
                             <div class="filter-group">
                                 <label asp-for="parametersDTO.NewsType" class="filter-label">
                                     <i class="bi bi-tags"></i>
-                                    Category
+                                    @L("Category", "বিভাগ")
                                 </label>
                                 <select asp-for="parametersDTO.NewsType" class="filter-select">
-                                    <option value="">All Categories</option>
+                                    <option value="">@(L("All Categories", "সব বিভাগ"))</option>
                                     @foreach (NewsType newsType in Enum.GetValues<NewsType>())
                                     {
-                                        <option value="@newsType" selected="@(Model.parametersDTO?.NewsType == newsType)">
-                                            @newsType
-                                        </option>
+                                        if(isBangla)
+                                        {
+                                            <option value="@newsType" selected="@(Model.parametersDTO?.NewsType == newsType)">
+                                                @newsType.GetDisplayName()
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@newsType" selected="@(Model.parametersDTO?.NewsType == newsType)">
+                                                @newsType
+                                            </option>
+                                        }
                                     }
                                 </select>
                             </div>
@@ -115,7 +131,7 @@
                             <div class="filter-group">
                                 <label asp-for="AuthorEmail" class="filter-label">
                                     <i class="bi bi-envelope"></i>
-                                    Author Email
+                                    @L("Author Email", "লেখকের ইমেইল")
                                 </label>
                                 @*<input asp-for="AuthorEmail"
                                        class="filter-input"
@@ -123,7 +139,7 @@
                                        value="@Model.AuthorEmail" />
                                 <span asp-validation-for="AuthorEmail" class="text-danger"></span>*@
                                 <select asp-for="AuthorEmail" class="filter-input" asp-items="@ViewBag.AuthorsList">
-                                    <option value="">-- Select Author --</option>
+                                    <option value="">@(L("-- Select Author --", "-- লেখক নির্বাচন করুন --"))</option>
                                 </select>
                                 <span asp-validation-for="AuthorEmail" class="text-danger"></span>
 
@@ -134,15 +150,25 @@
                             <div class="filter-group">
                                 <label asp-for="parametersDTO.NewsPriority" class="filter-label">
                                     <i class="bi bi-exclamation-triangle"></i>
-                                    Priority
+                                    @L("Priority", "অগ্রাধিকার")
                                 </label>
                                 <select asp-for="parametersDTO.NewsPriority" class="filter-select">
-                                    <option value="">All Priorities</option>
+                                    <option value="">@(L("All Priorities", "সব অগ্রাধিকার"))</option>
                                     @foreach (NewsPriority priority in Enum.GetValues<NewsPriority>())
                                     {
-                                        <option value="@priority" selected="@(Model.parametersDTO?.NewsPriority == priority)">
-                                            @priority
-                                        </option>
+
+                                        if(isBangla)
+                                        {
+                                            <option value="@priority" selected="@(Model.parametersDTO?.NewsPriority == priority)">
+                                                @priority.GetDisplayName()
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@priority" selected="@(Model.parametersDTO?.NewsPriority == priority)">
+                                                @priority
+                                            </option>
+                                        }                                       
                                     }
                                 </select>
                             </div>
@@ -151,7 +177,7 @@
                             <div class="filter-group">
                                 <label asp-for="parametersDTO.PublishedDate" class="filter-label">
                                     <i class="bi bi-calendar-event"></i>
-                                    Published Date
+                                    @L("Published Date", "প্রকাশের তারিখ")
                                 </label>
                                 <input asp-for="parametersDTO.PublishedDate"
                                        type="date"
@@ -164,22 +190,38 @@
                             <div class="filter-group">
                                 <label asp-for="sortBy" class="filter-label">
                                     <i class="bi bi-sort-down"></i>
-                                    Sort By
+                                    @L("Sort By", "বাছাইকরণ")
                                 </label>
                                 <select asp-for="sortBy" class="filter-select">
-                                    <option value="PublishedDate" selected="@(Model.sortBy == "PublishedDate")">Published Date</option>
-                                    <option value="NewsTitle" selected="@(Model.sortBy == "NewsTitle")">Title</option>
-                                    <option value="TotalViews" selected="@(Model.sortBy == "TotalViews")">Total Views</option>
-                                    <option value="NewsStatus" selected="@(Model.sortBy == "NewsStatus")">Status</option>
-                                    <option value="NewsPriority" selected="@(Model.sortBy == "NewsPriority")">Priority</option>
-                                    <option value="NewsType" selected="@(Model.sortBy == "NewsType")">Category</option>
+                                    @foreach (SortBy sortBy in Enum.GetValues<SortBy>())
+                                    {
+                                        if(isBangla)
+                                        {
+                                            <option value="@sortBy.ToString()" selected="@(Model.sortBy == sortBy.ToString())">
+                                                @sortBy.GetDisplayName()
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@sortBy.ToString()" selected="@(Model.sortBy == sortBy.ToString())">
+                                                @sortBy.ToString()
+                                            </option>
+                                        }
+
+                                    }
+                                    @*<option value="PublishedDate" selected="@(Model.sortBy == "PublishedDate")">@(L("Published Date","প্রকাশের তারিখ"))</option>
+                                    <option value="NewsTitle" selected="@(Model.sortBy == "NewsTitle")">@(L("Title","শিরোনাম"))</option>
+                                    <option value="TotalViews" selected="@(Model.sortBy == "TotalViews")">@(L("Total Views","মোট ভিউ"))</option>
+                                    <option value="NewsStatus" selected="@(Model.sortBy == "NewsStatus")">@(L("Status","অবস্থা"))</option>
+                                    <option value="NewsPriority" selected="@(Model.sortBy == "NewsPriority")">@(L("Priority","অগ্রাধিকার"))</option>
+                                    <option value="NewsType" selected="@(Model.sortBy == "NewsType")">@(L("Category","বিভাগ"))</option>*@
                                 </select>
                             </div>
 
                             <div class="filter-group">
                                 <label asp-for="sortType" class="filter-label">
                                     <i class="bi bi-arrow-up-down"></i>
-                                    Sort Order
+                                    @L("Sort Order", "সাজানোর ক্রম")
                                 </label>
                                 <select asp-for="sortType" class="filter-select">
                                     @foreach (SortTypes sortType in Enum.GetValues<SortTypes>())
@@ -196,7 +238,7 @@
                             <div class="filter-group">
                                 <label asp-for="pageSize" class="filter-label">
                                     <i class="bi bi-list-ol"></i>
-                                    Items Per Page
+                                    @L("Items Per Page", "প্রতি পৃষ্ঠায় আইটেম")
                                 </label>
                                 <select asp-for="pageSize" class="filter-select" id="pageSizeSelect">
                                     <option value="5" selected="@(Model.pageSize == 5)">5</option>
@@ -214,7 +256,7 @@
 
                                 <button type="submit" class="btn-filter-apply">
                                     <i class="bi bi-search"></i>
-                                    Apply Filters
+                                    @L("Apply Filters", "ফিল্টার প্রয়োগ")
                                 </button>
 
                                 <a asp-area="Admin"
@@ -222,7 +264,7 @@
                                    asp-action="Index"
                                    class="btn-filter-reset">
                                     <i class="bi bi-arrow-clockwise"></i>
-                                    Reset
+                                    @L("Reset", "রিসেট")
                                 </a>
                             </div>
                         </div>
@@ -233,12 +275,12 @@
 
             <div class="articles-section">
                 <div class="articles-header">
-                    <h3>📰 News Articles</h3>
+                    <h3>📰 @L("News Articles", "সংবাদ")</h3>
                     <div class="articles-summary">
                         <span class="current-filters">
-                            Sorted by @Model.sortBy (@Model.sortType)
-                            | @Model.pageSize items per page
-                            | Page @Model.pageNo of @pageCount
+                            @L("Sorted by", "ক্রম করা")  @(isBangla ? (@Model.sortType.GetDisplayName()) + " " + (Model.sortBy.GetSortBy()) + " দ্বারা" : (Model.sortBy + " " + (@Model.sortType)))
+                            | @Model.pageSize @L("items per page", "আইটেম প্রতি পৃষ্ঠা")
+                            | @L("Page", "পৃষ্ঠা") @Model.pageNo @L("of", "থেকে") @pageCount
                         </span>
                     </div>
                 </div>
@@ -263,9 +305,9 @@
                                 @if (Model.pageNo > 2)
                                 {
                                     <li class="page-item">
-                                        <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
+                                        <button onclick="goToPageWithScroll(1)" class="page-link" title="@(L("First Page","প্রথম পাতা"))">
                                             <i class="bi bi-chevron-double-left"></i>
-                                            First
+                                            @L("First","প্রথম")
                                         </button>
                                     </li>
                                 }
@@ -273,9 +315,9 @@
                                 @if (Model.pageNo > 1)
                                 {
                                     <li class="page-item">
-                                        <button onclick="goToPageWithScroll(@(Model.pageNo - 1))" class="page-link" title="Previous Page">
+                                        <button onclick="goToPageWithScroll(@(Model.pageNo - 1))" class="page-link" title="@(L("Previous Page","পূর্ববর্তী পাতা"))">
                                             <i class="bi bi-chevron-left"></i>
-                                            Previous
+                                            @L("Previous","পূর্ববর্তী")
                                         </button>
                                     </li>
                                 }
@@ -288,7 +330,7 @@
                                 @if (startPage > 1)
                                 {
                                     <li class="page-item">
-                                        <button onclick="goToPageWithScroll(1)" class="page-link">1</button>
+                                        <button onclick="goToPageWithScroll(1)" class="page-link">@(isBangla?"১":"1")</button>
                                     </li>
                                     @if (startPage > 2)
                                     {
@@ -307,7 +349,7 @@
                                         }
                                         else
                                         {
-                                            <button onclick="goToPageWithScroll(@i)" class="page-link">@i</button>
+                                            <button onclick="goToPageWithScroll(@i)" class="page-link">@(isBangla?i.ToString().ToBanglaDigits():i)</button>
                                         }
                                     </li>
                                 }
@@ -321,15 +363,15 @@
                                         </li>
                                     }
                                     <li class="page-item">
-                                        <button onclick="goToPageWithScroll(@pageCount)" class="page-link">@pageCount</button>
+                                        <button onclick="goToPageWithScroll(@pageCount)" class="page-link">@(isBangla? pageCount.ToString().ToBanglaDigits() : pageCount)</button>
                                     </li>
                                 }
 
                                 @if (Model.pageNo < pageCount)
                                 {
                                     <li class="page-item">
-                                        <button onclick="goToPageWithScroll(@(Model.pageNo + 1))" class="page-link" title="Next Page">
-                                            Next
+                                        <button onclick="goToPageWithScroll(@(Model.pageNo + 1))" class="page-link" title="@(L("Next Page","পরবর্তী পাতা"))">
+                                            @L("Next","পরবর্তী")
                                             <i class="bi bi-chevron-right"></i>
                                         </button>
                                     </li>
@@ -338,8 +380,8 @@
                                 @if (Model.pageNo < pageCount - 1)
                                 {
                                     <li class="page-item">
-                                        <button onclick="goToPageWithScroll(@pageCount)" class="page-link" title="Last Page">
-                                            Last
+                                        <button onclick="goToPageWithScroll(@pageCount)" class="page-link" title="@(L("Last Page","শেষ পাতা"))">
+                                            @L("Last","শেষ")
                                             <i class="bi bi-chevron-double-right"></i>
                                         </button>
                                     </li>
@@ -361,10 +403,9 @@
 
 @section Scripts {
     <script>
-        // Robust toggle implementation:
-        // - toggles 'show' class and uses max-height transition for smooth open/close
-        // - uses aria-expanded for accessibility
-        // - avoids relying on computed style string equality which may be empty or overridden by CSS
+        const isBangla = @(isBangla.ToString().ToLower());
+
+        function t(en, bn) { return isBangla ? bn : en; }
 
         function toggleFilters() {
             const filterFields = document.getElementById('filterFields');
@@ -376,14 +417,11 @@
             const isOpen = filterFields.classList.contains('show');
 
             if (!isOpen) {
-                // Open
                 filterFields.classList.add('show');
                 filterFields.style.display = 'block';
                 filterFields.style.overflow = 'hidden';
-                // compute full height and animate max-height
                 const fullHeight = filterFields.scrollHeight + 'px';
                 filterFields.style.maxHeight = '0px';
-                // trigger a frame so transition runs
                 requestAnimationFrame(() => {
                     filterFields.style.transition = 'max-height 260ms ease';
                     filterFields.style.maxHeight = fullHeight;
@@ -392,8 +430,6 @@
                 toggleIcon.className = 'bi bi-chevron-up';
                 toggleBtn.setAttribute('aria-expanded', 'true');
             } else {
-                // Close
-                // set to current height then animate to 0
                 filterFields.style.maxHeight = filterFields.scrollHeight + 'px';
                 requestAnimationFrame(() => {
                     filterFields.style.transition = 'max-height 200ms ease';
@@ -424,7 +460,7 @@
 
             } catch (error) {
                 console.error('Error navigating to page:', error);
-                showError('Failed to load page. Please try again.');
+                showError(t('Failed to load page. Please try again.', 'পৃষ্ঠা লোড করতে ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।'));
             } finally {
                 hideLoadingIndicator();
             }
@@ -481,7 +517,8 @@
                 const startItem = (currentPage - 1) * pageSize + 1;
                 const endItem = Math.min(currentPage * pageSize, totalItems);
 
-                pageInfo.innerHTML = `Showing <strong>${startItem}</strong> to <strong>${endItem}</strong> of <strong>${totalItems}</strong> articles`;
+                pageInfo.innerHTML = t('Showing <strong>' + startItem + '</strong> to <strong>' + endItem + '</strong> of <strong>' + totalItems + '</strong> articles',
+                                       'দেখানো হচ্ছে <strong>' + startItem + '</strong> থেকে <strong>' + endItem + '</strong> মোট <strong>' + totalItems + '</strong> টি সংবাদ');
             }
 
             const paginationNav = document.querySelector('.pagination-enhanced');
@@ -491,16 +528,16 @@
 
             if (currentPage > 2) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
-                                <i class="bi bi-chevron-double-left"></i> First
+                            <button onclick="goToPageWithScroll(1)" class="page-link" title="${t('First Page','প্রথম পাতা')}">
+                                <i class="bi bi-chevron-double-left"></i> ${t('First','প্রথম')}
                             </button>
                          </li>`;
             }
 
             if (currentPage > 1) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(${currentPage - 1})" class="page-link" title="Previous Page">
-                                <i class="bi bi-chevron-left"></i> Previous
+                            <button onclick="goToPageWithScroll(${currentPage - 1})" class="page-link" title="${t('Previous Page','পূর্ববর্তী পাতা')}">
+                                <i class="bi bi-chevron-left"></i> ${t('Previous','পূর্ববর্তী')}
                             </button>
                          </li>`;
             }
@@ -538,16 +575,16 @@
 
             if (currentPage < totalPages) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(${currentPage + 1})" class="page-link" title="Next Page">
-                                Next <i class="bi bi-chevron-right"></i>
+                            <button onclick="goToPageWithScroll(${currentPage + 1})" class="page-link" title="${t('Next Page','পরবর্তী পাতা')}">
+                                ${t('Next','পরবর্তী')} <i class="bi bi-chevron-right"></i>
                             </button>
                          </li>`;
             }
 
             if (currentPage < totalPages - 1) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(${totalPages})" class="page-link" title="Last Page">
-                                Last <i class="bi bi-chevron-double-right"></i>
+                            <button onclick="goToPageWithScroll(${totalPages})" class="page-link" title="${t('Last Page','শেষ পাতা')}">
+                                ${t('Last','শেষ')} <i class="bi bi-chevron-double-right"></i>
                             </button>
                          </li>`;
             }
@@ -559,7 +596,7 @@
             const pageSize = document.getElementById('pageSizeSelect').value;
             const params = new URLSearchParams(window.location.search);
             params.set('pageSize', pageSize);
-            params.set('pageNo', '1'); // Reset to first page
+            params.set('pageNo', '1'); 
 
             window.location.href = window.location.pathname + '?' + params.toString();
         }
@@ -576,7 +613,7 @@
             spinner.innerHTML = `
                 <div style="display: flex; justify-content: center; align-items: center; padding: 20px;">
                     <div style="width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                    <span style="margin-left: 10px; color: #667eea;">Loading...</span>
+                    <span style="margin-left: 10px; color: #667eea;">${t('Loading...','লোড হচ্ছে...')}</span>
                 </div>
 
             `;

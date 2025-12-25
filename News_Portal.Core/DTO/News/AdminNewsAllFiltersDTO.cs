@@ -15,8 +15,9 @@ namespace News_Portal.Core.DTO.News
 
         [DataType(DataType.EmailAddress, ErrorMessage = "Must be an email address")]
         [Remote(action: "IsAuthor", controller: "Account", areaName: "Identity", ErrorMessage = "Not an Author")]
-        public string? AuthorEmail { get; set; } 
+        public string? AuthorEmail { get; set; }
 
+        [Display(Name = "ক্রম : ")]
         public string? sortBy;
         public SortTypes sortType;
         public int pageNo;
@@ -24,3 +25,4 @@ namespace News_Portal.Core.DTO.News
 
     }
 }
+
