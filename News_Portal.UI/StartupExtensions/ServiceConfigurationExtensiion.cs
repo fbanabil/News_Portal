@@ -14,6 +14,7 @@ using News_Portal.Core.Services;
 using News_Portal.Infrastructure.DbContext;
 using News_Portal.Infrastructure.Repositories;
 using News_Portal.UI.Samples;
+using NuGet.Protocol;
 using System.Runtime.CompilerServices;
 
 namespace News_Portal.UI.StartupExtensions
@@ -81,6 +82,10 @@ namespace News_Portal.UI.StartupExtensions
                 .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>()
                 ;
 
+            builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.Zero;
+            });
 
             builder.Services.AddAuthentication()
                 .AddGoogle(options =>
@@ -96,30 +101,28 @@ namespace News_Portal.UI.StartupExtensions
             {
                 options.LoginPath= "/Identity/Account/AuthLogin";
 
-                options.Events = new CookieAuthenticationEvents
+                options.Events.OnRedirectToLogin = context =>
                 {
-                    OnRedirectToLogin = context =>
-                    {
-                        var tempFactory = context.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
-                        var tempData = tempFactory.GetTempData(context.HttpContext);
-                        tempData["Error"] = "Please sign in to continue.";
-                        tempData.Save();
+                    var tempFactory = context.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
+                    var tempData = tempFactory.GetTempData(context.HttpContext);
+                    tempData["Error"] = "Please sign in to continue.";
+                    tempData.Save();
 
-                        context.Response.Redirect(context.RedirectUri);
-                        return Task.CompletedTask;
-                    },
-
-                    OnRedirectToAccessDenied = context =>
-                    {
-                        var tempFactory = context.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
-                        var tempData = tempFactory.GetTempData(context.HttpContext);
-                        tempData["Error"] = "You do not have permission to access this resource.";
-                        tempData.Save();
-
-                        context.Response.Redirect(context.RedirectUri);
-                        return Task.CompletedTask;
-                    }
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
                 };
+
+                options.Events.OnRedirectToAccessDenied = context =>
+                {
+                    var tempFactory = context.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
+                    var tempData = tempFactory.GetTempData(context.HttpContext);
+                    tempData["Error"] = "You do not have permission to access this resource.";
+                    tempData.Save();
+
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
+                };
+           
             });
 
         }

@@ -1,15 +1,13 @@
 ﻿@model NewsToAddDTO
 @using News_Portal.Core.Enums
 @{
-    ViewBag.Title = "Add News";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    ViewBag.Title = isBangla? "নতুন নিউজ" : "Add News";
 }
 
-
-<header class="newspaper-header">
-    <h1 class="newspaper-title">Daily News Portal</h1>
-    <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
-    <div class="newspaper-line"></div>
-</header>
 
 
 @if (TempData["Message"] != null)
@@ -35,9 +33,9 @@
                 <div class="form-title-section">
                     <h1 class="form-title">
                         <i class="bi bi-plus-circle me-2"></i>
-                        Create New Article
+                        @(isBangla ? "নতুন নিউজ" : "Create New Article")
                     </h1>
-                    <p class="form-subtitle">Share your story with the world</p>
+                    <p class="form-subtitle">@(isBangla ? "আপনার গল্প বিশ্বের সাথে শেয়ার করুন" : "Share your story with the world")</p>
                 </div>
             </div>
 
@@ -51,38 +49,38 @@
                     <div class="form-group">
                         <label asp-for="NewsTitle" class="form-label">
                             <i class="bi bi-type me-1"></i>
-                            News Title *
+                            @(isBangla ? "নিউজ শিরোনাম *" : "News Title *")
                         </label>
                         <input asp-for="NewsTitle"
                                type="text"
                                class="form-control"
-                               placeholder="Enter a compelling news title..."
+                               placeholder="@(isBangla ? "আকর্ষণীয় শিরোনাম লিখুন..." : "Enter a compelling news title...")"
                                maxlength="100" />
                         <span asp-validation-for="NewsTitle" class="text-danger"></span>
-                        <small class="form-text">Maximum 100 characters</small>
+                        <small class="form-text">@(isBangla ? "সর্বোচ্চ 100 অক্ষর" : "Maximum 100 characters")</small>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="NewsContent" class="form-label">
                             <i class="bi bi-file-text me-1"></i>
-                            News Content *
+                            @(isBangla ? "নিউজ কনটেন্ট *" : "News Content *")
                         </label>
                         <textarea asp-for="NewsContent"
                                   class="form-control content-textarea"
                                   rows="12"
-                                  placeholder="Write your news article content here..."></textarea>
+                                  placeholder="@(isBangla ? "এখানে আপনার নিউজ লিখুন..." : "Write your news article content here...")"></textarea>
                         <span asp-validation-for="NewsContent" class="text-danger"></span>
-                        <small class="form-text">Provide detailed information about the news story</small>
+                        <small class="form-text">@(isBangla ? "খবরের বিস্তারিত তথ্য দিন" : "Provide detailed information about the news story")</small>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label asp-for="NewsType" class="form-label">
                                 <i class="bi bi-tag me-1"></i>
-                                News Type *
+                                @(isBangla ? "নিউজ টাইপ *" : "News Type *")
                             </label>
                             <select asp-for="NewsType" class="form-select">
-                                <option value="">Select news type...</option>
+                                <option value="">@(isBangla ? "নিউজ টাইপ নির্বাচন করুন..." : "Select news type...")</option>
                                 @foreach (var newsType in Enum.GetValues<NewsType>())
                                 {
                                     if(newsType.ToString()!="General") 
@@ -97,10 +95,10 @@
                         <div class="form-group">
                             <label asp-for="NewsPriority" class="form-label">
                                 <i class="bi bi-exclamation-triangle me-1"></i>
-                                Priority *
+                                @(isBangla ? "প্রাধান্য *" : "Priority *")
                             </label>
                             <select asp-for="NewsPriority" class="form-select">
-                                <option value="">Select priority...</option>
+                                <option value="">@(isBangla ? "প্রাধান্য নির্বাচন করুন..." : "Select priority...")</option>
                                 @foreach (var priority in Enum.GetValues<NewsPriority>())
                                 {
                                     <option value="@priority">@priority</option>
@@ -113,20 +111,20 @@
                     <div class="form-group">
                         <label asp-for="VideoUrl" class="form-label">
                             <i class="bi bi-camera-video me-1"></i>
-                            Video URL (Optional)
+                            @(isBangla ? "ভিডিও URL (ঐচ্ছিক)" : "Video URL (Optional)")
                         </label>
                         <input asp-for="VideoUrl"
                                type="url"
                                class="form-control"
-                               placeholder="https://youtube.com/embed/your-video-id" />
+                               placeholder="@(isBangla ? "https://youtube.com/embed/your-video-id" : "https://youtube.com/embed/your-video-id")" />
                         <span asp-validation-for="VideoUrl" class="text-danger"></span>
-                        <small class="form-text">Add a YouTube embed URL to include video content</small>
+                        <small class="form-text">@(isBangla ? "ভিডিও যোগ করতে YouTube embed URL দিন" : "Add a YouTube embed URL to include video content")</small>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="Images" class="form-label">
                             <i class="bi bi-images me-1"></i>
-                            Article Images (Optional)
+                            @(isBangla ? "নিউজ ছবি (ঐচ্ছিক)" : "Article Images (Optional)")
                         </label>
                         <div class="image-upload-wrapper" id="imageUploadWrapper">
                             <input asp-for="Images"
@@ -137,20 +135,20 @@
                                    id="imageInput" />
                             <div class="image-upload-info">
                                 <i class="bi bi-cloud-upload"></i>
-                                <span>Click to select images or drag and drop</span>
-                                <small>Maximum 4 images (JPG, PNG, GIF)</small>
+                                <span id="imageUploadInfo">@(isBangla ? "চিত্র নির্বাচন করতে ক্লিক করুন বা এখানে টেনে আনুন" : "Click to select images or drag and drop")</span>
+                                <small id="imageUploadSmall">@(isBangla ? "সর্বোচ্চ 4টি ছবি (JPG, PNG, GIF)" : "Maximum 4 images (JPG, PNG, GIF)")</small>
                             </div>
                         </div>
                         <span asp-validation-for="Images" class="text-danger"></span>
                         <div class="image-count-display" id="imageCount" style="display: none;">
-                            <small class="text-muted">Selected: <span id="selectedCount">0</span>/4 images</small>
+                            <small class="text-muted" id="imageCountText">@((isBangla ? "নির্বাচিত: " : "Selected: "))<span id="selectedCount">0</span>/4 @(isBangla ? "ছবি" : "images")</small>
                         </div>
                     </div>
 
                     <div class="selected-files-container" id="selectedFiles" style="display: none;">
                         <h6 class="selected-files-title">
                             <i class="bi bi-file-earmark-image me-1"></i>
-                            Selected Files
+                            @(isBangla ? "নির্বাচিত ফাইলসমূহ" : "Selected Files")
                         </h6>
                         <div class="selected-files-list" id="selectedFilesList"></div>
                     </div>
@@ -158,12 +156,12 @@
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary btn-submit">
                             <i class="bi bi-check-lg me-2"></i>
-                            Publish Article
+                            @(isBangla ? "প্রকাশ করুন" : "Publish Article")
                         </button>
                         <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
                            class="btn btn-secondary">
                             <i class="bi bi-arrow-left me-2"></i>
-                            Back to Articles
+                            @(isBangla ? "আর্টিকেলসমূহে ফিরে যান" : "Back to Articles")
                         </a>
                     </div>
 
@@ -175,28 +173,28 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-lightbulb"></i>
-                    Writing Tips
+                    @(isBangla ? "লেখার টিপস" : "Writing Tips")
                 </h4>
                 <div class="guidelines-content">
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Write clear and engaging titles</span>
+                        <span>@(isBangla ? "স্পষ্ট ও আকর্ষণীয় শিরোনাম লিখুন" : "Write clear and engaging titles")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Provide accurate and factual content</span>
+                        <span>@(isBangla ? "সঠিক ও তথ্যভিত্তিক কনটেন্ট দিন" : "Provide accurate and factual content")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Choose appropriate news category</span>
+                        <span>@(isBangla ? "উপযুক্ত ক্যাটাগরি বেছে নিন" : "Choose appropriate news category")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Set proper priority level</span>
+                        <span>@(isBangla ? "সঠিক প্রাধান্য সেট করুন" : "Set proper priority level")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Add up to 4 relevant images</span>
+                        <span>@(isBangla ? "সর্বোচ্চ 4টি প্রাসঙ্গিক ছবি যোগ করুন" : "Add up to 4 relevant images")</span>
                     </div>
                 </div>
             </div>
@@ -204,23 +202,23 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-info-circle"></i>
-                    Content Guidelines
+                    @(isBangla ? "বিষয়বস্তু নির্দেশিকা" : "Content Guidelines")
                 </h4>
                 <div class="content-info">
                     <div class="info-item">
-                        <span class="info-value">Maximum 100 characters</span>
+                        <span class="info-value">@(isBangla ? "সর্বোচ্চ 100 অক্ষর" : "Maximum 100 characters")</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Content:</span>
-                        <span class="info-value">Be descriptive and informative</span>
+                        <span class="info-label">@(isBangla ? "কনটেন্ট:" : "Content:")</span>
+                        <span class="info-value">@(isBangla ? "বর্ণনামূলক ও তথ্যসমৃদ্ধ লিখুন" : "Be descriptive and informative")</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Images:</span>
-                        <span class="info-value">Maximum 4 images (JPG, PNG, GIF)</span>
+                        <span class="info-label">@(isBangla ? "ছবি:" : "Images:")</span>
+                        <span class="info-value">@(isBangla ? "সর্বোচ্চ 4টি ছবি (JPG, PNG, GIF)" : "Maximum 4 images (JPG, PNG, GIF)")</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Video:</span>
-                        <span class="info-value">YouTube URLs only</span>
+                        <span class="info-label">@(isBangla ? "ভিডিও:" : "Video:")</span>
+                        <span class="info-value">@(isBangla ? "শুধুমাত্র YouTube URLs" : "YouTube URLs only")</span>
                     </div>
                 </div>
             </div>
@@ -228,17 +226,17 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-lightning"></i>
-                    Quick Actions
+                    @(isBangla ? "দ্রুত কার্যক্রম" : "Quick Actions")
                 </h4>
                 <div class="quick-actions">
                     <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
                        class="action-btn primary">
                         <i class="bi bi-list"></i>
-                        View My Articles
+                        @(isBangla ? "আমার আর্টিকেলসমূহ" : "View My Articles")
                     </a>
                     <button type="button" class="action-btn secondary" onclick="clearForm()">
                         <i class="bi bi-arrow-clockwise"></i>
-                        Clear Form
+                        @(isBangla ? "ফর্ম মুছুন" : "Clear Form")
                     </button>
                     
                 </div>
@@ -247,10 +245,10 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-tags"></i>
-                    Category Guide
+                    @(isBangla ? "ক্যাটাগরি নির্দেশিকা" : "Category Guide")
                 </h4>
                 <div class="category-guide">
-                    <small class="text-muted">Choose the most appropriate category for your article to help readers find relevant content easily.</small>
+                    <small class="text-muted">@(isBangla ? "আপনার আর্টিকেলের জন্য সবচেয়ে উপযুক্ত ক্যাটাগরি নির্বাচন করুন যাতে পাঠকরা প্রাসঙ্গিক কনটেন্ট সহজে খুঁজে পায়।" : "Choose the most appropriate category for your article to help readers find relevant content easily.")</small>
                 </div>
             </div>
         </aside>
@@ -260,6 +258,7 @@
 
 @section Scripts {
     <script>
+        var jsIsBangla = @isBangla.ToString().ToLower();
         let selectedFiles = [];
         const maxImages = 4;
 
@@ -282,7 +281,7 @@
             if (form && submitBtn) {
                 form.addEventListener('submit', function(e) {
                     const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Publishing...';
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>' + (jsIsBangla ? 'প্রকাশ করা হচ্ছে...' : 'Publishing...');
                     submitBtn.disabled = true;
 
                     setTimeout(() => {
@@ -301,7 +300,7 @@
 
                 function updateCharCount() {
                     const remaining = maxLength - titleInput.value.length;
-                    charCountElement.textContent = `${remaining} characters remaining`;
+                    charCountElement.textContent = `${remaining} ${(jsIsBangla ? 'অক্ষর বাকি' : 'characters remaining')}`;
                     charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';
                 }
 
@@ -375,10 +374,18 @@
                 if (totalFiles > maxImages) {
                     const allowedFiles = maxImages - selectedFiles.length;
                     if (allowedFiles > 0) {
-                        showAlert(`You can only select up to ${maxImages} images. Only the first ${allowedFiles} image(s) will be added.`, 'warning');
+                        if (jsIsBangla) {
+                            showAlert(`আপনি সর্বোচ্চ ${maxImages}টি ছবি নির্বাচন করতে পারবেন। শুধুমাত্র প্রথম ${allowedFiles}টি ছবি যোগ করা হবে।`, 'warning');
+                        } else {
+                            showAlert(`You can only select up to ${maxImages} images. Only the first ${allowedFiles} image(s) will be added.`, 'warning');
+                        }
                         imageFiles.splice(allowedFiles);
                     } else {
-                        showAlert(`You have already selected the maximum of ${maxImages} images.`, 'error');
+                        if (jsIsBangla) {
+                            showAlert(`আপনি ইতিমধ্যেই সর্বোচ্চ ${maxImages}টি ছবি নির্বাচন করেছেন।`, 'error');
+                        } else {
+                            showAlert(`You have already selected the maximum of ${maxImages} images.`, 'error');
+                        }
                         return;
                     }
                 }
@@ -407,7 +414,7 @@
                                     <small class="file-size text-muted">${formatFileSize(file.size)}</small>
                                 </div>
                             </div>
-                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="Remove file">
+                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="${jsIsBangla ? 'ফাইল সরান' : 'Remove file'}">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         `;
@@ -417,6 +424,13 @@
                     selectedFilesContainer.style.display = 'none';
                     imageCount.style.display = 'none';
                     selectedFilesList.innerHTML = '';
+                }
+
+                // keep image count text localized
+                const imageCountText = document.getElementById('imageCountText');
+                if (imageCountText) {
+                    imageCountText.innerHTML = (jsIsBangla ? "নির্বাচিত: " : "Selected: ");
+                    // selectedCount already updated
                 }
             }
 
@@ -450,7 +464,7 @@
                                 <small class="file-size text-muted">${formatFileSize(file.size)}</small>
                             </div>
                         </div>
-                        <button type="button" class="remove-file-btn" onclick="removeFile(${newIndex})" title="Remove file">
+                        <button type="button" class="remove-file-btn" onclick="removeFile(${newIndex})" title="${jsIsBangla ? 'ফাইল সরান' : 'Remove file'}">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     `;
@@ -469,9 +483,9 @@
         };
 
         function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
+            if (bytes === 0) return jsIsBangla ? '0 বাইট' : '0 Bytes';
             const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const sizes = [jsIsBangla ? 'বাইট' : 'Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
@@ -495,7 +509,8 @@
         }
 
         function clearForm() {
-            if (confirm('Are you sure you want to clear all form data?')) {
+            const confirmMsg = jsIsBangla ? 'আপনি কি নিশ্চিত যে ফর্মের সব ডেটা মুছতে চান?' : 'Are you sure you want to clear all form data?';
+            if (confirm(confirmMsg)) {
                 document.querySelector('.add-news-form').reset();
 
                 selectedFiles = [];
@@ -515,6 +530,6 @@
         }
 
     </script>
-
-    <partial name="_ValidationScriptsPartial" />
 }
+
+<partial name="_ValidationScriptsPartial" />

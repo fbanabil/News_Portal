@@ -1,6 +1,10 @@
 ﻿@model ProfileToUpdateDTO
 @{
-    ViewData["Title"] = "Edit Profile";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    ViewData["Title"] = isBangla ? "প্রোফাইল এডিট" : "Edit Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -20,69 +24,71 @@
     </div>
 }
 
-
 <div class="container py-4">
     <div class="profile-form-container">
         <div class="text-center mb-4">
-            <h1 class="h3 mb-2">Edit Profile</h1>
-            <p class="text-muted">Update your personal information and preferences</p>
+            <h1 class="h3 mb-2">@(isBangla ? "প্রোফাইল এডিট" : "Edit Profile")</h1>
+            <p class="text-muted">@(isBangla ? "আপনার ব্যক্তিগত তথ্য ও পছন্দসমূহ আপডেট করুন" : "Update your personal information and preferences")</p>
         </div>
 
         <div class="card">
             <div class="card-header py-3">
                 <h5 class="mb-0">
                     <i class="bi bi-person-gear me-2"></i>
-                    Personal Information
+                    @(isBangla ? "ব্যক্তিগত তথ্য" : "Personal Information")
                 </h5>
             </div>
             <div class="card-body p-4">
                 <form asp-area="Identity" asp-controller="Profile" asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
-                    
+
                     <div asp-validation-summary="All" class="validation-summary-errors" role="alert" style="display: none;">
-                        <strong>Please correct the following errors:</strong>
+                        <strong>@(isBangla ? "দয়া করে নিচের ত্রুটিগুলো ঠিক করুন:" : "Please correct the following errors:")</strong>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-12">
                             <div class="text-center mb-3">
                                 <label class="form-label fw-semibold mb-3">
-                                    <i class="bi bi-image me-1"></i>Profile Picture *
+                                    <i class="bi bi-image me-1"></i>@(isBangla ? "প্রোফাইল ছবি" : "Profile Picture") *
                                 </label>
                                 <div class="position-relative d-inline-block">
                                     <img src="@(Model.ExistingProfileImageUrl ?? ViewBag.DefaultImageUrl)"
-                                         alt="Profile Picture"
+                                         alt="@(isBangla ? "প্রোফাইল ছবি" : "Profile Picture")"
                                          class="rounded-circle profile-image-preview"
                                          id="profileImagePreview"
                                          onerror="this.src=@ViewBag.DefaultImageUrl" />
                                     <div class="position-absolute bottom-0 end-0">
-                                        <label for="profileImageFile" class="btn btn-primary btn-sm rounded-circle" style="cursor: pointer;" title="Change Profile Picture">
+                                        <label for="profileImageFile" class="btn btn-primary btn-sm rounded-circle"
+                                               style="cursor: pointer;"
+                                               title="@(isBangla ? "প্রোফাইল ছবি পরিবর্তন করুন" : "Change Profile Picture")">
                                             <i class="bi bi-camera-fill"></i>
                                         </label>
                                     </div>
                                 </div>
-                                
-                                <input asp-for="ProfileImage" 
-                                       type="file" 
-                                       id="profileImageFile" 
-                                       class="d-none" 
-                                       accept="image/*" 
+
+                                <input asp-for="ProfileImage"
+                                       type="file"
+                                       id="profileImageFile"
+                                       class="d-none"
+                                       accept="image/*"
                                        onchange="previewImage(this)" />
-                                
+
                                 <input asp-for="ExistingProfileImageUrl" type="hidden" />
-                                
+
                                 <span asp-validation-for="ProfileImage" class="text-danger"></span>
                                 <span asp-validation-for="ExistingProfileImageUrl" class="text-danger"></span>
-                                
+
                                 <div id="imageStatus" class="image-upload-status status-current">
                                     <i class="bi bi-info-circle me-1"></i>
-                                    <span id="imageStatusText">Using current profile picture</span>
+                                    <span id="imageStatusText">@(isBangla ? "বর্তমান প্রোফাইল ছবি ব্যবহার হচ্ছে" : "Using current profile picture")</span>
                                 </div>
-                                
+
                                 <div class="mt-2">
                                     <small class="text-muted">
-                                        Click the camera icon to upload a new profile picture<br>
-                                        Supported formats: JPG, PNG, GIF (Max: 5MB)
+                                        @(isBangla ? "ক্যামেরা আইকনে ক্লিক করে নতুন প্রোফাইল ছবি আপলোড করুন" : "Click the camera icon to upload a new profile picture")
+                                        <br>
+                                        @(isBangla ? "সমর্থিত ফরম্যাট: JPG, PNG, GIF (সর্বোচ্চ: ৫MB)" : "Supported formats: JPG, PNG, GIF (Max: 5MB)")
                                     </small>
                                 </div>
                             </div>
@@ -92,14 +98,14 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input asp-for="PersonName" 
-                                       class="form-control" 
-                                       id="personName" 
-                                       placeholder="Enter your full name"
+                                <input asp-for="PersonName"
+                                       class="form-control"
+                                       id="personName"
+                                       placeholder="@(isBangla ? "আপনার পূর্ণ নাম লিখুন" : "Enter your full name")"
                                        maxlength="100"
                                        required />
                                 <label for="personName">
-                                    <i class="bi bi-person me-1"></i>Full Name *
+                                    <i class="bi bi-person me-1"></i>@(isBangla ? "পূর্ণ নাম" : "Full Name") *
                                 </label>
                             </div>
                             <span asp-validation-for="PersonName" class="field-validation-error"></span>
@@ -107,14 +113,14 @@
 
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input asp-for="PhoneNumber" 
-                                       class="form-control" 
-                                       id="phoneNumber" 
-                                       placeholder="Enter your phone number"
+                                <input asp-for="PhoneNumber"
+                                       class="form-control"
+                                       id="phoneNumber"
+                                       placeholder="@(isBangla ? "আপনার ফোন নম্বর লিখুন" : "Enter your phone number")"
                                        type="tel"
                                        required />
                                 <label for="phoneNumber">
-                                    <i class="bi bi-telephone me-1"></i>Phone Number *
+                                    <i class="bi bi-telephone me-1"></i>@(isBangla ? "ফোন নম্বর" : "Phone Number") *
                                 </label>
                             </div>
                             <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
@@ -126,13 +132,18 @@
                             <hr class="my-4">
                             <h6 class="text-muted mb-3">
                                 <i class="bi bi-info-circle me-2"></i>
-                                Additional Information
+                                @(isBangla ? "অতিরিক্ত তথ্য" : "Additional Information")
                             </h6>
                             <div class="alert alert-info border-0" role="alert">
                                 <i class="bi bi-lightbulb me-2"></i>
-                                <strong>Note:</strong> Fields marked with <span class="text-danger">*</span> are required. 
-                                Your email address cannot be changed from this page. 
-                                If you need to update your email, please contact support.
+                                <strong>@(isBangla ? "নোট:" : "Note:")</strong>
+                                @(isBangla
+                                                                ? "যেসব ফিল্ডে "
+                                                                : "Fields marked with ")
+                                <span class="text-danger">*</span>
+                                @(isBangla
+                                                                ? " আছে সেগুলো পূরণ করা বাধ্যতামূলক। আপনার ইমেইল ঠিকানা এই পেজ থেকে পরিবর্তন করা যাবে না। ইমেইল আপডেট করতে হলে সাপোর্টে যোগাযোগ করুন।"
+                                                                : " are required. Your email address cannot be changed from this page. If you need to update your email, please contact support.")
                             </div>
                         </div>
                     </div>
@@ -141,17 +152,17 @@
                         <div class="col-12">
                             <hr class="my-4">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <a href="@Url.Action("ProfileDetails", "Profile", new { area = "Identity" })" 
+                                <a href="@Url.Action("ProfileDetails", "Profile", new { area = "Identity" })"
                                    class="btn btn-outline-secondary">
-                                    <i class="bi bi-arrow-left me-2"></i>Cancel
+                                    <i class="bi bi-arrow-left me-2"></i>@(isBangla ? "বাতিল" : "Cancel")
                                 </a>
-                                
+
                                 <div class="d-flex gap-2 flex-wrap">
                                     <button type="reset" class="btn btn-outline-warning" onclick="resetForm()">
-                                        <i class="bi bi-arrow-clockwise me-2"></i>Reset Changes
+                                        <i class="bi bi-arrow-clockwise me-2"></i>@(isBangla ? "পরিবর্তন রিসেট" : "Reset Changes")
                                     </button>
                                     <button type="submit" class="btn btn-primary" id="submitBtn">
-                                        <i class="bi bi-check-circle me-2"></i>Update Profile
+                                        <i class="bi bi-check-circle me-2"></i>@(isBangla ? "প্রোফাইল আপডেট" : "Update Profile")
                                     </button>
                                 </div>
                             </div>
@@ -165,19 +176,19 @@
             <div class="card-body">
                 <h6 class="card-title">
                     <i class="bi bi-shield-check text-success me-2"></i>
-                    Validation Guidelines
+                    @(isBangla ? "ভ্যালিডেশন নির্দেশনা" : "Validation Guidelines")
                 </h6>
                 <div class="row">
                     <div class="col-md-6">
                         <ul class="mb-0 small text-muted">
-                            <li><strong>Full Name:</strong> Required, maximum 100 characters</li>
-                            <li><strong>Phone Number:</strong> Required, must be valid phone format</li>
+                            <li><strong>@(isBangla ? "পূর্ণ নাম:" : "Full Name:")</strong> @(isBangla ? "আবশ্যক, সর্বোচ্চ ১০০ অক্ষর" : "Required, maximum 100 characters")</li>
+                            <li><strong>@(isBangla ? "ফোন নম্বর:" : "Phone Number:")</strong> @(isBangla ? "আবশ্যক, সঠিক ফোন ফরম্যাট হতে হবে" : "Required, must be valid phone format")</li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <ul class="mb-0 small text-muted">
-                            <li><strong>Profile Picture:</strong> Current image maintained if no new upload</li>
-                            <li><strong>File Size:</strong> Maximum 5MB for new images</li>
+                            <li><strong>@(isBangla ? "প্রোফাইল ছবি:" : "Profile Picture:")</strong> @(isBangla ? "নতুন ছবি না দিলে বর্তমান ছবি থাকবে" : "Current image maintained if no new upload")</li>
+                            <li><strong>@(isBangla ? "ফাইল সাইজ:" : "File Size:")</strong> @(isBangla ? "নতুন ছবির জন্য সর্বোচ্চ ৫MB" : "Maximum 5MB for new images")</li>
                         </ul>
                     </div>
                 </div>
@@ -190,74 +201,80 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    
+
     <script>
-        $(document).ready(function() {
+        const isBangla = @Json.Serialize(isBangla);
+
+        $(document).ready(function () {
             if ($('.field-validation-error:contains("field is required"), .field-validation-error:not(:empty)').length > 0) {
                 $('.validation-summary-errors').show();
             }
-            
-            $.validator.addMethod("phone", function(value, element) {
-                return this.optional(element) || /^[\+]?[\s\-\(\)]*([0-9][\s\-\(\)]*){10,}$/i.test(value);
-            }, "Please enter a valid phone number");
 
-            $('#personName').on('blur input', function() {
-                validateField($(this), function(value) {
+            $.validator.addMethod("phone", function (value, element) {
+                return this.optional(element) || /^[\+]?[\s\-\(\)]*([0-9][\s\-\(\)]*){10,}$/i.test(value);
+            }, isBangla ? "দয়া করে একটি সঠিক ফোন নম্বর লিখুন" : "Please enter a valid phone number");
+
+            $('#personName').on('blur input', function () {
+                validateField($(this), function (value) {
                     if (!value || value.trim() === '') {
-                        return 'Full Name is required';
+                        return isBangla ? 'পূর্ণ নাম আবশ্যক' : 'Full Name is required';
                     }
                     if (value.length > 100) {
-                        return 'Full Name cannot exceed 100 characters';
+                        return isBangla ? 'পূর্ণ নাম ১০০ অক্ষরের বেশি হতে পারবে না' : 'Full Name cannot exceed 100 characters';
                     }
                     return null;
                 });
             });
 
-            $('#phoneNumber').on('blur input', function() {
-                validateField($(this), function(value) {
+            $('#phoneNumber').on('blur input', function () {
+                validateField($(this), function (value) {
                     if (!value || value.trim() === '') {
-                        return 'Phone Number is required';
+                        return isBangla ? 'ফোন নম্বর আবশ্যক' : 'Phone Number is required';
                     }
                     const phoneRegex = /^[\+]?[\s\-\(\)]*([0-9][\s\-\(\)]*){10,}$/i;
                     if (!phoneRegex.test(value)) {
-                        return 'Please enter a valid phone number';
+                        return isBangla ? 'দয়া করে একটি সঠিক ফোন নম্বর লিখুন' : 'Please enter a valid phone number';
                     }
                     return null;
                 });
             });
 
-            $('#profileImageFile').on('change', function() {
+            $('#profileImageFile').on('change', function () {
                 const file = this.files[0];
                 if (file) {
                     if (file.size > 5 * 1024 * 1024) {
-                        alert('File size must be less than 5MB');
+                        alert(isBangla ? 'ফাইল সাইজ ৫MB এর কম হতে হবে' : 'File size must be less than 5MB');
                         $(this).val('');
                         resetImageStatus();
                         return;
                     }
-                    
+
                     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
                     if (!allowedTypes.includes(file.type)) {
-                        alert('Please select a valid image file (JPG, PNG, GIF)');
+                        alert(isBangla ? 'দয়া করে একটি বৈধ ছবি নির্বাচন করুন (JPG, PNG, GIF)' : 'Please select a valid image file (JPG, PNG, GIF)');
                         $(this).val('');
                         resetImageStatus();
                         return;
                     }
-                    
-                    updateImageStatus('new', `New image selected: ${file.name}`);
+
+                    updateImageStatus('new', (isBangla ? `নতুন ছবি নির্বাচন হয়েছে: ${file.name}` : `New image selected: ${file.name}`));
                 } else {
                     resetImageStatus();
                 }
             });
 
-            $('form').on('submit', function(e) {
+            $('form').on('submit', function (e) {
                 const submitBtn = $('#submitBtn');
                 const isValid = $(this).valid();
-                
+
                 if (isValid) {
-                    submitBtn.prop('disabled', true).html('<i class="bi bi-hourglass-split me-2"></i>Updating...');
+                    submitBtn.prop('disabled', true).html(
+                        isBangla
+                            ? '<i class="bi bi-hourglass-split me-2"></i>আপডেট হচ্ছে...'
+                            : '<i class="bi bi-hourglass-split me-2"></i>Updating...'
+                    );
                 }
-                
+
                 return isValid;
             });
         });
@@ -266,7 +283,7 @@
             const value = $field.val();
             const errorMessage = validationFunc(value);
             const $errorSpan = $field.closest('.col-md-6, .col-12').find('.field-validation-error');
-            
+
             if (errorMessage) {
                 $field.addClass('input-validation-error');
                 $errorSpan.text(errorMessage).show();
@@ -279,11 +296,11 @@
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                
-                reader.onload = function(e) {
+
+                reader.onload = function (e) {
                     $('#profileImagePreview').attr('src', e.target.result);
                 };
-                
+
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -291,9 +308,9 @@
         function updateImageStatus(type, message) {
             const $status = $('#imageStatus');
             const $statusText = $('#imageStatusText');
-            
+
             $status.removeClass('status-current status-new');
-            
+
             if (type === 'new') {
                 $status.addClass('status-new');
                 $statusText.html('<i class="bi bi-upload me-1"></i>' + message);
@@ -304,24 +321,23 @@
         }
 
         function resetImageStatus() {
-            updateImageStatus('current', 'Using current profile picture');
+            updateImageStatus('current', isBangla ? 'বর্তমান প্রোফাইল ছবি ব্যবহার হচ্ছে' : 'Using current profile picture');
         }
 
         function resetForm() {
-            if (confirm('Are you sure you want to reset all changes?')) {
+            if (confirm(isBangla ? 'আপনি কি নিশ্চিত সব পরিবর্তন রিসেট করতে চান?' : 'Are you sure you want to reset all changes?')) {
                 $('form')[0].reset();
-                
+
                 $('.input-validation-error').removeClass('input-validation-error');
                 $('.field-validation-error').text('').hide();
                 $('.validation-summary-errors').hide();
-                
+
                 const originalImageUrl = '@(Model.ExistingProfileImageUrl ?? ViewBag.DefaultImageUrl)';
                 $('#profileImagePreview').attr('src', originalImageUrl);
-                
+
                 $('#profileImageFile').val('');
                 resetImageStatus();
             }
         }
     </script>
 }
-

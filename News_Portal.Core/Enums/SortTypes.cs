@@ -76,4 +76,22 @@ public static class EnumExtensions
         else
             return string.Empty;
     }
+
+    public static string GetSortByInEng(this string s)
+    {
+        if (s == nameof(SortBy.NewsTitle))
+            return "News Title";
+        else if (s == nameof(SortBy.TotalViews))
+            return "Total Views";
+        else if (s == nameof(SortBy.NewsStatus))
+            return "News Status";
+        else if (s == nameof(SortBy.NewsPriority))
+            return "News Priority";
+        else if (s == nameof(SortBy.NewsType))
+            return "News Type";
+        else if (s == nameof(SortBy.PublishedDate))
+            return "Published Date";
+        else
+            return string.Empty;
+    }
 }

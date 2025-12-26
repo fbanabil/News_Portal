@@ -1,6 +1,10 @@
 ﻿@model LoginDTO
 @{
-    ViewBag.Title = "Login";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    ViewBag.Title = isBangla ? "লগইন" : "Login";
 }
 
 @if (TempData["Message"] != null)
@@ -19,29 +23,28 @@
     </div>
 }
 
-
 <div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
     <div class="col-12 col-sm-10 col-md-8 col-lg-5">
         <div class="card shadow-sm border-0">
             <div class="card-body p-4 p-lg-5">
-                <h1 class="h4 mb-1 text-center">Welcome</h1>
-                <p class="text-muted text-center mb-4">Sign in to continue</p>
+                <h1 class="h4 mb-1 text-center">@(isBangla ? "স্বাগতম" : "Welcome")</h1>
+                <p class="text-muted text-center mb-4">@(isBangla ? "চালিয়ে যেতে সাইন ইন করুন" : "Sign in to continue")</p>
 
                 <form asp-area="Identity" asp-controller="Account" asp-action="Login" method="post">
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
+                        <label asp-for="Email" class="form-label">@(isBangla ? "ইমেইল" : "Email")</label>
                         <input asp-for="Email"
                                class="form-control"
                                autocomplete="email"
-                               placeholder="you@example.com"/>
+                               placeholder="@(isBangla ? "আপনার ইমেইল লিখুন" : "you@example.com")" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Password</label>
+                        <label asp-for="Password" class="form-label">@(isBangla ? "পাসওয়ার্ড" : "Password")</label>
                         <input asp-for="Password"
                                class="form-control"
                                autocomplete="current-password"
@@ -50,43 +53,43 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Sign in</button>
+                        <button type="submit" class="btn btn-primary btn-lg">@(isBangla ? "সাইন ইন" : "Sign in")</button>
                     </div>
                 </form>
 
                 <div class="text-center mt-3">
                     <a asp-area="Identity" asp-controller="Account" asp-action="ForgotPassword" class="small text-decoration-none">
-                        Forgot your password?
+                        @(isBangla ? "পাসওয়ার্ড ভুলে গেছেন?" : "Forgot your password?")
                     </a>
                 </div>
 
                 <div class="text-center my-3">
-                    <span class="text-muted">or</span>
+                    <span class="text-muted">@(isBangla ? "অথবা" : "or")</span>
                 </div>
 
                 <form asp-area="Identity" asp-controller="Account" asp-action="ExternalLogin" method="post">
                     <input type="hidden" name="provider" value="Google" />
                     <button type="submit" class="btn btn-outline-danger w-100">
-                        <i class="bi bi-google"></i> Continue with Google
+                        <i class="bi bi-google"></i> @(isBangla ? "গুগল দিয়ে চালিয়ে যান" : "Continue with Google")
                     </button>
                 </form>
+
                 <div class="text-center my-3">
-                    <span class="text-muted small">or</span>
+                    <span class="text-muted small">@(isBangla ? "অথবা" : "or")</span>
                 </div>
 
-
                 <div class="d-flex justify-content-between mt-3">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="small text-decoration-none">Back to Home</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="small text-decoration-none">
+                        @(isBangla ? "হোমে ফিরে যান" : "Back to Home")
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
-

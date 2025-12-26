@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.DTO.Account;
+using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
 using News_Portal.UI.Filters;
@@ -226,7 +227,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> IsAnAuthor(string RemoveEmail)
+        public async Task<IActionResult> IsAnAuthor([FromQuery(Name = "authorAddRemoveDTO.RemoveEmail")]string RemoveEmail)
         {
             var user = await _userManager.FindByEmailAsync(RemoveEmail);
             if (user != null)
@@ -242,7 +243,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ValidAuthorEmailToAdd(string AddEmail)
+        public async Task<IActionResult> ValidAuthorEmailToAdd([FromQuery(Name = "authorAddRemoveDTO.AddEmail")]string AddEmail)
         {
             var user = await _userManager.FindByEmailAsync(AddEmail);
             if(user == null)
@@ -256,7 +257,6 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             }
             return Json(true);
         }
-
 
 
 
@@ -293,6 +293,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 ViewBag.PresentButton = "Login";
                 return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", new LoginDTO());
             }
+            var email = info.Principal.FindFirstValue(System.Security.Claims.ClaimTypes.Email);
+
 
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
 
@@ -301,8 +303,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 TempData["Message"] = "Logged in successfully!";
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
-
-            var email = info.Principal.FindFirstValue(System.Security.Claims.ClaimTypes.Email);
+            
 
             if (email == null)
             {
@@ -433,5 +434,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             ViewData["Message"] = "You do not have permission to access this resource.";
             return View();
         }
+
+
+        
     }
 }

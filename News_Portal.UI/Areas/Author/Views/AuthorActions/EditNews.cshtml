@@ -1,15 +1,14 @@
 ﻿@model NewsToEditDTO
 @using News_Portal.Core.Enums
 @{
-    ViewData["Title"] = "Edit News";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    ViewData["Title"] = isBangla? "সম্পাদনা করি" : "Edit News";
 }
 
-<!-- Newspaper Header -->
-<header class="newspaper-header">
-    <h1 class="newspaper-title">Daily News Portal</h1>
-    <div class="newspaper-date">@DateTime.Now.ToString("MMMM dd, yyyy")</div>
-    <div class="newspaper-line"></div>
-</header>
+
 
 <!-- Alerts -->
 @if (TempData["Message"] != null)
@@ -27,6 +26,8 @@
     </div>
 }
 
+
+
 <div class="add-news-main">
     <div class="add-news-container">
 
@@ -35,9 +36,9 @@
                 <div class="form-title-section">
                     <h1 class="form-title">
                         <i class="bi bi-pencil-square me-2"></i>
-                        Edit News Article
+                        @(isBangla ? "সংবাদ সম্পাদনা করুন" : "Edit News Article")
                     </h1>
-                    <p class="form-subtitle">Update your news article details and content</p>
+                    <p class="form-subtitle">@(isBangla ? "আপনার সংবাদ নিবন্ধের বিবরণ ও বিষয়বস্তু হালনাগাদ করুন" : "Update your news article details and content")</p>
                 </div>
             </div>
 
@@ -52,42 +53,42 @@
                     <div class="form-group">
                         <label asp-for="NewsTitle" class="form-label">
                             <i class="bi bi-type me-1"></i>
-                            News Title *
+                            @(isBangla ? "নিউজ শিরোনাম *" : "News Title *")
                         </label>
                         <input asp-for="NewsTitle"
                                type="text"
                                class="form-control"
-                               placeholder="Enter a compelling news title..."
+                               placeholder="@(isBangla ? "আকর্ষণীয় শিরোনাম লিখুন..." : "Enter a compelling news title...")"
                                maxlength="100" />
                         <span asp-validation-for="NewsTitle" class="text-danger"></span>
-                        <small class="form-text">Maximum 100 characters</small>
+                        <small class="form-text">@(isBangla ? "সর্বোচ্চ ১০০ অক্ষর" : "Maximum 100 characters")</small>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="NewsContent" class="form-label">
                             <i class="bi bi-file-text me-1"></i>
-                            News Content *
+                            @(isBangla ? "সংবাদ বিষয়বস্তু *" : "News Content *")
                         </label>
                         <textarea asp-for="NewsContent"
                                   class="form-control content-textarea"
                                   rows="12"
-                                  placeholder="Write your news article content here..."></textarea>
+                                  placeholder="@(isBangla ? "এখানে আপনার সংবাদ বিষয়বস্তু লিখুন..." : "Write your news article content here...")"></textarea>
                         <span asp-validation-for="NewsContent" class="text-danger"></span>
-                        <small class="form-text">Provide detailed information about the news story</small>
+                        <small class="form-text">@(isBangla ? "সংবাদ বিষয়বস্তুর বিস্তারিত লিখুন" : "Provide detailed information about the news story")</small>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label asp-for="NewsType" class="form-label">
                                 <i class="bi bi-tag me-1"></i>
-                                News Type *
+                                @(isBangla ? "সংবাদের ধরন *" : "News Type *")
                             </label>
                             <select asp-for="NewsType" class="form-select">
                                 @foreach (var newsType in Enum.GetValues<NewsType>())
                                 {
                                     if (newsType.ToString() != "General")
                                     {
-                                        <option value="@newsType">@newsType</option>
+                                        <option value="@newsType">@(isBangla ? newsType.GetDisplayName() : newsType)</option>
                                     }
                                 }
                             </select>
@@ -97,12 +98,12 @@
                         <div class="form-group">
                             <label asp-for="NewsPriority" class="form-label">
                                 <i class="bi bi-exclamation-triangle me-1"></i>
-                                Priority *
+                                @(isBangla ? "প্রাধান্য *" : "Priority *")
                             </label>
                             <select asp-for="NewsPriority" class="form-select">
                                 @foreach (var priority in Enum.GetValues<NewsPriority>())
                                 {
-                                    <option value="@priority">@priority</option>
+                                    <option value="@priority">@(isBangla ? priority.GetDisplayName() : priority)</option>
                                 }
                             </select>
                             <span asp-validation-for="NewsPriority" class="text-danger"></span>
@@ -112,14 +113,14 @@
                     <div class="form-group">
                         <label asp-for="VideoUrl" class="form-label">
                             <i class="bi bi-camera-video me-1"></i>
-                            Video URL (Optional)
+                            @(isBangla ? "ভিডিও URL (ঐচ্ছিক)" : "Video URL (Optional)")
                         </label>
                         <input asp-for="VideoUrl"
                                type="url"
                                class="form-control"
-                               placeholder="https://youtube.com/embed/your-video-id" />
+                               placeholder="@(isBangla ? "https://youtube.com/embed/your-video-id" : "https://youtube.com/embed/your-video-id")" />
                         <span asp-validation-for="VideoUrl" class="text-danger"></span>
-                        <small class="form-text">Add a YouTube embed URL to include video content</small>
+                        <small class="form-text">@(isBangla ? "ভিডিও সহ যুক্ত করতে YouTube embed URL দিন" : "Add a YouTube embed URL to include video content")</small>
                     </div>
 
                     @if (Model.ExistingImages != null && Model.ExistingImages.Any())
@@ -127,7 +128,7 @@
                         <div class="form-group">
                             <label class="form-label">
                                 <i class="bi bi-images me-1"></i>
-                                Current Images
+                                @(isBangla ? "বর্তমান ছবি" : "Current Images")
                             </label>
 
                             <div class="existing-images-container">
@@ -161,7 +162,7 @@
                                 </div>
 
                                 <small class="form-text">
-                                    Click the trash icon to remove images. Removed images will be deleted when you save.
+                                    @(isBangla ? "ছবি মুছে দিতে ট্র্যাশ আইকনে ক্লিক করুন। সেভ করলে মুছে ফেলা হবে।" : "Click the trash icon to remove images. Removed images will be deleted when you save.")
                                 </small>
                             </div>
                         </div>
@@ -170,7 +171,7 @@
                     <div class="form-group">
                         <label asp-for="NewImages" class="form-label">
                             <i class="bi bi-plus-circle me-1"></i>
-                            Add New Images (Optional)
+                            @(isBangla ? "নতুন ছবি যোগ করুন (ঐচ্ছিক)" : "Add New Images (Optional)")
                         </label>
                         <div class="image-upload-wrapper" id="imageUploadWrapper">
                             <input asp-for="NewImages"
@@ -182,20 +183,20 @@
                                    onchange="handleNewImages(this)" />
                             <div class="image-upload-info">
                                 <i class="bi bi-cloud-upload"></i>
-                                <span>Click to select images or drag and drop</span>
-                                <small>Maximum 4 images (JPG, PNG, GIF)</small>
+                                <span>@(isBangla ? "ছবি নির্বাচন করতে ক্লিক করুন অথবা এখানে ড্র্যাগ করতে পারেন" : "Click to select images or drag and drop")</span>
+                                <small>@(isBangla ? "সর্বোচ্চ ৪ টি ছবি (JPG, PNG, GIF)" : "Maximum 4 images (JPG, PNG, GIF)")</small>
                             </div>
                         </div>
                         <span asp-validation-for="NewImages" class="text-danger"></span>
                         <div class="image-count-display" id="imageCount" style="display: none;">
-                            <small class="text-muted">Selected: <span id="selectedCount">0</span>/4 images</small>
+                            <small class="text-muted">@(isBangla ? "নির্বাচিত: " : "Selected: ")<span id="selectedCount">0</span>/@(isBangla ? "৪" : "4") @(isBangla ? "ছবি" : "images")</small>
                         </div>
                     </div>
 
                     <div class="selected-files-container" id="selectedFiles" style="display: none;">
                         <h6 class="selected-files-title">
                             <i class="bi bi-file-earmark-image me-1"></i>
-                            New Images Selected
+                            @(isBangla ? "নতুন ছবি নির্বাচিত" : "New Images Selected")
                         </h6>
                         <div class="selected-files-list" id="selectedFilesList"></div>
                     </div>
@@ -203,12 +204,12 @@
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
                             <i class="bi bi-check-lg me-2"></i>
-                            Update Article
+                            @(isBangla ? "নিবন্ধ আপডেট করুন" : "Update Article")
                         </button>
                         <a href="@Url.Action("DetailedNews", "AuthorActions", new { area = "Author", newsId = Model.NewsId })"
                            class="btn btn-secondary">
                             <i class="bi bi-arrow-left me-2"></i>
-                            Cancel
+                            @(isBangla ? "বাতিল" : "Cancel")
                         </a>
                     </div>
 
@@ -220,28 +221,28 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-lightbulb"></i>
-                    Edit Guidelines
+                    @(isBangla ? "সম্পাদনার নির্দেশিকা" : "Edit Guidelines")
                 </h4>
                 <div class="guidelines-content">
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Write clear and engaging titles</span>
+                        <span>@(isBangla ? "সুস্পষ্ট এবং আকর্ষণীয় শিরোনাম লিখুন" : "Write clear and engaging titles")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Provide comprehensive content</span>
+                        <span>@(isBangla ? "সম্পূর্ণ বিষয়বস্তু প্রদান করুন" : "Provide comprehensive content")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Choose appropriate categories</span>
+                        <span>@(isBangla ? "উপযুক্ত শ্রেণি নির্বাচন করুন" : "Choose appropriate categories")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Set correct priority levels</span>
+                        <span>@(isBangla ? "সঠিক প্রাধান্য নির্ধারণ করুন" : "Set correct priority levels")</span>
                     </div>
                     <div class="guideline-item">
                         <i class="bi bi-check2 text-success"></i>
-                        <span>Add relevant images and videos</span>
+                        <span>@(isBangla ? "প্রাসঙ্গিক ছবি ও ভিডিও যোগ করুন" : "Add relevant images and videos")</span>
                     </div>
                 </div>
             </div>
@@ -249,24 +250,24 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-info-circle"></i>
-                    Content Guidelines
+                    @(isBangla ? "বিষয়বস্তু নির্দেশিকা" : "Content Guidelines")
                 </h4>
                 <div class="content-info">
                     <div class="info-item">
-                        <span class="info-label">Title:</span>
-                        <span class="info-value">Maximum 100 characters</span>
+                        <span class="info-label">@(isBangla ? "শিরোনাম:" : "Title:")</span>
+                        <span class="info-value">@(isBangla ? "সর্বোচ্চ ১০০ অক্ষর" : "Maximum 100 characters")</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Content:</span>
-                        <span class="info-value">Be descriptive and informative</span>
+                        <span class="info-label">@(isBangla ? "বিষয়বস্তু:" : "Content:")</span>
+                        <span class="info-value">@(isBangla ? "বর্ণনামূলক ও তথ্যবহুল লিখুন" : "Be descriptive and informative")</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Images:</span>
-                        <span class="info-value">Maximum 4 new images (JPG, PNG, GIF)</span>
+                        <span class="info-label">@(isBangla ? "ছবি:" : "Images:")</span>
+                        <span class="info-value">@(isBangla ? "সর্বোচ্চ ৪ নতুন ছবি (JPG, PNG, GIF)" : "Maximum 4 new images (JPG, PNG, GIF)")</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Video:</span>
-                        <span class="info-value">YouTube URLs only</span>
+                        <span class="info-label">@(isBangla ? "ভিডিও:" : "Video:")</span>
+                        <span class="info-value">@(isBangla ? "শুধুমাত্র YouTube URL" : "YouTube URLs only")</span>
                     </div>
                 </div>
             </div>
@@ -274,17 +275,17 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-lightning"></i>
-                    Quick Actions
+                    @(isBangla ? "দ্রুত কার্যক্রম" : "Quick Actions")
                 </h4>
                 <div class="quick-actions">
                     <a href="@Url.Action("Index", "AuthorActions", new { area = "Author" })"
                        class="action-btn primary">
                         <i class="bi bi-list"></i>
-                        View My Articles
+                        @(isBangla ? "আমার নিবন্ধসমূহ দেখুন" : "View My Articles")
                     </a>
                     <button type="button" class="action-btn secondary" onclick="resetForm()">
                         <i class="bi bi-arrow-clockwise"></i>
-                        Reset Changes
+                        @(isBangla ? "পরিবর্তন রিসেট করুন" : "Reset Changes")
                     </button>
                 </div>
             </div>
@@ -292,16 +293,16 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-graph-up"></i>
-                    Article Statistics
+                    @(isBangla ? "নিবন্ধ পরিসংখ্যান" : "Article Statistics")
                 </h4>
                 <div class="tips-content">
                     <div class="tip-item">
-                        <strong>Image Management:</strong>
-                        <p>Remove unwanted images by clicking the trash icon. Add new images using the file selector above.</p>
+                        <strong>@(isBangla ? "ছবি ব্যবস্থাপনা:" : "Image Management:")</strong>
+                        <p>@(isBangla ? "অপ্রয়োজনীয় ছবি মুছতে ট্র্যাশ আইকনে ক্লিক করুন।" : "Remove unwanted images by clicking the trash icon. Add new images using the file selector above.")</p>
                     </div>
                     <div class="tip-item">
-                        <strong>Priority Setting:</strong>
-                        <p>High priority articles appear prominently on the homepage.</p>
+                        <strong>@(isBangla ? "প্রাধান্য সেটিং:" : "Priority Setting:")</strong>
+                        <p>@(isBangla ? "উচ্চ প্রাধান্য পৃষ্ঠার হোমে প্রাধান্য পায়।" : "High priority articles appear prominently on the homepage.")</p>
                     </div>
                 </div>
             </div>
@@ -312,6 +313,23 @@
 
 @section Scripts {
     <script>
+        // Client-side localization & settings
+        const isBangla = @(isBangla.ToString().ToLower());
+        const texts = {
+            maxImages: '@(isBangla ? "৪" : "4")',
+            maxImagesEn: @(4),
+            overMaxSelected: isBangla
+                ? (allowed => `আপনি সর্বোচ্চ ${texts.maxImages} টি ছবি নির্বাচন করতে পারবেন। প্রথম ${allowed} টি ছবি যোগ করা হবে।`)
+                : (allowed => `You can only select up to ${texts.maxImagesEn} images. Only the first ${allowed} image(s) will be added.`),
+            alreadyAtMax: isBangla
+                ? 'আপনি ইতোমধ্যে সর্বোচ্চ সংখ্যক ছবি নির্বাচন করেছেন।'
+                : 'You have already selected the maximum number of images.',
+            updating: isBangla ? 'আপডেট করা হচ্ছে...' : 'Updating...',
+            removeFileTitle: isBangla ? 'ফাইল সরান' : 'Remove file',
+            confirmReset: isBangla ? 'আপনি নিশ্চিত যে আপনি সব পরিবর্তন রিসেট করতে চান? এটি মূল মানগুলো পুনঃস্থাপন করবে।' : 'Are you sure you want to reset all changes? This will restore the original values.',
+            removeFileBtnTitle: isBangla ? 'ফাইল সরান' : 'Remove file'
+        };
+
         let selectedFiles = [];
         const maxImages = 4;
 
@@ -337,7 +355,7 @@
             if (form && submitBtn) {
                 form.addEventListener('submit', function (e) {
                     const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Updating...';
+                    submitBtn.innerHTML = `<i class="bi bi-hourglass-split me-2"></i> ${texts.updating}`;
                     submitBtn.disabled = true;
 
                     setTimeout(() => {
@@ -356,8 +374,15 @@
 
                 function updateCharCount() {
                     const remaining = maxLength - titleInput.value.length;
-                    charCountElement.textContent = `${remaining} characters remaining`;
-                    charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';
+                    if (isBangla) {
+                        // Use server-side converter for digits if required
+                        const rem = remaining.toString();
+                        charCountElement.textContent = `${rem.ToBanglaDigits ? rem.ToBanglaDigits() : rem} ${remaining === 1 ? 'অক্ষর বাকি' : 'অক্ষর বাকি'}`;
+                        charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';
+                    } else {
+                        charCountElement.textContent = `${remaining} characters remaining`;
+                        charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';
+                    }
                 }
 
                 titleInput.addEventListener('input', updateCharCount);
@@ -418,10 +443,12 @@
                 if (totalFiles > maxImages) {
                     const allowedFiles = maxImages - selectedFiles.length;
                     if (allowedFiles > 0) {
-                        alert(`You can only select up to ${maxImages} images. Only the first ${allowedFiles} image(s) will be added.`);
+                        alert(isBangla
+                            ? `আপনি সর্বোচ্চ ${texts.maxImages} টি ছবি নির্বাচন করতে পারবেন। প্রথম ${allowedFiles} টি ছবি যোগ করা হবে।`
+                            : `You can only select up to ${texts.maxImagesEn} images. Only the first ${allowedFiles} image(s) will be added.`);
                         imageFiles.splice(allowedFiles);
                     } else {
-                        alert(`You have already selected the maximum of ${maxImages} images.`);
+                        alert(isBangla ? texts.alreadyAtMax : texts.alreadyAtMax);
                         return;
                     }
                 }
@@ -435,7 +462,7 @@
                 if (selectedFiles.length > 0) {
                     selectedFilesContainer.style.display = 'block';
                     imageCount.style.display = 'block';
-                    selectedCount.textContent = selectedFiles.length;
+                    selectedCount.textContent = isBangla ? selectedFiles.length.toString().ToBanglaDigits?.() ?? selectedFiles.length : selectedFiles.length;
                     selectedFilesList.innerHTML = '';
 
                     selectedFiles.forEach((file, index) => {
@@ -449,7 +476,7 @@
                                     <small class="file-size text-muted">${formatFileSize(file.size)}</small>
                                 </div>
                             </div>
-                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="Remove file">
+                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="${texts.removeFileTitle}">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         `;
@@ -477,7 +504,9 @@
                 const imageFiles = files.filter(file => file.type.startsWith('image/'));
 
                 if (imageFiles.length > maxImages) {
-                    alert(`You can only select up to ${maxImages} images. Only the first ${maxImages} image(s) will be processed.`);
+                    alert(isBangla
+                        ? `আপনি সর্বোচ্চ ${texts.maxImages} টি ছবি নির্বাচন করতে পারবেন। প্রথম ${texts.maxImages} টি ছবি প্রক্রিয়াকৃত হবে।`
+                        : `You can only select up to ${texts.maxImagesEn} images. Only the first ${texts.maxImagesEn} image(s) will be processed.`);
                     imageFiles.splice(maxImages);
                 }
 
@@ -494,7 +523,7 @@
                 if (selectedFiles.length > 0) {
                     selectedFilesContainer.style.display = 'block';
                     imageCount.style.display = 'block';
-                    selectedCount.textContent = selectedFiles.length;
+                    selectedCount.textContent = isBangla ? selectedFiles.length.toString().ToBanglaDigits?.() ?? selectedFiles.length : selectedFiles.length;
                     selectedFilesList.innerHTML = '';
 
                     selectedFiles.forEach((file, index) => {
@@ -508,7 +537,7 @@
                                     <small class="file-size text-muted">${formatFileSize(file.size)}</small>
                                 </div>
                             </div>
-                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="Remove file">
+                            <button type="button" class="remove-file-btn" onclick="removeFile(${index})" title="${texts.removeFileTitle}">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         `;
@@ -537,7 +566,7 @@
 
             const overlay = imageItem.querySelector('.image-overlay');
             if (overlay) {
-                overlay.innerHTML = '<span class="badge bg-danger">Removed</span>';
+                overlay.innerHTML = `<span class="badge bg-danger">${isBangla ? 'মুছে ফেলা হয়েছে' : 'Removed'}</span>`;
             }
 
             const removeBtn = imageItem.querySelector('.remove-image-btn');
@@ -575,7 +604,7 @@
             const selectedCount = document.getElementById('selectedCount');
 
             if (selectedFiles.length > 0) {
-                selectedCount.textContent = selectedFiles.length;
+                selectedCount.textContent = isBangla ? selectedFiles.length.toString().ToBanglaDigits?.() ?? selectedFiles.length : selectedFiles.length;
                 selectedFilesList.innerHTML = '';
 
                 selectedFiles.forEach((file, newIndex) => {
@@ -589,7 +618,7 @@
                                 <small class="file-size text-muted">${formatFileSize(file.size)}</small>
                             </div>
                         </div>
-                        <button type="button" class="remove-file-btn" onclick="removeFile(${newIndex})" title="Remove file">
+                        <button type="button" class="remove-file-btn" onclick="removeFile(${newIndex})" title="${texts.removeFileTitle}">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     `;
@@ -607,7 +636,7 @@
         };
 
         function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
+            if (bytes === 0) return isBangla ? '0 Bytes' : '0 Bytes';
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -615,7 +644,7 @@
         }
 
         function resetForm() {
-            if (confirm('Are you sure you want to reset all changes? This will restore the original values.')) {
+            if (confirm(texts.confirmReset)) {
                 location.reload();
             }
         }

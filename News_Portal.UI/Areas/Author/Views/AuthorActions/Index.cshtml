@@ -1,8 +1,11 @@
 ﻿@model AuthorNewsAllFiltersDTO
 @using News_Portal.Core.Enums
-
 @{
-    ViewBag.Title = "Author Actions";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    ViewBag.Title = isBangla ? "লেখকের কার্যক্রম" : "Author Actions";
 
     Model.parametersDTO ??= new NewsFilterParametersDTO();
 
@@ -37,7 +40,7 @@
             <div class="section-header">
                 <h2 class="section-title">
                     <i class="bi bi-pencil-square"></i>
-                    Author Dashboard
+                    @(isBangla ? "লেখকের ড্যাশবোর্ড" : "Author Dashboard")
                 </h2>
             </div>
 
@@ -54,7 +57,7 @@
                         <div class="filter-header">
                             <h4 class="filter-title">
                                 <i class="bi bi-funnel"></i>
-                                Filter & Search Articles
+                                @(isBangla ? "ফিল্টার ও নিবন্ধ অনুসন্ধান" : "Filter & Search Articles")
                             </h4>
                             <button type="button" class="btn-toggle-filters" onclick="toggleFilters()">
                                 <i class="bi bi-chevron-down"></i>
@@ -67,22 +70,22 @@
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsTitle" class="filter-label">
                                         <i class="bi bi-search"></i>
-                                        Article Title
+                                        @(isBangla ? "নিবন্ধ শিরোনাম" : "Article Title")
                                     </label>
                                     <input asp-for="parametersDTO.NewsTitle"
                                            class="filter-input"
-                                           placeholder="Search by title..."
+                                           placeholder="@(isBangla ? "শিরোনাম দ্বারা অনুসন্ধান..." : "Search by title...")"
                                            value="@Model.parametersDTO?.NewsTitle" />
                                 </div>
 
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsContent" class="filter-label">
                                         <i class="bi bi-text-paragraph"></i>
-                                        Content
+                                        @(isBangla ? "বিষয়বস্তু" : "Content")
                                     </label>
                                     <input asp-for="parametersDTO.NewsContent"
                                            class="filter-input"
-                                           placeholder="Search in content..."
+                                           placeholder="@(isBangla ? "বিষয়ের অনুসন্ধান..." : "Search in content...")"
                                            value="@Model.parametersDTO?.NewsContent" />
                                 </div>
                             </div>
@@ -91,14 +94,14 @@
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsType" class="filter-label">
                                         <i class="bi bi-tags"></i>
-                                        Category
+                                        @(isBangla ? "শ্রেণি" : "Category")
                                     </label>
                                     <select asp-for="parametersDTO.NewsType" class="filter-select">
-                                        <option value="">All Categories</option>
+                                        <option value="">@(isBangla ? "সব শ্রেণী" : "All Categories")</option>
                                         @foreach (NewsType newsType in Enum.GetValues<NewsType>())
                                         {
                                             <option value="@newsType" selected="@(Model.parametersDTO?.NewsType == newsType)">
-                                                @newsType
+                                                @(isBangla? newsType.GetDisplayName() : newsType)
                                             </option>
                                         }
                                     </select>
@@ -107,14 +110,14 @@
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsStatus" class="filter-label">
                                         <i class="bi bi-flag"></i>
-                                        Status
+                                        @(isBangla ? "অবস্থা" : "Status")
                                     </label>
                                     <select asp-for="parametersDTO.NewsStatus" class="filter-select">
-                                        <option value="">All Statuses</option>
+                                        <option value="">@(isBangla ? "সব স্ট্যাটাস" : "All Statuses")</option>
                                         @foreach (NewsStatus status in Enum.GetValues<NewsStatus>())
                                         {
                                             <option value="@status" selected="@(Model.parametersDTO?.NewsStatus == status)">
-                                                @status
+                                                @(isBangla? status.GetDisplayName() : status)
                                             </option>
                                         }
                                     </select>
@@ -125,14 +128,14 @@
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.NewsPriority" class="filter-label">
                                         <i class="bi bi-exclamation-triangle"></i>
-                                        Priority
+                                        @(isBangla ? "প্রায়োরিটি" : "Priority")
                                     </label>
                                     <select asp-for="parametersDTO.NewsPriority" class="filter-select">
-                                        <option value="">All Priorities</option>
+                                        <option value="">@(isBangla ? "সব প্রাধান্য" : "All Priorities")</option>
                                         @foreach (NewsPriority priority in Enum.GetValues<NewsPriority>())
                                         {
                                             <option value="@priority" selected="@(Model.parametersDTO?.NewsPriority == priority)">
-                                                @priority
+                                                @(isBangla? priority.GetDisplayName():priority)
                                             </option>
                                         }
                                     </select>
@@ -141,7 +144,7 @@
                                 <div class="filter-group">
                                     <label asp-for="parametersDTO.PublishedDate" class="filter-label">
                                         <i class="bi bi-calendar-event"></i>
-                                        Published Date
+                                        @(isBangla ? "প্রকাশের তারিখ" : "Published Date")
                                     </label>
                                     <input asp-for="parametersDTO.PublishedDate"
                                            type="date"
@@ -154,28 +157,28 @@
                                 <div class="filter-group">
                                     <label asp-for="sortBy" class="filter-label">
                                         <i class="bi bi-sort-down"></i>
-                                        Sort By
+                                        @(isBangla?"ক্রমিত : ":"Sort By") 
                                     </label>
                                     <select asp-for="sortBy" class="filter-select">
-                                        <option value="PublishedDate" selected="@(Model.sortBy == "PublishedDate")">Published Date</option>
-                                        <option value="NewsTitle" selected="@(Model.sortBy == "NewsTitle")">Title</option>
-                                        <option value="TotalViews" selected="@(Model.sortBy == "TotalViews")">Total Views</option>
-                                        <option value="NewsStatus" selected="@(Model.sortBy == "NewsStatus")">Status</option>
-                                        <option value="NewsPriority" selected="@(Model.sortBy == "NewsPriority")">Priority</option>
-                                        <option value="NewsType" selected="@(Model.sortBy == "NewsType")">Category</option>
+                                        @foreach (SortBy sortBy in Enum.GetValues<SortBy>())
+                                        {
+                                            <option value="@sortBy" selected="@(Model.sortBy == sortBy.ToString())">
+                                                @(isBangla? sortBy.GetDisplayName():sortBy)
+                                            </option>
+                                        }
                                     </select>
                                 </div>
 
                                 <div class="filter-group">
                                     <label asp-for="sortType" class="filter-label">
                                         <i class="bi bi-arrow-up-down"></i>
-                                        Sort Order
+                                        @(isBangla ? "ক্রমের ধরণ" : "Sort Order")
                                     </label>
                                     <select asp-for="sortType" class="filter-select">
                                         @foreach (SortTypes sortType in Enum.GetValues<SortTypes>())
                                         {
                                             <option value="@sortType" selected="@(Model.sortType == sortType)">
-                                                @sortType.GetDisplayName()
+                                                @(isBangla? sortType.GetDisplayName():sortType)
                                             </option>
                                         }
                                     </select>
@@ -186,13 +189,24 @@
                                 <div class="filter-group">
                                     <label asp-for="pageSize" class="filter-label">
                                         <i class="bi bi-list-ol"></i>
-                                        Items Per Page
+                                        @(isBangla ? "প্রতি পাতায় আইটেম" : "Items Per Page")
                                     </label>
-                                    <select asp-for="pageSize" class="filter-select" id="pageSizeSelect">
-                                        <option value="5" selected="@(Model.pageSize == 5)">5</option>
-                                        <option value="10" selected="@(Model.pageSize == 10)">10</option>
-                                        <option value="20" selected="@(Model.pageSize == 20)">20</option>
-                                        <option value="50" selected="@(Model.pageSize == 50)">50</option>
+                                    <select asp-for="pageSize" class="filter-select" id="pageSizeSelect" onchange="changePageSize()">
+                                    @if(isBangla)
+                                        {
+                                            <option value="5" selected="@(Model.pageSize == 5)">৫</option>
+                                            <option value="10" selected="@(Model.pageSize == 10)">১০</option>
+                                            <option value="20" selected="@(Model.pageSize == 20)">২০</option>
+                                            <option value="50" selected="@(Model.pageSize == 50)">৫০</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="5" selected="@(Model.pageSize == 5)">5</option>
+                                            <option value="10" selected="@(Model.pageSize == 10)">10</option>
+                                            <option value="20" selected="@(Model.pageSize == 20)">20</option>
+                                            <option value="50" selected="@(Model.pageSize == 50)">50</option>
+                                        }
+                                        
                                     </select>
                                 </div>
 
@@ -201,15 +215,15 @@
 
                                     <button type="submit" class="btn-filter-apply">
                                         <i class="bi bi-search"></i>
-                                        Apply Filters
+                                        @(isBangla ? "ফিল্টার প্রয়োগ করুন" : "Apply Filters")
                                     </button>
 
                                     <a asp-area="Author"
                                        asp-controller="AuthorActions"
                                        asp-action="Index"
-                                       class="btn-filter-reset">
+                                       class="btn-filter-reset" title="@(isBangla ? "রিসেট করুন" : "Reset")">
                                         <i class="bi bi-arrow-clockwise"></i>
-                                        Reset
+                                        @(isBangla ? "রিসেট" : "Reset")
                                     </a>
                                 </div>
                             </div>
@@ -223,9 +237,10 @@
                         <h3>📰 Your Articles</h3>
                         <div class="articles-summary">
                             <span class="current-filters">
-                                Sorted by @Model.sortBy (@Model.sortType)
-                                | @Model.pageSize items per page
-                                | Page @Model.pageNo of @pageCount
+
+                                @(!isBangla ? "Sorted by" : "ক্রম করা")  @(isBangla ? (@Model.sortType.GetDisplayName()) + " " + (Model.sortBy.GetSortBy()) + " দ্বারা" : (Model.sortBy.GetSortByInEng() + " " + (@Model.sortType)))
+                                | @(isBangla? Model.pageSize.ToString().ToBanglaDigits(): Model.pageSize) @(!isBangla ? "items per page" : "আইটেম প্রতি পৃষ্ঠা")
+                                | @(!isBangla ? "Page " : "পৃষ্ঠা ")@(isBangla? Model.pageNo.ToString().ToBanglaDigits(): Model.pageNo)  @(!isBangla ? "of" : "থেকে") @(isBangla? pageCount.ToString().ToBanglaDigits():pageCount)
                             </span>
                         </div>
                     </div>
@@ -248,9 +263,9 @@
                                     @if (Model.pageNo > 2)
                                     {
                                         <li class="page-item">
-                                            <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
+                                            <button onclick="goToPageWithScroll(1)" class="page-link" title="@(isBangla ? "প্রথম পাতা" : "First Page")">
                                                 <i class="bi bi-chevron-double-left"></i>
-                                                First
+                                                @(isBangla ? "প্রথম" : "First")
                                             </button>
                                         </li>
                                     }
@@ -258,14 +273,15 @@
                                     @if (Model.pageNo > 1)
                                     {
                                         <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@(Model.pageNo - 1))" class="page-link" title="Previous Page">
+                                            <button onclick="goToPageWithScroll(@(Model.pageNo - 1))" class="page-link" title="@(isBangla ? "পূর্ববর্তী পৃষ্ঠা" : "Previous Page")">
                                                 <i class="bi bi-chevron-left"></i>
-                                                Previous
+                                                @(isBangla ? "পূর্ববর্তী" : "Previous")
                                             </button>
                                         </li>
                                     }
 
                                     @{
+
                                         int startPage = Math.Max(1, Model.pageNo - 2);
                                         int endPage = Math.Min(pageCount, Model.pageNo + 2);
                                     }
@@ -273,7 +289,7 @@
                                     @if (startPage > 1)
                                     {
                                         <li class="page-item">
-                                            <button onclick="goToPageWithScroll(1)" class="page-link">1</button>
+                                            <button onclick="goToPageWithScroll(1)" class="page-link">@(isBangla?"১":"1")</button>
                                         </li>
                                         @if (startPage > 2)
                                         {
@@ -288,11 +304,11 @@
                                         <li class="page-item @(i == Model.pageNo ? "active" : "")">
                                             @if (i == Model.pageNo)
                                             {
-                                                <span class="page-link">@i</span>
+                                                <span class="page-link">@(isBangla? i.ToString().ToBanglaDigits():i)</span>
                                             }
                                             else
                                             {
-                                                <button onclick="goToPageWithScroll(@i)" class="page-link">@i</button>
+                                                <button onclick="goToPageWithScroll(@i)" class="page-link">@(isBangla? i.ToString().ToBanglaDigits():i)</button>
                                             }
                                         </li>
                                     }
@@ -306,15 +322,15 @@
                                             </li>
                                         }
                                         <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@pageCount)" class="page-link">@pageCount</button>
+                                            <button onclick="goToPageWithScroll(@pageCount)" class="page-link">@(isBangla? pageCount.ToString().ToBanglaDigits():pageCount)</button>
                                         </li>
                                     }
 
                                     @if (Model.pageNo < pageCount)
                                     {
                                         <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@(Model.pageNo + 1))" class="page-link" title="Next Page">
-                                                Next
+                                            <button onclick="goToPageWithScroll(@(Model.pageNo + 1))" class="page-link" title="@(isBangla ? "পরবর্তী পৃষ্ঠা" : "Next Page")">
+                                                @(isBangla ? "পরবর্তী" : "Next")
                                                 <i class="bi bi-chevron-right"></i>
                                             </button>
                                         </li>
@@ -323,16 +339,14 @@
                                     @if (Model.pageNo < pageCount - 1)
                                     {
                                         <li class="page-item">
-                                            <button onclick="goToPageWithScroll(@pageCount)" class="page-link" title="Last Page">
-                                                Last
+                                            <button onclick="goToPageWithScroll(@pageCount)" class="page-link" title="@(isBangla ? "শেষ পাতা" : "Last Page")">
+                                                @(isBangla ? "শেষ" : "Last")
                                                 <i class="bi bi-chevron-double-right"></i>
                                             </button>
                                         </li>
                                     }
                                 </ul>
-                            </nav>
-
-                           
+                            </nav> 
                         }
                     </div>
 
@@ -346,24 +360,31 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-graph-up"></i>
-                    Quick Stats
+                    @(isBangla ? "দ্রুত পরিসংখ্যান" : "Quick Stats")
                 </h4>
                 <div class="stats-grid">
+
+                    @{
+                        int totalArticle = ViewBag.TotalArticles;
+                        int totalViews = ViewBag.TotalViews;
+                        int publishedArticles = ViewBag.TotalPublishedArticles;
+                        int thisMonth = ViewBag.ThisMonth;
+                    }
                     <div class="stat-item">
-                        <span class="stat-number">@ViewBag.TotalArticles</span>
-                        <span class="stat-label">Total Articles</span>
+                        <span class="stat-number">@(isBangla?totalArticle.ToString().ToBanglaDigits():totalArticle)</span>
+                        <span class="stat-label">@(isBangla ? "মোট সংবাদ" : "Total Articles")</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">@ViewBag.TotalViews</span>
-                        <span class="stat-label">Total Views</span>
+                        <span class="stat-number">@(isBangla?totalViews.ToString().ToBanglaDigits():totalViews)</span>
+                        <span class="stat-label">@(isBangla ? "মোট ভিউ" : "Total Views")</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">@ViewBag.ThisMonth</span>
-                        <span class="stat-label">This Month</span>
+                        <span class="stat-number">@(isBangla?thisMonth.ToString().ToBanglaDigits():thisMonth)</span>
+                        <span class="stat-label">@(isBangla ? "এই মাস" : "This Month")</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">@ViewBag.TotalPublishedArticles %</span>
-                        <span class="stat-label">Published</span>
+                        <span class="stat-number">@(isBangla ? publishedArticles.ToString().ToBanglaDigits():publishedArticles) %</span>
+                        <span class="stat-label">@(isBangla ? "প্রকাশিত" : "Published")</span>
                     </div>
                 </div>
             </div>
@@ -371,35 +392,25 @@
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-lightning"></i>
-                    Quick Actions
+                    @(isBangla ? "দ্রুত কার্যক্রম" : "Quick Actions")
                 </h4>
                 <div class="quick-actions">
                     <a href="@Url.Action("AddNews", "AuthorActions", new { area = "Author" })"
                         class="action-btn primary">
                         <i class="bi bi-plus-circle"></i>
-                        Create New Article
+                        @(isBangla ? "নতুন সংবাদ তৈরি করুন" : "Create New Article")
                     </a>
                     <a href="@Url.Action("Index","Home")" class="action-btn secondary">
                         <i class="bi bi-eye"></i>
-                        View All Articles
+                        @(isBangla ? "সমস্ত সংবাদ দেখুন" : "View All Articles")
                     </a>
-                    @*
-                    <a href="#" class="action-btn primary">
-                        <i class="bi bi-bar-chart"></i>
-                        Analytics
-                    </a>
-                    <a href="#" class="action-btn secondary">
-                        <i class="bi bi-gear"></i>
-                        Settings
-                    </a>
-                    *@
                 </div>
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-trophy"></i>
-                    Your Top Articles
+                    @(isBangla ? "আপনার শীর্ষ সংবাদ" : "Your Top Articles")
                 </h4>
                
                 <div class="best-news-content">
@@ -416,6 +427,7 @@
 
 @section Scripts {
     <script>
+        
         async function goToPageWithScroll(pageNo) {
             showLoadingIndicator();
             
@@ -426,7 +438,7 @@
                 
             } catch (error) {
                 console.error('Error navigating to page:', error);
-                showError('Failed to load page. Please try again.');
+                showError('@(isBangla ? "পেজ লোড করা ব্যর্থ হয়েছে। আবার চেষ্টা করুন।" : "Failed to load page. Please try again.")');
             } finally {
                 hideLoadingIndicator();
             }
@@ -483,7 +495,7 @@
                 const startItem = (currentPage - 1) * pageSize + 1;
                 const endItem = Math.min(currentPage * pageSize, totalItems);
                 
-                pageInfo.innerHTML = `Showing <strong>${startItem}</strong> to <strong>${endItem}</strong> of <strong>${totalItems}</strong> articles`;
+                pageInfo.innerHTML = `@(isBangla ? "দেখানো হচ্ছে" : "Showing") <strong>${startItem}</strong> @(isBangla ? "থেকে" : "to") <strong>${endItem}</strong> @(isBangla ? "মোট" : "of") <strong>${totalItems}</strong> @(isBangla ? "নিবন্ধ" : "articles")`;
             }
 
             const paginationNav = document.querySelector('.pagination-enhanced');
@@ -493,16 +505,16 @@
 
             if (currentPage > 2) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(1)" class="page-link" title="First Page">
-                                <i class="bi bi-chevron-double-left"></i> First
+                            <button onclick="goToPageWithScroll(1)" class="page-link" title="${texts.firstPageTitle}">
+                                <i class="bi bi-chevron-double-left"></i> ${texts.first}
                             </button>
                          </li>`;
             }
 
             if (currentPage > 1) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(${currentPage - 1})" class="page-link" title="Previous Page">
-                                <i class="bi bi-chevron-left"></i> Previous
+                            <button onclick="goToPageWithScroll(${currentPage - 1})" class="page-link" title="${texts.previousPageTitle}">
+                                <i class="bi bi-chevron-left"></i> ${texts.previous}
                             </button>
                          </li>`;
             }
@@ -540,16 +552,16 @@
 
             if (currentPage < totalPages) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(${currentPage + 1})" class="page-link" title="Next Page">
-                                Next <i class="bi bi-chevron-right"></i>
+                            <button onclick="goToPageWithScroll(${currentPage + 1})" class="page-link" title="${texts.nextPageTitle}">
+                                ${texts.next} <i class="bi bi-chevron-right"></i>
                             </button>
                          </li>`;
             }
 
             if (currentPage < totalPages - 1) {
                 html += `<li class="page-item">
-                            <button onclick="goToPageWithScroll(${totalPages})" class="page-link" title="Last Page">
-                                Last <i class="bi bi-chevron-double-right"></i>
+                            <button onclick="goToPageWithScroll(${totalPages})" class="page-link" title="${texts.lastPageTitle}">
+                                ${texts.last} <i class="bi bi-chevron-double-right"></i>
                             </button>
                          </li>`;
             }
@@ -578,7 +590,7 @@
             spinner.innerHTML = `
                 <div style="display: flex; justify-content: center; align-items: center; padding: 20px;">
                     <div style="width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                    <span style="margin-left: 10px; color: #667eea;">Loading...</span>
+                    <span style="margin-left: 10px; color: #667eea;">${texts.loading}</span>
                 </div>
               
             `;

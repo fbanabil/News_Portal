@@ -17,7 +17,7 @@
             <div class="d-flex justify-content-center mb-3">
                 <div class="carousel-counter badge bg-light text-dark border" role="status" aria-live="polite">
                     <span class="visually-hidden">@(isBangla ? "স্লাইড" : "Slide")</span>
-                    <span id="currentSlide">1</span> / <span id="totalSlides">@totalItems.ToString().ToBanglaDigits()</span>
+                    <span id="currentSlide">@(isBangla ? "১" : "1")</span> / <span id="totalSlides">@(isBangla? totalItems.ToString().ToBanglaDigits():totalItems.ToString())</span>
                 </div>
             </div>
             
@@ -67,6 +67,13 @@ else
 }
 
 <script>
+
+        function toBanglaDigits(input) {
+        const banglaDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+
+        return input.toString().replace(/\d/g, digit => banglaDigits[digit]);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const carousel = document.getElementById('newsCarousel');
         const track = document.getElementById('carouselTrack');
@@ -116,7 +123,8 @@ else
         function updateCounter() {
             const visibleCount = getVisibleSlidesCount();
             const displayIndex = Math.min(currentIndex + 1, totalItems - visibleCount + 1);
-            currentSlideSpan.textContent = displayIndex;
+            currentSlideSpan.textContent =  @Json.Serialize(isBangla) ? toBanglaDigits(displayIndex)
+                                                    : displayIndex;
         }
 
         function resetProgress() {

@@ -1,11 +1,17 @@
-﻿@{
+﻿<!DOCTYPE html>
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     string presentButton = (ViewBag.PresentButton as string ?? "").Trim();
     bool isLoginPresent = string.Equals(presentButton, "Login", StringComparison.OrdinalIgnoreCase);
 }
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,25 +28,25 @@
             <div class="identity-actions-box">
                 @if (isLoginPresent)
                 {
-                    <a class="btn-min btn-present"
+                    <a class="btn-present"
                        asp-area="Identity"
                        asp-controller="Account"
-                       asp-action="AuthLogin">Login</a>
+                       asp-action="AuthLogin">@(isBangla?"লগ-ইন":"Login")</a>
                     <a class="btn-min"
-                       asp-area="Identity"
-                       asp-controller="Account"
-                       asp-action="AuthRegister">Register</a>
+                    asp-area="Identity"
+                    asp-controller="Account"
+                    asp-action="AuthRegister">@(isBangla ? "রেজিস্টার":"Register")</a>
                 }
                 else
                 {
                     <a class="btn-min"
                        asp-area="Identity"
                        asp-controller="Account"
-                       asp-action="AuthLogin">Login</a>
-                    <a class="btn-min btn-present"
+                       asp-action="AuthLogin">@(isBangla ? "লগ-ইন" : "Login")</a>
+                    <a class="btn-present"
                        asp-area="Identity"
                        asp-controller="Account"
-                       asp-action="AuthRegister">Register</a>
+                       asp-action="AuthRegister">@(isBangla ? "রেজিস্টার" : "Register")</a>
                 }
             </div>
         </div>

@@ -1,7 +1,11 @@
 ﻿@using News_Portal.Core.DTO.Profile
 @model ProfileToShowDTO
 @{
-    ViewBag.Title = "Profile Details";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    ViewBag.Title = isBangla ? "প্রোফাইল বিস্তারিত" : "Profile Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -21,7 +25,6 @@
     </div>
 }
 
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <div class="container py-4">
@@ -29,12 +32,12 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h1 class="h3 mb-1">Profile Details</h1>
-                    <p class="text-muted mb-0">Manage your account information and preferences</p>
+                    <h1 class="h3 mb-1">@(isBangla ? "প্রোফাইল বিস্তারিত" : "Profile Details")</h1>
+                    <p class="text-muted mb-0">@(isBangla ? "আপনার অ্যাকাউন্ট তথ্য ও পছন্দসমূহ পরিচালনা করুন" : "Manage your account information and preferences")</p>
                 </div>
                 <div>
                     <a href="@Url.Action("Index", "Home", new { area = "" })" class="btn btn-outline-secondary me-2">
-                        <i class="bi bi-arrow-left me-1"></i>Back to Home
+                        <i class="bi bi-arrow-left me-1"></i>@(isBangla ? "হোমে ফিরে যান" : "Back to Home")
                     </a>
                 </div>
             </div>
@@ -47,36 +50,36 @@
                 <div class="card-body text-center p-4">
                     <div class="position-relative d-inline-block mb-3">
                         <img src="@(Model.ProfileImageUrl ?? ViewBag.DefaultImageUrl)"
-                             alt="Profile Picture"
+                             alt="@(isBangla ? "প্রোফাইল ছবি" : "Profile Picture")"
                              class="rounded-circle border"
                              style="width: 120px; height: 120px; object-fit: cover;"
                              onerror="this.src= @ViewBag.DefaultImageUrl" />
                     </div>
-                    <h4 class="mb-1">@(Model.PersonName ?? "User Name")</h4>
+                    <h4 class="mb-1">@(Model.PersonName ?? (isBangla ? "ব্যবহারকারীর নাম" : "User Name"))</h4>
                     <p class="text-muted mb-3">@(Model.Email ?? "user@example.com")</p>
-                    
+
                     <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
-                        <i class="bi bi-check-circle-fill me-1"></i>Verified Account
+                        <i class="bi bi-check-circle-fill me-1"></i>@(isBangla ? "যাচাইকৃত অ্যাকাউন্ট" : "Verified Account")
                     </span>
 
-                    @if(User.IsInRole("Author"))
+                    @if (User.IsInRole(UserTypes.Author.ToString()))
                     {
                         <div class="mt-3">
                             <a asp-controller="AuthorActions" asp-action="Index" asp-area="Author"
                                class="btn btn-gradient-primary btn-author-dashboard px-4 py-2 w-100">
                                 <i class="bi bi-pencil-square me-2"></i>
-                                <span>Author Dashboard</span>
+                                <span>@(isBangla ? "লেখক ড্যাশবোর্ড" : "Author Dashboard")</span>
                                 <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
                     }
-                    @if (User.IsInRole("Admin"))
+                    @if (User.IsInRole(UserTypes.Admin.ToString()))
                     {
                         <div class="mt-3">
                             <a asp-controller="AdminActions" asp-action="Index" asp-area="Admin"
                                class="btn btn-gradient-primary btn-author-dashboard px-4 py-2 w-100">
                                 <i class="bi bi-pencil-square me-2"></i>
-                                <span>Admin Dashboard</span>
+                                <span>@(isBangla ? "অ্যাডমিন ড্যাশবোর্ড" : "Admin Dashboard")</span>
                                 <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
@@ -93,11 +96,11 @@
                         <div class="card-header bg-white border-0 py-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">
-                                    <i class="bi bi-person-circle me-2 text-primary"></i>Personal Information
+                                    <i class="bi bi-person-circle me-2 text-primary"></i>@(isBangla ? "ব্যক্তিগত তথ্য" : "Personal Information")
                                 </h5>
-                                <a href="@Url.Action("EditProfile", "Profile", new { area = "Identity" })" 
+                                <a href="@Url.Action("EditProfile", "Profile", new { area = "Identity" })"
                                    class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-pencil-square me-1"></i>Edit Profile
+                                    <i class="bi bi-pencil-square me-1"></i>@(isBangla ? "প্রোফাইল এডিট" : "Edit Profile")
                                 </a>
                             </div>
                         </div>
@@ -105,25 +108,25 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="border-start border-primary border-3 ps-3">
-                                        <small class="text-muted text-uppercase fw-bold">Full Name</small>
-                                        <div class="fw-medium">@(Model.PersonName ?? "Not provided")</div>
+                                        <small class="text-muted text-uppercase fw-bold">@(isBangla ? "পূর্ণ নাম" : "Full Name")</small>
+                                        <div class="fw-medium">@(Model.PersonName ?? (isBangla ? "দেওয়া হয়নি" : "Not provided"))</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="border-start border-info border-3 ps-3">
-                                        <small class="text-muted text-uppercase fw-bold">Email Address</small>
-                                        <div class="fw-medium">@(Model.Email ?? "Not provided")</div>
+                                        <small class="text-muted text-uppercase fw-bold">@(isBangla ? "ইমেইল ঠিকানা" : "Email Address")</small>
+                                        <div class="fw-medium">@(Model.Email ?? (isBangla ? "দেওয়া হয়নি" : "Not provided"))</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="border-start border-success border-3 ps-3">
-                                        <small class="text-muted text-uppercase fw-bold">Phone Number</small>
-                                        <div class="fw-medium">@(Model.PhoneNumber ?? "Not provided")</div>
+                                        <small class="text-muted text-uppercase fw-bold">@(isBangla ? "ফোন নম্বর" : "Phone Number")</small>
+                                        <div class="fw-medium">@(Model.PhoneNumber ?? (isBangla ? "দেওয়া হয়নি" : "Not provided"))</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="border-start border-warning border-3 ps-3">
-                                        <small class="text-muted text-uppercase fw-bold">Member Since</small>
+                                        <small class="text-muted text-uppercase fw-bold">@(isBangla ? "সদস্যতার সময়" : "Member Since")</small>
                                         <div class="fw-medium">@DateTime.Now.ToString("MMMM yyyy")</div>
                                     </div>
                                 </div>
@@ -136,48 +139,48 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white border-0 py-3">
                             <h5 class="mb-0">
-                                <i class="bi bi-gear-fill me-2 text-primary"></i>Account Settings
+                                <i class="bi bi-gear-fill me-2 text-primary"></i>@(isBangla ? "অ্যাকাউন্ট সেটিংস" : "Account Settings")
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <a href="@Url.Action("EditProfile", "Profile", new { area = "Identity" })" 
+                                    <a href="@Url.Action("EditProfile", "Profile", new { area = "Identity" })"
                                        class="card text-decoration-none border-0 bg-primary-subtle h-100">
                                         <div class="card-body text-center p-3">
                                             <i class="bi bi-person-gear display-6 text-primary mb-2"></i>
-                                            <h6 class="card-title text-primary mb-1">Edit Profile</h6>
-                                            <small class="text-muted">Update your personal information</small>
+                                            <h6 class="card-title text-primary mb-1">@(isBangla ? "প্রোফাইল এডিট" : "Edit Profile")</h6>
+                                            <small class="text-muted">@(isBangla ? "আপনার ব্যক্তিগত তথ্য আপডেট করুন" : "Update your personal information")</small>
                                         </div>
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="@Url.Action("ChangePassword", "Profile", new { area = "Identity" })" 
+                                    <a href="@Url.Action("ChangePassword", "Profile", new { area = "Identity" })"
                                        class="card text-decoration-none border-0 bg-warning-subtle h-100">
                                         <div class="card-body text-center p-3">
                                             <i class="bi bi-shield-lock display-6 text-warning mb-2"></i>
-                                            <h6 class="card-title text-warning mb-1">Change Password</h6>
-                                            <small class="text-muted">Update your account password</small>
+                                            <h6 class="card-title text-warning mb-1">@(isBangla ? "পাসওয়ার্ড পরিবর্তন" : "Change Password")</h6>
+                                            <small class="text-muted">@(isBangla ? "আপনার অ্যাকাউন্টের পাসওয়ার্ড আপডেট করুন" : "Update your account password")</small>
                                         </div>
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="#" onclick="resetPassword()" 
+                                    <a href="#" onclick="resetPassword()"
                                        class="card text-decoration-none border-0 bg-secondary-subtle h-100">
                                         <div class="card-body text-center p-3">
                                             <i class="bi bi-key display-6 text-secondary mb-2"></i>
-                                            <h6 class="card-title text-secondary mb-1">Reset Password</h6>
-                                            <small class="text-muted">Send password reset email</small>
+                                            <h6 class="card-title text-secondary mb-1">@(isBangla ? "পাসওয়ার্ড রিসেট" : "Reset Password")</h6>
+                                            <small class="text-muted">@(isBangla ? "পাসওয়ার্ড রিসেট ইমেইল পাঠান" : "Send password reset email")</small>
                                         </div>
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="#" onclick="deleteAccount()" 
+                                    <a href="#" onclick="deleteAccount()"
                                        class="card text-decoration-none border-0 bg-danger-subtle h-100">
                                         <div class="card-body text-center p-3">
                                             <i class="bi bi-trash display-6 text-danger mb-2"></i>
-                                            <h6 class="card-title text-danger mb-1">Delete Account</h6>
-                                            <small class="text-muted">Permanently delete your account</small>
+                                            <h6 class="card-title text-danger mb-1">@(isBangla ? "অ্যাকাউন্ট ডিলিট" : "Delete Account")</h6>
+                                            <small class="text-muted">@(isBangla ? "স্থায়ীভাবে আপনার অ্যাকাউন্ট মুছে ফেলুন" : "Permanently delete your account")</small>
                                         </div>
                                     </a>
                                 </div>
@@ -195,7 +198,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="profilePictureModalLabel">
-                    <i class="bi bi-camera me-2"></i>Change Profile Picture
+                    <i class="bi bi-camera me-2"></i>@(isBangla ? "প্রোফাইল ছবি পরিবর্তন" : "Change Profile Picture")
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -203,13 +206,13 @@
                 <form asp-area="Identity" asp-controller="Profile" asp-action="UpdateProfilePicture" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     <div class="mb-3">
-                        <label for="profileImage" class="form-label">Select New Profile Picture</label>
+                        <label for="profileImage" class="form-label">@(isBangla ? "নতুন প্রোফাইল ছবি নির্বাচন করুন" : "Select New Profile Picture")</label>
                         <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*" required />
-                        <small class="text-muted">Recommended: JPG, PNG. Max size: 5MB</small>
+                        <small class="text-muted">@(isBangla ? "প্রস্তাবিত: JPG, PNG। সর্বোচ্চ সাইজ: ৫MB" : "Recommended: JPG, PNG. Max size: 5MB")</small>
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-upload me-1"></i>Upload Picture
+                            <i class="bi bi-upload me-1"></i>@(isBangla ? "ছবি আপলোড করুন" : "Upload Picture")
                         </button>
                     </div>
                 </form>
@@ -223,24 +226,29 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="resetPasswordModalLabel">
-                    <i class="bi bi-key me-2"></i>Reset Password
+                    <i class="bi bi-key me-2"></i>@(isBangla ? "পাসওয়ার্ড রিসেট" : "Reset Password")
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-info" role="alert">
                     <i class="bi bi-info-circle me-2"></i>
-                    <strong>Password Reset Request</strong><br>
-                    Are you sure you want to reset your password? A password reset link will be sent to your email address: <strong>@Model.Email</strong>
+                    <strong>@(isBangla ? "পাসওয়ার্ড রিসেট অনুরোধ" : "Password Reset Request")</strong><br>
+                    @(isBangla
+                                        ? "আপনি কি নিশ্চিত আপনার পাসওয়ার্ড রিসেট করতে চান? একটি রিসেট লিংক আপনার এই ইমেইলে পাঠানো হবে: "
+                                        : "Are you sure you want to reset your password? A password reset link will be sent to your email address: ")
+                    <strong>@Model.Email</strong>
                 </div>
                 <p class="text-muted small">
-                    You will receive an email with instructions to create a new password. This action will not immediately change your current password.
+                    @(isBangla
+                                        ? "আপনি একটি ইমেইল পাবেন যেখানে নতুন পাসওয়ার্ড তৈরি করার নির্দেশনা থাকবে। এতে আপনার বর্তমান পাসওয়ার্ড সঙ্গে সঙ্গে পরিবর্তন হবে না।"
+                                        : "You will receive an email with instructions to create a new password. This action will not immediately change your current password.")
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@(isBangla ? "বাতিল" : "Cancel")</button>
                 <button type="button" class="btn btn-danger" onclick="confirmResetPassword()">
-                    <i class="bi bi-send me-1"></i>Send Reset Email
+                    <i class="bi bi-send me-1"></i>@(isBangla ? "রিসেট ইমেইল পাঠান" : "Send Reset Email")
                 </button>
             </div>
         </div>
@@ -252,35 +260,39 @@
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="deleteAccountModalLabel">
-                    <i class="bi bi-exclamation-triangle me-2"></i>Delete Account
+                    <i class="bi bi-exclamation-triangle me-2"></i>@(isBangla ? "অ্যাকাউন্ট ডিলিট" : "Delete Account")
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger" role="alert">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    <strong>WARNING: This action is irreversible!</strong>
+                    <strong>@(isBangla ? "সতর্কতা: এই কাজটি ফেরত নেওয়া যাবে না!" : "WARNING: This action is irreversible!")</strong>
                 </div>
                 <p class="mb-3">
-                    Are you absolutely sure you want to delete your account? This will permanently:
+                    @(isBangla
+                                        ? "আপনি কি নিশ্চিত আপনার অ্যাকাউন্ট ডিলিট করতে চান? এতে স্থায়ীভাবে যা হবে:"
+                                        : "Are you absolutely sure you want to delete your account? This will permanently:")
                 </p>
                 <ul class="text-danger">
-                    <li>Delete all your personal information</li>
-                    <li>Remove all your comments and posts</li>
-                    <li>Cancel any subscriptions or preferences</li>
-                    <li>Make your profile inaccessible</li>
+                    <li>@(isBangla ? "আপনার সব ব্যক্তিগত তথ্য মুছে যাবে" : "Delete all your personal information")</li>
+                    <li>@(isBangla ? "আপনার সব মন্তব্য ও পোস্ট মুছে যাবে" : "Remove all your comments and posts")</li>
+                    <li>@(isBangla ? "সব সাবস্ক্রিপশন/পছন্দসমূহ বাতিল হবে" : "Cancel any subscriptions or preferences")</li>
+                    <li>@(isBangla ? "আপনার প্রোফাইল আর দেখা যাবে না" : "Make your profile inaccessible")</li>
                 </ul>
                 <div class="form-group mt-3">
                     <label for="confirmationText" class="form-label">
-                        Type <strong>"DELETE MY ACCOUNT"</strong> to confirm:
+                        @(isBangla
+                                                ? "নিশ্চিত করতে টাইপ করুন "
+                                                : "Type ") <strong>"DELETE MY ACCOUNT"</strong> @(isBangla ? " লিখুন:" : " to confirm:")
                     </label>
-                    <input type="text" id="confirmationText" class="form-control" placeholder="Type confirmation text here">
+                    <input type="text" id="confirmationText" class="form-control" placeholder="@(isBangla ? "এখানে কনফার্মেশন লিখুন" : "Type confirmation text here")">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@(isBangla ? "বাতিল" : "Cancel")</button>
                 <button type="button" class="btn btn-danger" id="confirmDeleteBtn" disabled onclick="confirmDeleteAccount()">
-                    <i class="bi bi-trash me-1"></i>Delete My Account
+                    <i class="bi bi-trash me-1"></i>@(isBangla ? "আমার অ্যাকাউন্ট ডিলিট করুন" : "Delete My Account")
                 </button>
             </div>
         </div>
@@ -289,17 +301,19 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        const isBangla = @Json.Serialize(isBangla);
+
+        document.addEventListener('DOMContentLoaded', function () {
             console.log('ProfileDetails page loaded successfully');
-            
+
             const confirmationInput = document.getElementById('confirmationText');
             const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-            
+
             if (confirmationInput && confirmDeleteBtn) {
-                confirmationInput.addEventListener('input', function() {
+                confirmationInput.addEventListener('input', function () {
                     const isValid = this.value.trim().toUpperCase() === 'DELETE MY ACCOUNT';
                     confirmDeleteBtn.disabled = !isValid;
-                    
+
                     if (isValid) {
                         confirmDeleteBtn.classList.remove('btn-outline-danger');
                         confirmDeleteBtn.classList.add('btn-danger');
@@ -319,7 +333,9 @@
         function confirmResetPassword() {
             const confirmBtn = document.querySelector('#resetPasswordModal .btn-danger');
             const originalText = confirmBtn.innerHTML;
-            confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Sending...';
+            confirmBtn.innerHTML = isBangla
+                ? '<i class="bi bi-hourglass-split me-1"></i>পাঠানো হচ্ছে...'
+                : '<i class="bi bi-hourglass-split me-1"></i>Sending...';
             confirmBtn.disabled = true;
 
             fetch('@Url.Action("ResetPassword", "Profile", new { area = "Identity" })', {
@@ -332,35 +348,41 @@
                     email: '@Model.Email'
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
-                    modalInstance.hide();
-                    
-                    document.getElementById('resetPasswordModal').addEventListener('hidden.bs.modal', function() {
-                        setTimeout(() => {
-                            showAlert('success', 'Password reset email sent successfully! Please check your email.');
-                        }, 100);
-                    }, { once: true }); 
-                } else {
-                    showAlert('danger', data.message || 'Failed to send reset email. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('danger', 'An error occurred. Please try again later.');
-            })
-            .finally(() => {
-                confirmBtn.innerHTML = originalText;
-                confirmBtn.disabled = false;
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                        modalInstance.hide();
+
+                        document.getElementById('resetPasswordModal').addEventListener('hidden.bs.modal', function () {
+                            setTimeout(() => {
+                                showAlert('success', isBangla
+                                    ? 'পাসওয়ার্ড রিসেট ইমেইল সফলভাবে পাঠানো হয়েছে! দয়া করে আপনার ইমেইল চেক করুন।'
+                                    : 'Password reset email sent successfully! Please check your email.');
+                            }, 100);
+                        }, { once: true });
+                    } else {
+                        showAlert('danger', data.message || (isBangla
+                            ? 'রিসেট ইমেইল পাঠাতে ব্যর্থ। আবার চেষ্টা করুন।'
+                            : 'Failed to send reset email. Please try again.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('danger', isBangla
+                        ? 'একটি সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।'
+                        : 'An error occurred. Please try again later.');
+                })
+                .finally(() => {
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.disabled = false;
+                });
         }
 
         function deleteAccount() {
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
             deleteModal.show();
-            
+
             document.getElementById('confirmationText').value = '';
             document.getElementById('confirmDeleteBtn').disabled = true;
         }
@@ -368,7 +390,9 @@
         function confirmDeleteAccount() {
             const confirmBtn = document.getElementById('confirmDeleteBtn');
             const originalText = confirmBtn.innerHTML;
-            confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
+            confirmBtn.innerHTML = isBangla
+                ? '<i class="bi bi-hourglass-split me-1"></i>ডিলিট হচ্ছে...'
+                : '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
             confirmBtn.disabled = true;
 
             fetch('@Url.Action("DeleteAccount", "Profile", new { area = "Identity" })', {
@@ -378,51 +402,57 @@
                     'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
-                    modalInstance.hide();
-                    
-                    document.getElementById('deleteAccountModal').addEventListener('hidden.bs.modal', function() {
-                        setTimeout(() => {
-                            showAlert('success', 'Account deleted successfully. Redirecting...', false);
-                            
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
+                        modalInstance.hide();
+
+                        document.getElementById('deleteAccountModal').addEventListener('hidden.bs.modal', function () {
                             setTimeout(() => {
-                                window.location.href = '@Url.Action("Index", "Home", new { area = "" })';
-                            }, 3000);
-                        }, 100);
-                    }, { once: true }); 
-                } else {
-                    showAlert('danger', data.message || 'Failed to delete account. Please try again.');
+                                showAlert('success', isBangla
+                                    ? 'অ্যাকাউন্ট সফলভাবে ডিলিট হয়েছে। রিডাইরেক্ট করা হচ্ছে...'
+                                    : 'Account deleted successfully. Redirecting...', false);
+
+                                setTimeout(() => {
+                                    window.location.href = '@Url.Action("Index", "Home", new { area = "" })';
+                                }, 3000);
+                            }, 100);
+                        }, { once: true });
+                    } else {
+                        showAlert('danger', data.message || (isBangla
+                            ? 'অ্যাকাউন্ট ডিলিট করতে ব্যর্থ। আবার চেষ্টা করুন।'
+                            : 'Failed to delete account. Please try again.'));
+                        confirmBtn.innerHTML = originalText;
+                        confirmBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('danger', isBangla
+                        ? 'একটি সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।'
+                        : 'An error occurred. Please try again later.');
                     confirmBtn.innerHTML = originalText;
                     confirmBtn.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('danger', 'An error occurred. Please try again later.');
-                confirmBtn.innerHTML = originalText;
-                confirmBtn.disabled = false;
-            });
+                });
         }
 
         function showAlert(type, message, autoDismiss = true) {
             const existingAlerts = document.querySelectorAll('.alert');
             existingAlerts.forEach(alert => alert.remove());
-            
+
             const alertHtml = `
                 <div class="alert alert-${type} alert-dismissible fade show" role="alert" style="margin-bottom: 1rem;">
                     <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
                     ${message}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`;
-            
+
             const container = document.querySelector('.container');
             container.insertAdjacentHTML('afterbegin', alertHtml);
-            
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
+
             if (autoDismiss) {
                 setTimeout(() => {
                     const alert = container.querySelector('.alert');
@@ -439,4 +469,3 @@
         }
     </script>
 }
-

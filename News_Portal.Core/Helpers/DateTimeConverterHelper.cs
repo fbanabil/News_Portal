@@ -66,6 +66,17 @@ namespace News_Portal.Core.Helpers
             return ToBanglaDigits(dateTime.Year.ToString());
         }
 
+        public static string GetBanglaHour(this DateTime dateTime)
+        {
+            var hour12 = dateTime.ToString("hh");
+            return hour12.ToBanglaDigits();
+        }
+
+        public static string GetBanglaMinute(this DateTime dateTime)
+        {
+            var minute = dateTime.ToString("mm");
+            return minute.ToBanglaDigits();
+        }
 
         private static string ToBanglaDigits(string input)
         {

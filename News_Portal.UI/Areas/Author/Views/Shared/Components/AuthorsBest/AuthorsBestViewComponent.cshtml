@@ -1,5 +1,8 @@
 ﻿@model List<HomePageNewsToShowDTO>
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 <div class="row g-2 g-md-3 mt-2">
     @if (Model is { Count: > 0 })
@@ -14,7 +17,7 @@
     else
     {
         <div class="col-12">
-            <div class="alert alert-light border mb-0">No Top News available.</div>
+            <div class="alert alert-light border mb-0">@(isBangla? "কোন শীর্ষ সংবাদ নেই" : " No Top News available.")</div>
         </div>
     }
 </div>

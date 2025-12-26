@@ -49,7 +49,14 @@ namespace News_Portal.UI.Areas.Author.Controllers
             ( int TotalArticles, int TotalPublishedArticles, int TotalViews, int ThisMonth ) = await _newsService.GetAuthorsNewsSummaryAsync(user.Id);
 
             ViewBag.TotalArticles = TotalArticles;
-            ViewBag.TotalPublishedArticles = (int)(((double)TotalPublishedArticles/(double)TotalArticles)*100);
+            if (TotalArticles != 0)
+            {
+                ViewBag.TotalPublishedArticles = (int)(((double)TotalPublishedArticles / (double)TotalArticles) * 100);
+            }
+            else 
+            {
+                ViewBag.TotalPublishedArticles = 0;
+            }
             ViewBag.TotalViews = TotalViews;
             ViewBag.ThisMonth = ThisMonth;
 

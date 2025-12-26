@@ -1,8 +1,13 @@
 ﻿@model RegisterDTO
 @{
-    ViewData["Title"] = "Register";
-    ViewBag.PresentButton = "Register";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
+@{
+    ViewData["Title"] = isBangla ? "রেজিস্টার" : "Register";
+    ViewBag.PresentButton = isBangla ? "রেজিস্টার" : "Register";
+}
+
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -23,49 +28,48 @@
     <div class="col-12 col-sm-10 col-md-8 col-lg-6">
         <div class="card shadow-sm border-0">
             <div class="card-body p-4 p-lg-5">
-                <h1 class="h4 mb-1 text-center">Create your account</h1>
-                <p class="text-muted text-center mb-4">Fill in the details to get started</p>
+                <h1 class="h4 mb-1 text-center">@(isBangla ? "আপনার অ্যাকাউন্ট তৈরি করুন" : "Create your account")</h1>
+                <p class="text-muted text-center mb-4">@(isBangla ? "শুরু করতে নিচের তথ্যগুলো পূরণ করুন" : "Fill in the details to get started")</p>
 
                 <form asp-area="Identity"
                       asp-controller="Account"
                       asp-action="Register"
                       method="post"
-                      enctype="multipart/form-data"
-                      >
+                      enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
 
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
+                        <label asp-for="Email" class="form-label">@(isBangla ? "ইমেইল" : "Email")</label>
                         <input asp-for="Email"
                                class="form-control"
                                autocomplete="email"
-                               placeholder="you@example.com" />
+                               placeholder="@(isBangla ? "আপনার ইমেইল লিখুন" : "you@example.com")" />
                         <span asp-validation-for="Email" class="text-danger d-block"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="PersonName" class="form-label">Full name</label>
+                        <label asp-for="PersonName" class="form-label">@(isBangla ? "পূর্ণ নাম" : "Full name")</label>
                         <input asp-for="PersonName"
                                class="form-control"
                                autocomplete="name"
-                               placeholder="John Doe" />
+                               placeholder="@(isBangla ? "আপনার নাম লিখুন" : "John Doe")" />
                         <span asp-validation-for="PersonName" class="text-danger d-block"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="PhoneNumber" class="form-label">Phone number</label>
+                        <label asp-for="PhoneNumber" class="form-label">@(isBangla ? "ফোন নম্বর" : "Phone number")</label>
                         <input asp-for="PhoneNumber"
                                class="form-control"
                                inputmode="numeric"
                                pattern="[0-9]*"
-                               placeholder="0123456789" />
+                               placeholder="@(isBangla ? "০১২৩৪৫৬৭৮৯" : "0123456789")" />
                         <span asp-validation-for="PhoneNumber" class="text-danger d-block"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Password</label>
+                        <label asp-for="Password" class="form-label">@(isBangla ? "পাসওয়ার্ড" : "Password")</label>
                         <input asp-for="Password"
                                class="form-control"
                                autocomplete="new-password"
@@ -74,7 +78,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label">Confirm password</label>
+                        <label asp-for="ConfirmPassword" class="form-label">@(isBangla ? "পাসওয়ার্ড নিশ্চিত করুন" : "Confirm password")</label>
                         <input asp-for="ConfirmPassword"
                                class="form-control"
                                autocomplete="new-password"
@@ -83,24 +87,28 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="ProfileImage" class="form-label">Profile image</label>
+                        <label asp-for="ProfileImage" class="form-label">@(isBangla ? "প্রোফাইল ছবি" : "Profile image")</label>
                         <input asp-for="ProfileImage"
                                class="form-control"
                                accept="image/*" />
                         <span asp-validation-for="ProfileImage" class="text-danger d-block"></span>
-                        <small class="text-muted">PNG or JPG recommended.</small>
+                        <small class="text-muted">@(isBangla ? "PNG বা JPG ফাইল প্রস্তাবিত।" : "PNG or JPG recommended.")</small>
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        <button type="submit" class="btn btn-primary btn-lg">@(isBangla ? "রেজিস্টার" : "Register")</button>
                     </div>
 
                     <div class="d-flex justify-content-between mt-3">
                         <a asp-area="Identity"
                            asp-controller="Account"
                            asp-action="AuthLogin"
-                           class="small text-decoration-none">Already have an account? Login</a>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="small text-decoration-none">Back to Home</a>
+                           class="small text-decoration-none">
+                            @(isBangla ? "আগেই অ্যাকাউন্ট আছে? লগইন করুন" : "Already have an account? Login")
+                        </a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="small text-decoration-none">
+                            @(isBangla ? "হোমে ফিরে যান" : "Back to Home")
+                        </a>
                     </div>
                 </form>
             </div>

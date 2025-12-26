@@ -1,4 +1,8 @@
 ﻿@model AuthorsNewsToShowDTO
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 
 <a asp-controller="AuthorActions"
    asp-action="DetailedNews"
@@ -16,7 +20,7 @@
             }
             else
             {
-                <div class="news-media-placeholder">No Image</div>
+                <div class="news-media-placeholder">@(isBangla?"কোন ছবি নেই":"No Image")</div>
             }
         </div>
 
@@ -25,9 +29,21 @@
                 <h3 class="news-title">@Model.NewsTitle</h3>
 
                 <div class="news-meta">
-                    <span class="meta-pill">@Model.NewsType</span>
-                    <span class="meta-pill status">@Model.NewsStatus</span>
-                    <span class="meta-date">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+
+                    @if(isBangla)
+                    {
+                        <span class="meta-pill">@Model.NewsType.GetDisplayName()</span>
+                        <span class="meta-pill status">@Model.NewsStatus.GetDisplayName()</span>
+                        <span class="meta-date">@Model.PublishedDate.GetBengaliDate()</span>
+                    }
+                    else
+                    {
+                        <span class="meta-pill">@Model.NewsType</span>
+                        <span class="meta-pill status">@Model.NewsStatus</span>
+                        <span class="meta-date">@Model.PublishedDate.ToString("MMM dd, yyyy")</span>
+                    }
+
+                    
                 </div>
             </header>
 
@@ -39,7 +55,8 @@
 
             <div class="news-footer">
                 <span class="read-more">
-                    Read details <span aria-hidden="true">→</span>
+                    @(isBangla? "বিস্তারিত পড়ি":"Read Details") 
+                    <span aria-hidden="true">→</span>
                 </span>
             </div>
         </div>

@@ -278,7 +278,7 @@
                     <h3>📰 @L("News Articles", "সংবাদ")</h3>
                     <div class="articles-summary">
                         <span class="current-filters">
-                            @L("Sorted by", "ক্রম করা")  @(isBangla ? (@Model.sortType.GetDisplayName()) + " " + (Model.sortBy.GetSortBy()) + " দ্বারা" : (Model.sortBy + " " + (@Model.sortType)))
+                            @L("Sorted by", "ক্রম করা")  @(isBangla ? (@Model.sortType.GetDisplayName()) + " " + (Model.sortBy.GetSortBy()) + " দ্বারা" : (Model.sortBy.GetSortByInEng() + " " + (@Model.sortType)))
                             | @Model.pageSize @L("items per page", "আইটেম প্রতি পৃষ্ঠা")
                             | @L("Page", "পৃষ্ঠা") @Model.pageNo @L("of", "থেকে") @pageCount
                         </span>

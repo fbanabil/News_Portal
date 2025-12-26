@@ -22,11 +22,13 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
         private readonly INewsService _newsService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AdminActionsController(INewsService newsService, UserManager<ApplicationUser> userManager)
+        public AdminActionsController(INewsService newsService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _newsService = newsService;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
 
@@ -125,58 +127,67 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddAdmin(string email)
+        public async Task<IActionResult> AddAuthor([FromForm(Name = "authorAddRemoveDTO.AddEmail")]string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
-            {
-                var result = await _userManager.AddToRoleAsync(user, "Admin");
-
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {  
+                if (await _userManager.IsInRoleAsync(user, UserTypes.Author.ToString()))
                 {
-                    return BadRequest("User is already an Admin.");
+                    TempData["ErrorMessage"] = "User is already an Author.";
+                    return RedirectToAction(nameof(Index));
                 }
+                var result = await _userManager.AddToRoleAsync(user, UserTypes.Author.ToString());
                 if (result.Succeeded)
                 {
-                    return Ok($"User with email {email} has been added as Admin.");
+                    await _userManager.UpdateSecurityStampAsync(user);
+                    TempData["SuccessMessage"] = "Author role added successfully.";
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return BadRequest("Failed to add user to Admin role.");
+                    TempData["ErrorMessage"] = "Failed to add user to Author role.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
             else
             {
-                return NotFound($"User with email {email} not found.");
+                TempData["ErrorMessage"] = $"User with email {email} not found.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> RemoveAdmin(string email)
+        public async Task<IActionResult> RemoveAuthor([FromForm(Name = "authorAddRemoveDTO.RemoveEmail")] string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
-                if (!await _userManager.IsInRoleAsync(user, "Admin"))
+                if (!await _userManager.IsInRoleAsync(user, UserTypes.Author.ToString()))
                 {
-                    return BadRequest("User is not an Admin.");
+                    return BadRequest("User is not an Author.");
                 }
-                var result = await _userManager.RemoveFromRoleAsync(user, "Admin");
+                var result = await _userManager.RemoveFromRoleAsync(user, UserTypes.Author.ToString());
                 if (result.Succeeded)
                 {
-                    TempData["SuccessMessage"] = "Admin role removed successfully.";
-                    return Ok($"User with email {email} has been removed from Admin role.");
+                    //if author removed he must autometically logget out is logged in
+
+                    await _userManager.UpdateSecurityStampAsync(user);
+                    
+                    TempData["SuccessMessage"] = "Author role removed successfully.";
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     TempData["ErrorMessage"] = "Failed to remove user from Admin role.";
-                    return BadRequest("Failed to remove user from Admin role.");
+                    return RedirectToAction(nameof(Index));
                 }
             }
             else
             {
-                return NotFound($"User with email {email} not found.");
+                TempData["ErrorMessage"] = $"User with email {email} not found.";
+                return RedirectToAction(nameof(Index));
             }
         }
 

@@ -1,5 +1,8 @@
 ﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 @{
     var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)
         ? "https://via.placeholder.com/300x200?text=News"
@@ -43,19 +46,28 @@
             <div class="sidebar-news-meta">
                 <span class="sidebar-news-date">
                     <i class="bi bi-calendar-event"></i>
-                    @Model.PublishedDate.ToString("MMM dd")
+                    @(isBangla ? Model.PublishedDate.GetBengaliMonth()+" " +Model.PublishedDate.GetBengaliDay()  : Model.PublishedDate.ToString("MMM dd"))
+                    
                 </span>
 
                 <span class="sidebar-news-views">
                     <i class="bi bi-eye"></i>
-                    @((Model.TotalViews) > 999 ? $"{(Model.TotalViews) / 1000.0:F1}k" : (Model.TotalViews).ToString())
+                    @if(isBangla)
+                    {
+                        @((Model.TotalViews) > 999 ? $"{(Model.TotalViews) / 1000.0:F1}k" : (Model.TotalViews).ToString().ToBanglaDigits())
+                    }
+                    else
+                    {
+                        @((Model.TotalViews) > 999 ? $"{(Model.TotalViews) / 1000.0:F1}k" : (Model.TotalViews).ToString())
+                    }
+                    
                 </span>
             </div>
 
             <div class="sidebar-news-footer">
                 <span class="sidebar-news-badge @badgeClass">
                     <i class="news-type-icon" aria-hidden="true"></i>
-                    @Model.NewsType
+                    @(isBangla? Model.NewsType.GetDisplayName() : Model.NewsType)
                 </span>
 
                 <span class="sidebar-news-excerpt">
