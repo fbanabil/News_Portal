@@ -22,13 +22,15 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IImageService _imageService;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService)
+        private readonly IEmailService _emailService;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _logger = logger;
             _imageService = imageService;
+            _emailService = emailService;
         }
 
 
@@ -358,6 +360,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             return View(new ForgotPasswordDTO());
         }
 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPasswordReset(ForgotPasswordDTO forgotPasswordDto)
@@ -372,6 +376,9 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var resetLink = Url.Action("ResetPassword", "Account", new { token = token, email = forgotPasswordDto.Email }, Request.Scheme);
             _logger.LogInformation("Password reset link: {ResetLink}", resetLink);
+
+            await _emailService.SendEmailAsync(forgotPasswordDto.Email, "Password Reset", $"Please reset your password by <a href='{System.Net.WebUtility.HtmlEncode(resetLink)}'>clicking here</a>.");
+
             TempData["Message"] = "Password reset link has been sent to your email.";
             return RedirectToAction(nameof(ForgotPassword));
         }

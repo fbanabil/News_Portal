@@ -16,6 +16,7 @@ using News_Portal.Infrastructure.Repositories;
 using News_Portal.UI.Samples;
 using NuGet.Protocol;
 using System.Runtime.CompilerServices;
+using News_Portal.Core.Services.POCO;
 
 namespace News_Portal.UI.StartupExtensions
 {
@@ -40,6 +41,7 @@ namespace News_Portal.UI.StartupExtensions
             var cloudinary = new Cloudinary(account);
 
             builder.Services.AddSingleton(cloudinary);
+            services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
 
             services.AddScoped<INewsService, NewsService>();
@@ -52,6 +54,7 @@ namespace News_Portal.UI.StartupExtensions
             services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IEmailService, EmailService>();
 
 
             services.AddDbContext<ApplicationDbContext>(
