@@ -9,21 +9,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
+@await Html.PartialAsync("PartialViews/MessagePartial")
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
@@ -127,7 +114,7 @@
                                 <div class="col-md-6">
                                     <div class="border-start border-warning border-3 ps-3">
                                         <small class="text-muted text-uppercase fw-bold">@(isBangla ? "সদস্যতার সময়" : "Member Since")</small>
-                                        <div class="fw-medium">@DateTime.Now.ToString("MMMM yyyy")</div>
+                                        <div class="fw-medium">@(isBangla? DateTime.Now.GetBengaliDate() :DateTime.Now.ToString("MMMM yyyy"))</div>
                                     </div>
                                 </div>
                             </div>
@@ -299,6 +286,11 @@
     </div>
 </div>
 
+<!-- place this somewhere near the top of the page so JS can read the antiforgery token -->
+<form id="antiForgeryForm" style="display:none">
+    @Html.AntiForgeryToken()
+</form>
+
 @section Scripts {
     <script>
         const isBangla = @Json.Serialize(isBangla);
@@ -395,16 +387,30 @@
                 : '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
             confirmBtn.disabled = true;
 
+            // pull antiforgery token from the hidden form
+            const tokenEl = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]');
+            const token = tokenEl ? tokenEl.value : '';
+
             fetch('@Url.Action("DeleteAccount", "Profile", new { area = "Identity" })', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                }
+                    'RequestVerificationToken': token
+                },
+                // no body required for this action; included for clarity
+                body: JSON.stringify({})
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
+                .then(async response => {
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (err) {
+                        // non-JSON response: read as text
+                        const text = await response.text();
+                        data = { success: response.ok, message: text || 'Unexpected server response.' };
+                    }
+
+                    if (response.ok && data?.success) {
                         const modalInstance = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
                         modalInstance.hide();
 
@@ -415,16 +421,22 @@
                                     : 'Account deleted successfully. Redirecting...', false);
 
                                 setTimeout(() => {
+                                    // redirect after short delay to let user read the message
                                     window.location.href = '@Url.Action("Index", "Home", new { area = "" })';
-                                }, 3000);
+                                }, 1500);
                             }, 100);
                         }, { once: true });
                     } else {
-                        showAlert('danger', data.message || (isBangla
+                        showAlert('danger', data?.message || (isBangla
                             ? 'অ্যাকাউন্ট ডিলিট করতে ব্যর্থ। আবার চেষ্টা করুন।'
                             : 'Failed to delete account. Please try again.'));
                         confirmBtn.innerHTML = originalText;
                         confirmBtn.disabled = false;
+
+                        // If server suggested redirect (e.g., not authenticated), handle it
+                        if (data?.redirect) {
+                            setTimeout(() => window.location.href = data.redirect, 300);
+                        }
                     }
                 })
                 .catch(error => {

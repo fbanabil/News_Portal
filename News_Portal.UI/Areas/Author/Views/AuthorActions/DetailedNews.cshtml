@@ -31,20 +31,8 @@
 }
 
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert success-alert">
-        ✓ @TempData["Message"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert error-alert">
-        ⚠ @TempData["Error"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
+@await Html.PartialAsync("PartialViews/MessagePartial")
+
 
 <div class="author-news-main">
     <div class="author-news-container">
@@ -293,7 +281,7 @@
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="commentsModalLabel">
                     <i class="bi bi-chat-dots me-2"></i>
-                    @(isBangla ? "মন্তব্য" : "Comments") (<span id="comments-count-modal">@(isBangla? commentsCount.ToString().ToBanglaDigits() : commentsCount)</span>)
+                    @(isBangla ? "মন্তব্য" : "Comments")
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

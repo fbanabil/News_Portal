@@ -18,20 +18,8 @@
 }
 
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert success-alert">
-        ✓ @TempData["Message"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert error-alert">
-        ⚠ @TempData["Error"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
+@await Html.PartialAsync("PartialViews/MessagePartial")
+
 
 <div class="author-news-main">
     <div class="author-news-container">

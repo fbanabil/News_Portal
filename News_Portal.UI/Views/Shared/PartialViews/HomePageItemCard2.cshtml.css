@@ -78,24 +78,24 @@
 }
 
 .compact-title {
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 1100;
     color: #111827;
     margin-bottom: 0.2rem;
     line-height: 1.32;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
 .compact-snippet {
-    font-size: 0.78rem;
+    font-size: 0.6rem;
     color: #4b5563;
     line-height: 1.35;
     margin-bottom: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2; 
+    -webkit-line-clamp: 6; 
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

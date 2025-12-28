@@ -18,6 +18,7 @@ namespace News_Portal.Core.ServiceContracts
         Task<bool> ChangeNewsStatusAsync(Guid newsId, NewsStatus newStatus);
         Task<bool> ChangeNewsTypeAsync(Guid newsId, NewsType newType);
         Task DeleteNewsAsync(Guid newsId, Guid id);
+        Task DeleteNewsByAuthorId(Guid id);
         Task<bool> DeleteNewsByNewsIdAsync(Guid newsId);
         Task<int> GetAdminPageNewsCountAsync(Guid? id, NewsFilterParametersDTO? parametersDTO);
         Task<AdminsNewsDetailesToShowDTO> GetAdminsNewsDetailsAsync(Guid newsId);

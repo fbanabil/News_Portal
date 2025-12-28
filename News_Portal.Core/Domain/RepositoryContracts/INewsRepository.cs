@@ -14,6 +14,7 @@ namespace News_Portal.Core.Domain.RepositoryContracts
         Task AddNews(News news);
         Task AddPinnedNewsAsync(PinnedNews pinnedNews);
         Task DeleteNewsAsync(Guid newsId);
+        Task DeleteNewsByAuthorId(Guid id);
         Task DeletePinnedNewsAsync(Guid id);
         Task DeletePinnedNewsByNewsIdAsync(Guid newsId);
         Task<List<News>> GetAllAuthorsNews(Guid authorId);

@@ -39,7 +39,7 @@ namespace News_Portal.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //await _updateSample.UpdateAsync();
+            await _updateSample.UpdateAsync();
             return View();
         }
 

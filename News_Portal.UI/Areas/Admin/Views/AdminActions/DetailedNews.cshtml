@@ -1,17 +1,18 @@
 ﻿@using News_Portal.Core.DTO.Comment
 @model AdminsNewsDetailesToShowDTO
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    SideBarDTO sideBarDTO=new SideBarDTO();
-}
-@{
     var lang = Context.Request.Cookies["Language"];
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
+@{
+    ViewData["Title"] = isBangla ? "সংবাদ বিস্তারিত" : "News Details";
+    ViewBag.Title = ViewData["Title"];
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    SideBarDTO sideBarDTO=new SideBarDTO();
+}
+
 
 @{
-    ViewData["Title"] = Model.NewsTitle ?? "News Details";
-
     var galleryId = $"newsGallery_{Model.NewsId}";
     var authorName = Model.Author?.UserName ?? "Unknown";
     var commentsCount = Model.Comments?.Count ?? 0;
@@ -41,20 +42,8 @@
 }
 
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert success-alert">
-        ✓ @TempData["Message"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert error-alert">
-        ⚠ @TempData["Error"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
+@await Html.PartialAsync("PartialViews/MessagePartial")
+
 
 <div class="author-news-main">
 

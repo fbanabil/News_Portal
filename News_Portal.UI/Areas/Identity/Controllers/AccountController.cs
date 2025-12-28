@@ -6,6 +6,7 @@ using News_Portal.Core.DTO.Account;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
+using News_Portal.Core.Services;
 using News_Portal.UI.Filters;
 using System.Security.Claims;
 
@@ -23,7 +24,9 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IImageService _imageService;
         private readonly IEmailService _emailService;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService, IEmailService emailService)
+        private readonly INewsService _newsService;
+        private readonly ICommentService _commentService;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService, IEmailService emailService, INewsService newsService, ICommentService commentService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -31,6 +34,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             _logger = logger;
             _imageService = imageService;
             _emailService = emailService;
+            _newsService = newsService;
+            _commentService = commentService;
         }
 
 
@@ -73,6 +78,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             {
                 //ModelState.AddModelError(string.Empty, "Email not confirmed. Please confirm your email before logging in.");
                 TempData["Error"] = "Email not confirmed. Please confirm your email before logging in.";
+                TempData["ErrorBangla"] = "ইমেইল নিশ্চিত করা হয়নি। লগইন করার আগে অনুগ্রহ করে আপনার ইমেইল নিশ্চিত করুন।";
                 ViewBag.PresentButton = "Login";
                 return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", loginDTO);
             }
@@ -83,6 +89,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             {
                 //ModelState.AddModelError(string.Empty, "Wrong Password");
                 TempData["Error"] = "Wrong Password";
+                TempData["ErrorBangla"] = "ভুল পাসওয়ার্ড";
                 ViewBag.PresentButton = "Login";
                 return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", loginDTO);
             }
@@ -133,6 +140,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             _logger.LogInformation("Email confirmation link: {ConfirmationLink}", confirmationLink);
 
             TempData["Message"] = "Registration successful! Please check your email to confirm your account.";
+            TempData["MessageBangla"] = "নিবন্ধন সফল! আপনার অ্যাকাউন্ট নিশ্চিত করতে অনুগ্রহ করে আপনার ইমেইল চেক করুন।";
 
             return RedirectToAction(nameof(AuthLogin));
         }
@@ -145,6 +153,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (userId == null || token == null)
             {
                 TempData["Error"] = "Invalid email confirmation link.";
+                TempData["ErrorBangla"] = "অবৈধ ইমেইল নিশ্চিতকরণ লিঙ্ক।";
                 return RedirectToAction(nameof(AuthLogin));
             }
 
@@ -152,6 +161,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Error"] = "User not found.";
+                TempData["ErrorBangla"] = "ব্যবহারকারী পাওয়া যায়নি।";
                 return RedirectToAction(nameof(AuthLogin));
             }
 
@@ -159,10 +169,12 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 TempData["Message"] = "Email confirmed successfully! You can now log in.";
+                TempData["MessageBangla"] = "ইমেইল সফলভাবে নিশ্চিত হয়েছে! আপনি এখন লগইন করতে পারেন।";
             }
             else
             {
                 TempData["Error"] = "Error confirming email.";
+                TempData["ErrorBangla"] = "ইমেইল নিশ্চিতকরণে ত্রুটি।";
             }
 
             return RedirectToAction(nameof(AuthLogin));
@@ -175,6 +187,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         {
             await _signInManager.SignOutAsync();
             TempData["Message"] = "You have been logged out successfully.";
+            TempData["MessageBangla"] = "আপনি সফলভাবে লগআউট হয়েছেন।";
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
@@ -303,6 +316,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (signInResult.Succeeded)
             {
                 TempData["Message"] = "Logged in successfully!";
+                TempData["MessageBangla"] = "সফলভাবে লগইন হয়েছে!";
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
             
@@ -337,7 +351,12 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                     ViewBag.PresentButton = "Login";
                     return View("~/Areas/Identity/Views/Account/AuthLogin.cshtml", new LoginDTO());
                 }
-                TempData["Message"] = "Account created successfully using " + info.LoginProvider + " provider. Please reset you password from profile section.";
+
+                string emailToSend = $"Your account has been created. Your temporary password is {randomPassword}. Please reset your password after logging in.";
+                await _emailService.SendEmailAsync(email, "Account Created", emailToSend);
+
+                TempData["Message"] = "Account created successfully . Password sent you email";
+                TempData["MessageBangla"] = "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। পাসওয়ার্ড আপনার ইমেইলে পাঠানো হয়েছে।";
                 await _userManager.AddToRoleAsync(user, UserTypes.User.ToString());
             }
             if (user.EmailConfirmed == false)
@@ -348,7 +367,6 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
             await _userManager.AddLoginAsync(user, info);
             await _signInManager.SignInAsync(user, isPersistent: false);
-            TempData["Message"] = "Logged in successfully!";
             return RedirectToAction("Index", "Home", new { area = "" });
 
         }
@@ -370,6 +388,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
             {
                 TempData["Error"] = "Invalid Request";
+                TempData["ErrorBangla"] = "অবৈধ অনুরোধ";
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
@@ -380,6 +399,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             await _emailService.SendEmailAsync(forgotPasswordDto.Email, "Password Reset", $"Please reset your password by <a href='{System.Net.WebUtility.HtmlEncode(resetLink)}'>clicking here</a>.");
 
             TempData["Message"] = "Password reset link has been sent to your email.";
+            TempData["MessageBangla"] = "পাসওয়ার্ড রিসেট লিঙ্ক আপনার ইমেইলে পাঠানো হয়েছে।";
             return RedirectToAction(nameof(ForgotPassword));
         }
 
@@ -401,12 +421,14 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (string.IsNullOrEmpty(forgotPasswordResetDTO.Email) || string.IsNullOrEmpty(forgotPasswordResetDTO.Token))
             {
                 TempData["Error"] = "Invalid password reset request.";
+                TempData["ErrorBangla"] = "অবৈধ পাসওয়ার্ড রিসেট অনুরোধ।";
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
             if (forgotPasswordResetDTO.NewPassword != forgotPasswordResetDTO.ConfirmNewPassword)
             {
                 TempData["Error"] = "New password and confirmation do not match.";
+                TempData["ErrorBangla"] = "নতুন পাসওয়ার্ড এবং নিশ্চিতকরণ মেলে না।";
                 return View("ResetPassword", forgotPasswordResetDTO);
             }
 
@@ -414,6 +436,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Error"] = "User not found.";
+                TempData["ErrorBangla"] = "ব্যবহারকারী পাওয়া যায়নি।";
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
@@ -422,6 +445,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 TempData["Message"] = "Your password has been reset successfully. You can now log in with your new password.";
+                TempData["MessageBangla"] = "আপনার পাসওয়ার্ড সফলভাবে রিসেট হয়েছে। আপনি এখন আপনার নতুন পাসওয়ার্ড দিয়ে লগইন করতে পারেন।";
                 return RedirectToAction(nameof(AuthLogin));
             }
             else
@@ -443,6 +467,42 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         }
 
 
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string email)
+        {
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+
+            await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.Contains(UserTypes.Admin.ToString()))
+            {
+                return BadRequest(new { success = false, message = "Cannot delete the only admin account.", messageBangla = "একক অ্যাডমিন অ্যাকাউন্ট মুছে ফেলা যাবে না।" });
+            }
+
+
+            await _newsService.DeleteNewsByAuthorId(user.Id);
+            
+
+            await _commentService.DeleteCommentsByUserId(user.Id);
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["Message"] = "Account deleted successfully.";
+                TempData["MessageBangla"] = "অ্যাকাউন্ট সফলভাবে মুছে ফেলা হয়েছে।";
+                return Ok(new { success = true, message = "Account deleted successfully." });
+            }
+            else
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                TempData["Error"] = "Account deletion failed.";
+                TempData["ErrorBangla"] = "অ্যাকাউন্ট মুছে ফেলা ব্যর্থ হয়েছে।";
+                return BadRequest(new { success = false, message = "Account deletion failed. " + errors });
+            }
+        }
+
     }
 }

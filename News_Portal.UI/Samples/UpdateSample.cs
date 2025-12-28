@@ -40,6 +40,15 @@ namespace News_Portal.UI.Samples
 
         public async Task UpdateAsync()
         {
+
+            List<ApplicationUser> userList = await _userManager.Users.ToListAsync();
+
+            //if (userList.Count > 0)
+            //{
+            //    return;
+            //}
+
+
             // Path: Samples/application_users.json (ensure Copy to Output Directory if needed)
             var usersPath = Path.Combine(_env.ContentRootPath, "Samples", "application_users.json");
             var rolesPath = Path.Combine(_env.ContentRootPath, "Samples", "user_roles.json");

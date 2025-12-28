@@ -26,23 +26,7 @@
 }
 
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-enhanced success-alert alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle me-2"></i>
-        @TempData["Message"]
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-    </div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-enhanced error-alert alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        @TempData["Error"]
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-    </div>
-}
+@await Html.PartialAsync("PartialViews/MessagePartial")
 
 
 <div class="simple-category-header">

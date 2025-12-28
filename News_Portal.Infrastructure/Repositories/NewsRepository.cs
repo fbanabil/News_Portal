@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.RepositoryContracts;
@@ -17,9 +18,11 @@ namespace News_Portal.Infrastructure.Repositories
     public class NewsRepository : INewsRepository
     {
         private readonly ApplicationDbContext _dbContext;
-        public NewsRepository(ApplicationDbContext dbContext)
+        private readonly ILogger<NewsRepository> _logger;
+        public NewsRepository(ApplicationDbContext dbContext, ILogger<NewsRepository> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task AddNews(News news)
@@ -53,6 +56,48 @@ namespace News_Portal.Infrastructure.Repositories
             }
         }
 
+
+
+
+
+        public async Task DeleteNewsByAuthorId(Guid id)
+        {
+            try
+            {
+                var newsIds = await _dbContext.News
+                    .AsNoTracking()
+                    .Where(n => n.AuthorId == id)
+                    .Select(n => n.NewsId)
+                    .ToListAsync();
+
+                if (!newsIds.Any())
+                    return;
+
+                await _dbContext.Images.Where(i => newsIds.Contains(i.NewsId)).ExecuteDeleteAsync();
+                await _dbContext.Comments.Where(c => newsIds.Contains(c.NewsId)).ExecuteDeleteAsync();
+                await _dbContext.PinnedNews.Where(p => newsIds.Contains(p.NewsId)).ExecuteDeleteAsync();
+
+                await _dbContext.News.Where(n => newsIds.Contains(n.NewsId)).ExecuteDeleteAsync();
+            }
+            catch (DbUpdateConcurrencyException dbex)
+            {
+                foreach (var entry in dbex.Entries)
+                {
+                    var keyValues = entry.Properties
+                        .Where(p => p.Metadata.IsPrimaryKey())
+                        .Select(p => p.CurrentValue)
+                        .ToArray();
+                    _logger.LogError("Concurrency failure deleting entity {EntityType} with keys [{Keys}]", entry.Entity.GetType().Name, string.Join(",", keyValues));
+                }
+                _logger.LogError(dbex, $"Concurrency error deleting news by author id {id}: {dbex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error deleting news by author id {id}: {ex.Message}");
+                throw;
+            }
+        }
 
 
 
@@ -129,7 +174,7 @@ namespace News_Portal.Infrastructure.Repositories
         public async Task<List<HomePageNewsToShowDTO>> GetNewsForHomePageCarouselAsync()
         {
             return await _dbContext.News.Include(i => i.Images).OrderByDescending(n => n.TotalViews)
-                .Where(t=> DateTime.UtcNow.Month-t.PublishedDate.Month <= 12)
+                .Where(t=> DateTime.UtcNow.Month-t.PublishedDate.Month <= 12 && t.NewsStatus==NewsStatus.Published)
                 .Take(9)
                 .Select(n => n.ToHomePageNewsToShowDTO())
                 .ToListAsync();
@@ -140,7 +185,7 @@ namespace News_Portal.Infrastructure.Repositories
 
         public async Task<List<HomePageNewsToShowDTO>> GetOtherNewsByTypeAsync(NewsType newsType)
         {
-            return await _dbContext.News.Include(i => i.Images).Where(n => n.NewsType == newsType)
+            return await _dbContext.News.Include(i => i.Images).Where(n => n.NewsType == newsType && n.NewsStatus == NewsStatus.Published)
                 .OrderByDescending(n => n.PublishedDate)
                 .Take(6)
                 .Select(n => n.ToHomePageNewsToShowDTO())

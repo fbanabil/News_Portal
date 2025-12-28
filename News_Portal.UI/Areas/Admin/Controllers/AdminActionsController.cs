@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using News_Portal.Core.Domain.IdentityEntities;
+using News_Portal.Core.DTO.Account;
 using News_Portal.Core.DTO.News;
 using News_Portal.Core.DTO.Profile;
 using News_Portal.Core.Enums;
+using News_Portal.Core.Helpers;
 using News_Portal.Core.ServiceContracts;
 using News_Portal.UI.Filters;
 
@@ -23,12 +25,14 @@ namespace News_Portal.UI.Areas.Admin.Controllers
         private readonly INewsService _newsService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserHelper _userHelper;
 
         public AdminActionsController(INewsService newsService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _newsService = newsService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _userHelper = new UserHelper(_userManager);
         }
 
 
@@ -134,25 +138,30 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             {  
                 if (await _userManager.IsInRoleAsync(user, UserTypes.Author.ToString()))
                 {
-                    TempData["ErrorMessage"] = "User is already an Author.";
+                    TempData["Error"] = "User is already an Author.";
+                    TempData["ErrorBangla"] = "ব্যবহারকারী ইতিমধ্যেই একজন লেখক।";
+
                     return RedirectToAction(nameof(Index));
                 }
                 var result = await _userManager.AddToRoleAsync(user, UserTypes.Author.ToString());
                 if (result.Succeeded)
                 {
                     await _userManager.UpdateSecurityStampAsync(user);
-                    TempData["SuccessMessage"] = "Author role added successfully.";
+                    TempData["Message"] = "Author role added successfully.";
+                    TempData["MessageBangla"] = "লেখক ভূমিকা সফলভাবে যোগ করা হয়েছে।";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed to add user to Author role.";
+                    TempData["Error"] = "Failed to add user to Author role.";
+                    TempData["ErrorBangla"] = "ব্যবহারকারীকে লেখক ভূমিকা যোগ করতে ব্যর্থ হয়েছে।";
                     return RedirectToAction(nameof(Index));
                 }
             }
             else
             {
-                TempData["ErrorMessage"] = $"User with email {email} not found.";
+                TempData["Error"] = $"User with email {email} not found.";
+                TempData["ErrorBangla"] = $"{email} ইমেইল সহ ব্যবহারকারী পাওয়া যায়নি।";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -175,18 +184,21 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
                     await _userManager.UpdateSecurityStampAsync(user);
                     
-                    TempData["SuccessMessage"] = "Author role removed successfully.";
+                    TempData["Message"] = "Author role removed successfully.";
+                    TempData["MessageBangla"] = "লেখক ভূমিকা সফলভাবে সরানো হয়েছে।";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed to remove user from Admin role.";
+                    TempData["Error"] = "Failed to remove user from Admin role.";
+                    TempData["ErrorBangla"] = "ব্যবহারকারীকে প্রশাসক ভূমিকা থেকে সরাতে ব্যর্থ হয়েছে।";
                     return RedirectToAction(nameof(Index));
                 }
             }
             else
             {
-                TempData["ErrorMessage"] = $"User with email {email} not found.";
+                TempData["Error"] = $"User with email {email} not found.";
+                TempData["ErrorBangla"] = $"{email} ইমেইল সহ ব্যবহারকারী পাওয়া যায়নি।";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -199,12 +211,14 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             bool isUpdated = await _newsService.ChangeNewsStatusAsync(newsId, newStatus);
             if (isUpdated)
             {
-                TempData["SuccessMessage"] = "News status updated successfully.";
+                TempData["Message"] = "News status updated successfully.";
+                TempData["MessageBangla"] = "সংবাদের অবস্থা সফলভাবে আপডেট হয়েছে।";
                 return Ok($"News status updated to {newStatus}.");
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to update news status.";
+                TempData["Error"] = "Failed to update news status.";
+                TempData["ErrorBangla"] = "সংবাদের অবস্থা আপডেট করতে ব্যর্থ হয়েছে।";
                 return BadRequest("Failed to update news status.");
             }
         }
@@ -215,12 +229,14 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             bool isUpdated = await _newsService.ChangeNewsPriorityAsync(newsId, newPriority);
             if (isUpdated)
             {
-                TempData["SuccessMessage"] = "News priority updated successfully.";
+                TempData["Success"] = "News priority updated successfully.";
+                TempData["SuccessBangla"] = "সংবাদের অগ্রাধিকার সফলভাবে আপডেট হয়েছে।";
                 return Ok($"News priority updated to {newPriority}.");
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to update news priority.";
+                TempData["Error"] = "Failed to update news priority.";
+                TempData["ErrorBangla"] = "সংবাদের অগ্রাধিকার আপডেট করতে ব্যর্থ হয়েছে।";
                 return BadRequest("Failed to update news priority.");
             }
         }
@@ -231,12 +247,14 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             bool isUpdated = await _newsService.ChangeNewsTypeAsync(newsId, newType);
             if (isUpdated)
             {
-                TempData["SuccessMessage"] = "News type updated successfully.";
+                TempData["Success"] = "News type updated successfully.";
+                TempData["SuccessBangla"] = "সংবাদের ধরন সফলভাবে আপডেট হয়েছে।";
                 return Ok($"News type updated to {newType}.");
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to update news type.";
+                TempData["Error"] = "Failed to update news type.";
+                TempData["ErrorBangla"] = "সংবাদের ধরন আপডেট করতে ব্যর্থ হয়েছে।";
                 return BadRequest("Failed to update news type.");
             }
         }
@@ -247,7 +265,8 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             bool isDeleted = await _newsService.DeleteNewsByNewsIdAsync(newsId);
             if (isDeleted)
             {
-                TempData["SuccessMessage"] = "News deleted successfully.";
+                TempData["Success"] = "News deleted successfully.";
+                TempData["SuccessBangla"] = "সংবাদ সফলভাবে মুছে ফেলা হয়েছে।";
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
                     return Redirect(returnUrl);
@@ -256,7 +275,8 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to delete news.";
+                TempData["Error"] = "Failed to delete news.";
+                TempData["ErrorBangla"] = "সংবাদ মুছে ফেলতে ব্যর্থ হয়েছে।";
                 return BadRequest("Failed to delete news.");
             }
         }
@@ -268,12 +288,14 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             bool isPinned = await _newsService.PinNewsAsync(newsId);
             if (isPinned)
             {
-                TempData["SuccessMessage"] = "News pinned successfully.";
+                TempData["Success"] = "News pinned successfully.";
+                TempData["SuccessBangla"] = "সংবাদ সফলভাবে পিন করা হয়েছে।";
                 return Ok("News pinned successfully.");
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to pin news.";
+                TempData["Error"] = "Failed to pin news.";
+                TempData["ErrorBangla"] = "সংবাদ পিন করতে ব্যর্থ হয়েছে।";
                 return BadRequest("Failed to pin news.");
             }
         }
@@ -285,15 +307,56 @@ namespace News_Portal.UI.Areas.Admin.Controllers
             bool isUnpinned = await _newsService.UnpinNewsAsync(newsId);
             if (isUnpinned)
             {
-                TempData["SuccessMessage"] = "News unpinned successfully.";
+                TempData["Success"] = "News unpinned successfully.";
+                TempData["SuccessBangla"] = "সংবাদ সফলভাবে আনপিন করা হয়েছে।";
                 return Ok("News unpinned successfully.");
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to unpin news.";
+                TempData["Error"] = "Failed to unpin news.";
+                TempData["ErrorBangla"] = "সংবাদ আনপিন করতে ব্যর্থ হয়েছে।";
                 return BadRequest("Failed to unpin news.");
             }
 
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers(UserFilterParameterDTO? userFilterParameterDTO, int pageNo = 1, int pageSize = 5)
+        {
+            List<ApplicationUser> users = await _userManager.Users.AsNoTracking().ToListAsync();
+
+            List<ApplicationUser> filteredUsers = users.Where(u => u.IsIncludedInFilter(userFilterParameterDTO)).ToList();
+
+            if (userFilterParameterDTO?.UserType != null)
+            {
+                filteredUsers = filteredUsers.Where(u => _userHelper.IsUserInRoleAsync(u, userFilterParameterDTO.UserType.ToString())).ToList();
+            }
+            int totalUsersCount = filteredUsers.Count;
+
+
+            ViewBag.PageCount = (int)Math.Ceiling((double)totalUsersCount / pageSize);
+            ViewBag.PageSize = pageSize;
+            ViewBag.CurrentPage = 1;
+
+            IList<ApplicationUser>? authors = await _userManager.GetUsersInRoleAsync(UserTypes.Author.ToString());
+            List<AuthorsToShowDTO> allAuthors = authors.Select(u => u.ToAuthorsToShowDTO()).OrderBy(x => x.AuthorName).ToList();
+            ViewBag.AuthorsList = new SelectList(allAuthors, "AuthorEmail", "AuthorName");
+
+            return View(userFilterParameterDTO);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UsersList(UserFilterParameterDTO? userFilterParameterDTO, int pageNo = 1, int pageSize = 5)
+        {
+            return ViewComponent("Users", new
+            {
+                userFilterParameterDTO,
+                pageNo,
+                pageSize
+            });
+        }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.Domain.RepositoryContracts;
@@ -137,6 +138,15 @@ namespace News_Portal.Core.Services
                 throw new UnauthorizedAccessException("You are not authorized to delete this news.");
             }
             await _newsRepository.DeleteNewsAsync(newsId);
+        }
+
+
+
+
+
+        public async Task DeleteNewsByAuthorId(Guid id)
+        {
+            await _newsRepository.DeleteNewsByAuthorId(id);    
         }
 
 

@@ -1,0 +1,177 @@
+﻿@model List<UsersToShowDTO>
+@{
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString());
+}
+@if (Model == null || !Model.Any())
+{
+    <div class="text-muted">@(isBangla ? "কোন ব্যবহারকারী পাওয়া যাইনি" : "No users found.")</div>
+}
+else
+{
+
+    <div class="list-group">
+        @foreach (var user in Model)
+        {
+            <form class="list-group-item d-flex align-items-center justify-content-between gap-3 user-delete-form" onsubmit="return false;" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="d-flex align-items-center gap-3">
+                    <img src="@(string.IsNullOrEmpty(user.ProfileImageUrl) ? Url.Content("~/images/default-profile.png") : user.ProfileImageUrl)"
+                         alt="Profile"
+                         class="rounded-circle"
+                         style="width:44px;height:44px;object-fit:cover" />
+
+                    <div class="d-flex flex-column">
+                        <span class="fw-semibold">@(!string.IsNullOrEmpty(user.Name) ? user.Name : "—")</span>
+                        <small class="text-muted">@(!string.IsNullOrEmpty(user.Email) ? user.Email : "—")</small>
+
+                        <div class="mt-1">
+                            @if (user.UserType != null && user.UserType.Any())
+                            {
+                                foreach (var ut in user.UserType)
+                                {
+                                    <span class="badge bg-secondary me-1">@(isBangla? ut.GetDisplayName(): ut.ToString())</span>
+                                }
+                            }
+                            else
+                            {
+                                <small class="text-muted">—</small>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <input type="hidden" name="deleteEmail" value="@(user.Email ?? string.Empty)" />
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-user-btn" @(string.IsNullOrEmpty(user.Email) ? "disabled" : "") title="Delete user">
+                        <i class="bi bi-person-x me-1"></i> @(isBangla?"ডিলিট":"Delete")
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+
+    <script>
+        (function () {
+            // build route server-side to avoid hard-coded paths
+            const endpoint = '@Url.Action("DeleteUser", "Account", new { area = "Identity" })';
+
+            function showLocalAlert(container, type, message) {
+                const existing = container.querySelector('.local-delete-alert');
+                if (existing) existing.remove();
+
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type} alert-dismissible fade show local-delete-alert`;
+                alert.role = 'alert';
+                alert.style.marginBottom = '0.5rem';
+                alert.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                container.insertAdjacentElement('afterbegin', alert);
+
+                setTimeout(() => {
+                    try { const bs = bootstrap.Alert.getInstance(alert) ?? new bootstrap.Alert(alert); bs.close(); } catch { alert.remove(); }
+                }, 5000);
+            }
+
+            async function handleDeleteClick(e) {
+                const btn = e.currentTarget || e.target;
+                const form = btn.closest('.user-delete-form');
+                if (!form) return;
+
+                const email = form.querySelector('input[name="deleteEmail"]')?.value;
+                if (!email) return alert('User email is missing.');
+
+                if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+
+                btn.disabled = true;
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+                try {
+                    const formData = new FormData();
+                    const tokenEl = form.querySelector('input[name="__RequestVerificationToken"]') || document.querySelector('input[name="__RequestVerificationToken"]');
+                    const token = tokenEl ? tokenEl.value : null;
+                    if (token) {
+                        formData.append('__RequestVerificationToken', token);
+                    }
+                    formData.append('email', email);
+
+                    const headers = { 'Accept': 'application/json' };
+                    if (token) headers['RequestVerificationToken'] = token;
+
+                    const res = await fetch(endpoint, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin',
+                        headers: headers
+                    });
+
+                    // parse response if possible
+                    let data = null;
+                    try {
+                        data = await res.json();
+                    } catch (jsonErr) {
+                        try {
+                            const txt = await res.text();
+                            data = { success: res.ok, message: txt };
+                        } catch {
+                            data = { success: res.ok, message: null };
+                        }
+                    }
+
+                    if (res.ok) {
+                        if (data && data.redirect) {
+                            window.location.href = data.redirect;
+                            return;
+                        }
+
+                        if (data && data.success && data.message) {
+                            const listGroup = form.closest('.list-group') ?? form;
+                            showLocalAlert(listGroup, 'success', data.message);
+                            setTimeout(() => location.reload(), 700);
+                            return;
+                        }
+
+                        location.reload();
+                        return;
+                    }
+
+                    const message = (data && (data.message || data.messageBangla)) || 'Failed to delete user.';
+                    const listGroup = form.closest('.list-group') ?? form;
+                    showLocalAlert(listGroup, 'danger', message);
+
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                } catch (err) {
+                    console.error(err);
+                    const listGroup = form.closest('.list-group') ?? form;
+                    showLocalAlert(listGroup, 'danger', 'An error occurred while deleting the user.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            }
+
+            // Attach handlers immediately (view components can be rendered after DOMContentLoaded)
+            function attachHandlers() {
+                document.querySelectorAll('.delete-user-btn').forEach(b => {
+                    // avoid double-binding
+                    if (!b.__deleteHandlerBound) {
+                        b.addEventListener('click', handleDeleteClick);
+                        b.__deleteHandlerBound = true;
+                    }
+                });
+            }
+
+            attachHandlers();
+            // Fallback if script loaded before elements exist or to catch dynamic content
+            document.addEventListener('DOMContentLoaded', attachHandlers);
+        })();
+    </script>
+}
+
+
+
+

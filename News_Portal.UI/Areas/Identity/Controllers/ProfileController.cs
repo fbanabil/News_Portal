@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.DTO.Profile;
+using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
 using News_Portal.UI.Filters;
 
@@ -19,13 +20,17 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IImageService _imageService;
-        public ProfileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService)
+        private readonly INewsService _newsService;
+        private readonly ICommentService _commentService;
+        public ProfileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService, INewsService newsService, ICommentService commentService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _logger = logger;
             _imageService = imageService;
+            _newsService = newsService;
+            _commentService = commentService;
         }
 
         [HttpGet]
@@ -35,6 +40,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Error"] = "User not found. Please login again.";
+                TempData["ErrorBangla"] = "ব্যবহারকারী পাওয়া যায়নি। দয়া করে আবার লগইন করুন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
             string DefaultImageUrl = await _imageService.GetDefaultProfileImageUrl();
@@ -54,6 +60,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Error"] = "User not found. Please login again.";
+                TempData["ErrorBangla"] = "ব্যবহারকারী পাওয়া যায়নি। দয়া করে আবার লগইন করুন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
 
@@ -71,6 +78,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Error"] = "User not found. Please login again.";
+                TempData["ErrorBangla"] = "ব্যবহারকারী পাওয়া যায়নি। দয়া করে আবার লগইন করুন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
             user.PersonName = profileToUpdate.PersonName;
@@ -84,6 +92,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 TempData["Message"] = "Profile updated successfully.";
+                TempData["MessageBangla"] = "প্রোফাইল সফলভাবে আপডেট হয়েছে।";
                 await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction(nameof(ProfileDetails));
             }
@@ -105,6 +114,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Error"] = "User not found. Please login again.";
+                TempData["ErrorBangla"] = "ব্যবহারকারী পাওয়া যায়নি। দয়া করে আবার লগইন করুন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
             return View(new PasswordChangeDTO());
@@ -117,12 +127,14 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Message"] = "User not found. Please login again.";
+                TempData["MessageBangla"] = "ব্যবহারকারী পাওয়া যায়নি। দয়া করে আবার লগইন করুন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
 
             if(passwordChangeDTO.NewPassword != passwordChangeDTO.ConfirmNewPassword)
             {
                 TempData["Message"] = "New password and confirmation do not match.";
+                TempData["MessageBangla"] = "নতুন পাসওয়ার্ড এবং নিশ্চিতকরণ মেলে না।";
                 return View(passwordChangeDTO);
             }
 
@@ -130,12 +142,14 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 TempData["Message"] = "Password changed successfully.";
+                TempData["MessageBangla"] = "পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে।";
                 await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction(nameof(ProfileDetails));
             }
             else
             {
                 TempData["Message"] = "Password change failed. Please correct the errors and try again.";
+                TempData["MessageBangla"] = "পাসওয়ার্ড পরিবর্তন ব্যর্থ হয়েছে। দয়া করে ত্রুটিগুলি সংশোধন করুন এবং আবার চেষ্টা করুন।";
                 return View(passwordChangeDTO);
             }
         }
@@ -148,6 +162,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Message"] = "User not found. Please login again.";
+                TempData["MessageBangla"] = "ব্যবহারকারী পাওয়া যায়নি। দয়া করে আবার লগইন করুন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
             
@@ -167,6 +182,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Message"] = "Invalid password reset request.";
+                TempData["MessageBangla"] = "অবৈধ পাসওয়ার্ড রিসেট অনুরোধ।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
 
@@ -175,6 +191,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (!result)
             {
                 TempData["Message"] = "Invalid or expired password reset token.";
+                TempData["MessageBangla"] = "অবৈধ বা মেয়াদোত্তীর্ণ পাসওয়ার্ড রিসেট টোকেন।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
 
@@ -195,6 +212,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (user == null)
             {
                 TempData["Message"] = "Invalid password reset request.";
+                TempData["MessageBangla"] = "অবৈধ পাসওয়ার্ড রিসেট অনুরোধ।";
                 return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
             }
 
@@ -203,6 +221,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 TempData["Message"] = "Password has been reset successfully.";
+                TempData["MessageBangla"] = "পাসওয়ার্ড সফলভাবে রিসেট হয়েছে।";
                 return RedirectToAction("ProfileDetails", "Profile", new { area = "Identity" });
             }
             else
@@ -217,30 +236,40 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAccount()
         {
             ApplicationUser? user = await _userManager.GetUserAsync(HttpContext.User);
             if (user == null)
             {
-                return RedirectToAction("AuthLogin", "Account", new { area = "Identity" });
+                return BadRequest(new { success = false, message = "User not authenticated.", redirect = Url.Action("AuthLogin", "Account", new { area = "Identity" }) });
             }
 
             await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
-            
-            IdentityResult result = await _userManager.DeleteAsync(user);
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.Contains(UserTypes.Admin.ToString()))
+            {
+                return BadRequest(new { success = false, message = "Cannot delete the only admin account.", messageBangla = "একক অ্যাডমিন অ্যাকাউন্ট মুছে ফেলা যাবে না।" });
+            }
+
+            await _newsService.DeleteNewsByAuthorId(user.Id);         
+            await _commentService.DeleteCommentsByUserId(user.Id);
+            var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
-                TempData["Message"] = "Account deleted successfully.";
                 await _signInManager.SignOutAsync();
-                return Ok(new {message="Succesfully Deleted"});
+                TempData["Message"] = "Account deleted successfully.";
+                TempData["MessageBangla"] = "অ্যাকাউন্ট সফলভাবে মুছে ফেলা হয়েছে।";
+                return Ok(new { success = true, message = "Account deleted successfully." });
             }
             else
             {
-                foreach (IdentityError error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-                return RedirectToAction(nameof(ProfileDetails));
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                TempData["Error"] = "Account deletion failed.";
+                TempData["ErrorBangla"] = "অ্যাকাউন্ট মুছে ফেলা ব্যর্থ হয়েছে।";
+                return BadRequest(new { success = false, message = "Account deletion failed. " + errors });
             }
         }
     }

@@ -94,7 +94,7 @@
     font-weight: 600;
     letter-spacing: 0.025em;
     text-transform: uppercase;
-    font-size: 0.6875rem;
+    font-size: 0.4875rem;
     padding: 0.25rem 0.6rem;
     border-radius: 1rem;
     transition: all 0.3s ease;
@@ -320,6 +320,7 @@
 .suggestion-card .text-muted {
     color: #64748b !important;
     transition: color 0.3s ease;
+    font-size:10px;
 }
 
 .suggestion-card:hover .text-muted {

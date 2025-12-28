@@ -47,5 +47,15 @@ namespace News_Portal.Infrastructure.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteCommentsByUserId(Guid id)
+        {
+            List<Comments> comments = _dbContext.Comments.Where(c => c.UserId == id).ToList();
+            if (comments.Any())
+            {
+                _dbContext.Comments.RemoveRange(comments);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
     }
 }

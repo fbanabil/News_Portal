@@ -1,0 +1,226 @@
+﻿@model UserFilterParameterDTO
+@using News_Portal.Core.Enums
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var lang = Context.Request.Cookies["Language"];
+    bool isBangla = (lang == Languages.Bangla.ToString());
+
+    ViewBag.Title = isBangla ? "ব্যবহারকারী পরিচালনা করুন" : "Manage Users";
+
+    int totalPageCount = ViewBag.PageCount != null ? (int)ViewBag.PageCount : 0;
+
+    int pageSize = ViewBag.PageSize != null ? (int)ViewBag.PageSize : 5;
+
+    int currentPage = ViewBag.CurrentPage != null ? (int)ViewBag.CurrentPage : 1;
+    int pageNo = currentPage > 0 ? currentPage : 1;
+}
+
+@await Html.PartialAsync("PartialViews/MessagePartial")
+
+<div class="mb-3">
+    <form id="usersFilterForm" method="get"
+          action="@Url.Action("GetUsers", "AdminActions", new { area = "Admin" })"
+          class="row g-2 align-items-end">
+
+        <input type="hidden" name="pageNo" id="pageNoInput" value="@pageNo" />
+
+        <div class="col-sm-4">
+            <label class="form-label small">@(isBangla ? "ইমেইল" : "Email")</label>
+            <input type="search"
+                   name="userFilterParameterDTO.Email"
+                   value="@(Model?.Email ?? "")"
+                   class="form-control"
+                   placeholder="@(isBangla ? "ইমেইল অনুসন্ধান করুন" : "Search by email")" />
+        </div>
+
+        <div class="col-sm-4">
+            <label class="form-label small">@(isBangla ? "নাম" : "Name")</label>
+            <input type="search"
+                   name="userFilterParameterDTO.Name"
+                   value="@(Model?.Name ?? "")"
+                   class="form-control"
+                   placeholder="@(isBangla ? "নাম অনুসন্ধান করুন" : "Search by name")" />
+        </div>
+
+        <div class="col-sm-3">
+            <label class="form-label small">@(isBangla ? "ব্যবহারকারীর ধরন" : "User Type")</label>
+            <select name="userFilterParameterDTO.UserType" class="form-select">
+                <option value="">@(isBangla ? "সব" : "All")</option>
+                @foreach (var ut in Enum.GetValues(typeof(UserTypes)).Cast<UserTypes>())
+                {
+                    <option value="@ut" selected="@(Model?.UserType == ut)">
+                        @(isBangla? ut.GetDisplayName() : ut.ToString())
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label small">&nbsp;</label>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">@(isBangla ? "ফিল্টার" : "Filter")</button>
+                <a href="@Url.Action("GetUsers", "AdminActions", new { area = "Admin" })"
+                   class="btn btn-outline-secondary">
+                    @(isBangla ? "রিসেট" : "Reset")
+                </a>
+            </div>
+        </div>
+
+        <div class="col-12 mt-2">
+            <label class="form-label small">@(isBangla ? "পেজ সাইজ" : "Page size")</label>
+            <select name="pageSize" id="pageSizeSelect" class="form-select w-auto d-inline-block">
+                @foreach (var size in new int[] { 5, 10, 20, 50 })
+                {
+                    <option value="@size" selected="@(size == pageSize)">@size</option>
+                }
+            </select>
+            <small class="text-muted ms-2">@(isBangla ? "প্রতিটি পৃষ্ঠায় আইটেম" : "items per page")</small>
+        </div>
+    </form>
+</div>
+
+<div id="usersComponentContainer">
+    @await Component.InvokeAsync("Users", new { userFilterParameterDTO = Model, pageNo = pageNo, pageSize = pageSize })
+</div>
+
+<div class="mt-3">
+    @if (totalPageCount > 1)
+    {
+        <nav aria-label="Users pagination">
+            <ul class="pagination">
+                <li class="page-item @(pageNo <= 1 ? "disabled" : "")">
+                    <a class="page-link" href="#" data-page="@(pageNo - 1)">@(isBangla ? "আগে" : "Previous")</a>
+                </li>
+
+                @{
+                    int start = Math.Max(1, pageNo - 3);
+                    int end = Math.Min(totalPageCount, pageNo + 3);
+
+                    if (start > 1)
+                    {
+                        <li class="page-item"><a class="page-link" href="#" data-page="1">@(isBangla?"১":"1")</a></li>
+                        if (start > 2)
+                        {
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        }
+                    }
+
+                    for (int i = start; i <= end; i++)
+                    {
+                        <li class="page-item @(i == pageNo ? "active" : "")">
+                            <a class="page-link" href="#" data-page="@i">@(isBangla? i.ToString().ToBanglaDigits():i)</a>
+                        </li>
+                    }
+
+                    if (end < totalPageCount)
+                    {
+                        if (end < totalPageCount - 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        }
+                        <li class="page-item"><a class="page-link" href="#" data-page="@totalPageCount">@(isBangla? totalPageCount.ToString().ToBanglaDigits():totalPageCount)</a></li>
+                    }
+                }
+
+                <li class="page-item @(pageNo >= totalPageCount ? "disabled" : "")">
+                    <a class="page-link" href="#" data-page="@(pageNo + 1)">@(isBangla ? "পরের" : "Next")</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('usersFilterForm');
+            const container = document.getElementById('usersComponentContainer');
+            const pageNoInput = document.getElementById('pageNoInput');
+            const pageSizeSelect = document.getElementById('pageSizeSelect');
+
+            const usersListUrl = '@Url.Action("UsersList", "AdminActions", new { area = "Admin" })';
+
+            if (!form || !container || !pageNoInput || !pageSizeSelect) return;
+
+            function buildQuery(pageNo) {
+                const fd = new FormData(form);
+                fd.set('pageNo', String(pageNo));
+                fd.set('pageSize', pageSizeSelect.value);
+
+                const params = new URLSearchParams();
+                for (const [k, v] of fd.entries()) {
+                    if (v !== null && String(v).trim() !== '') {
+                        params.append(k, v);
+                    } else {
+                    }
+                }
+                return params.toString();
+            }
+
+            function setActivePage(pageNo) {
+                const items = document.querySelectorAll('.pagination .page-item');
+                items.forEach(li => li.classList.remove('active'));
+
+                const activeLink = document.querySelector('.pagination .page-link[data-page="' + pageNo + '"]');
+                if (activeLink && activeLink.closest('.page-item')) {
+                    activeLink.closest('.page-item').classList.add('active');
+                }
+
+                const prevLi = document.querySelector('.pagination .page-link[data-page="' + (pageNo - 1) + '"]')?.closest('.page-item');
+                const nextLi = document.querySelector('.pagination .page-link[data-page="' + (pageNo + 1) + '"]')?.closest('.page-item');
+            }
+
+            async function loadUsersComponent(pageNo) {
+                pageNoInput.value = String(pageNo);
+                setActivePage(pageNo);
+
+                const qs = buildQuery(pageNo);
+                const url = usersListUrl + (qs ? ('?' + qs) : '');
+
+                container.style.opacity = '0.6';
+
+                try {
+                    const res = await fetch(url, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    if (!res.ok) throw new Error('Failed to load users list: ' + res.status);
+
+                    const html = await res.text();
+                    container.innerHTML = html;
+                } catch (err) {
+                    console.error(err);
+                    form.submit();
+                } finally {
+                    container.style.opacity = '1';
+                }
+            }
+
+            document.addEventListener('click', function (e) {
+                const link = e.target.closest('.page-link[data-page]');
+                if (!link) return;
+
+                e.preventDefault();
+
+                const li = link.closest('.page-item');
+                if (li && li.classList.contains('disabled')) return;
+
+                const page = parseInt(link.getAttribute('data-page'), 10);
+                if (!page || page < 1) return;
+
+                loadUsersComponent(page);
+            });
+
+            form.addEventListener('submit', function () {
+                pageNoInput.value = '1';
+            });
+
+            pageSizeSelect.addEventListener('change', function () {
+                pageNoInput.value = '1';
+                form.submit();
+            });
+
+        })();
+    </script>
+}

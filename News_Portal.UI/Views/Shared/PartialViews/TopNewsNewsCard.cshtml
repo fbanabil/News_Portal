@@ -46,13 +46,12 @@
                 <p class="small text-muted mb-1">
                     <span class="me-2"> @(isBangla? @Model.PublishedDate.GetBengaliDate() : @Model.PublishedDate.ToString("MMM dd, yyyy"))</span>
                     <span class="badge @badgeClass">
-                        <i class="news-type-icon me-1" aria-hidden="true"></i>
                         @(isBangla? Model.NewsType.GetDisplayName(): Model.NewsType)
                     </span>
                 </p>
                 <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">
-                    @((Model.NewsContent ?? string.Empty).Length > 40
-                                        ? Model.NewsContent!.Substring(0, 40) + "…"
+                    @((Model.NewsContent ?? string.Empty).Length > 60
+                                        ? Model.NewsContent!.Substring(0, 60) + "…"
                                         : Model.NewsContent)
                 </p>
             </div>

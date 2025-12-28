@@ -51,6 +51,12 @@
                 <div class="mt-2 text-muted small">
                     @(isBangla ? "ইমেইল ঠিকানা ব্যবহার করে লেখক যোগ/বাতিল করুন। সম্পূর্ণ লেখক পৃষ্ঠায় ব্যাচ ম্যানেজমেন্ট উপলব্ধ।" : "Use email addresses to add or remove author users. Bulk management is available on the full author users page.")
                 </div>
+                <div class="mb-2">
+                    <a asp-area="Admin" asp-controller="AdminActions" asp-action="GetUsers" class="list-group-item list-group-item-action d-flex justify-content-center align-items-center">
+                        @(isBangla? "ব্যবহারকারী": "Users")
+                    </a>
+                </div>
+                
             </div>
         </div>
 
@@ -101,7 +107,7 @@
 
 
 }
-else
+else if(ViewBag.Title == "News Details" || ViewBag.Title == "সংবাদ বিস্তারিত")
 {
     Model.adminsNewsDetailedDTO = ViewBag.adminsNewsDetailedDTO;
 
@@ -301,7 +307,91 @@ else
             </div>
 
 
-            <script>
+           
+        }
+    }
+}
+else if(ViewBag.Title == "ব্যবহারকারী পরিচালনা করুন" || ViewBag.Title == "Manage Users")
+{
+    <div class="admin-sidebar">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <strong class="mb-0">@(isBangla ? "এডমিন" : "Admins")</strong>
+                <small class="text-muted">@(isBangla ? "ইমেইল দ্বারা পরিচালনা" : "Manage by email")</small>
+            </div>
+
+            <div class="card-body">
+                <form id="addAdminForm" method="post" asp-area="Admin" asp-controller="AdminActions" asp-action="AddAuthor" class="mb-3" role="form" novalidate>
+                    @Html.AntiForgeryToken()
+                    <label class="form-label visually-hidden" for="AddAuthor_Email">@(isBangla ? "ইমেইল দিয়ে লেখক যোগ করুন" : "Add author by email")</label>
+                    <div class="input-group">
+                        <input asp-for="authorAddRemoveDTO.AddEmail" class="form-control" placeholder="author@example.com" aria-label="Author email" />
+                        <button type="submit" class="btn btn-primary" title="@(isBangla ? "লেখক যুক্ত করুন" : "Add author")">
+                            <i class="bi bi-person-plus"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="authorAddRemoveDTO.AddEmail" class="text-danger"></span>
+                </form>
+
+                <form id="removeAdminForm" method="post" asp-area="Admin" asp-controller="AdminActions" asp-action="RemoveAuthor" class="mb-2" role="form" novalidate>
+                    @Html.AntiForgeryToken()
+                    <label class="form-label visually-hidden" for="RemoveAuthor_Email">@(isBangla ? "ইমেইল দিয়ে লেখক সরান" : "Remove author by email")</label>
+                    <div class="input-group">
+                        <select asp-for="authorAddRemoveDTO.RemoveEmail" class="form-control" asp-items="@ViewBag.AuthorsList">
+                            <option value="">-- @(isBangla ? "লেখক নির্বাচন করুন" : "Select Author") --</option>
+                        </select>
+                        <span asp-validation-for="authorAddRemoveDTO.RemoveEmail" class="text-danger"></span>
+                        <button type="submit" class="btn btn-outline-danger" title="@(isBangla ? "লেখক সরান" : "Remove Author")">
+                            <i class="bi bi-person-dash"></i>
+                        </button>
+                    </div>
+                    @* <span asp-validation-for="RemoveEmail" class="text-danger" ></span> *@
+                </form>
+
+                <div class="mt-2 text-muted small">
+                    @(isBangla ? "ইমেইল ঠিকানা ব্যবহার করে লেখক যোগ/বাতিল করুন। সম্পূর্ণ লেখক পৃষ্ঠায় ব্যাচ ম্যানেজমেন্ট উপলব্ধ।" : "Use email addresses to add or remove author users. Bulk management is available on the full author users page.")
+                </div>
+                <div class="mb-2">
+                    <a asp-area="Admin" asp-controller="AdminActions" asp-action="GetUsers" class="list-group-item list-group-item-action d-flex justify-content-center align-items-center">
+                        @(isBangla? "ব্যবহারকারী": "Users")
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <strong class="mb-0">@(isBangla ? "ইউসারের ধরন" : "User Role")</strong>
+            </div>
+
+            <div class="card-body">
+                <div class="list-group list-group-flush mb-3">
+                    <a asp-area="Admin"
+                       asp-controller="AdminActions"
+                       asp-action="GetUsers"
+                       asp-route-userType=""
+                       class="list-group-item list-group-item-action d-flex justify-content-center align-items-center">
+                        <span class="me-2">@(isBangla ? "সব" : "All")</span>
+                    </a>
+                    @foreach (UserTypes type in Enum.GetValues(typeof(UserTypes)))
+                    {
+                        <a asp-area="Admin"
+                           asp-controller="AdminActions"
+                           asp-action="GetUsers"
+                           asp-route-userType="@type"
+                           class="list-group-item list-group-item-action d-flex justify-content-center align-items-center">
+                            <span class="me-2">@(isBangla? type.GetDisplayName() : type)</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+             <script>
                 (function () {
                     // Serialized enum values for rebuilding controls client-side
                     const NEWS_STATUSES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsStatus))));
@@ -466,6 +556,3 @@ else
 
                 })();
             </script>
-        }
-    }
-}

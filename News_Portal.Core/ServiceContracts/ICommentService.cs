@@ -11,5 +11,6 @@ namespace News_Portal.Core.ServiceContracts
     {
         Task<CommentToShowDTO> AddCommentAsync(CommentToAddDTO commentToAddDTO, Guid id);
         Task DeleteCommentById(Guid commentId);
+        Task DeleteCommentsByUserId(Guid id);
     }
 }

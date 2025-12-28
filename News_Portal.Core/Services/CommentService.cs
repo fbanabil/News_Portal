@@ -31,5 +31,14 @@ namespace News_Portal.Core.Services
         {
             await _commentRepository.DeleteCommentById(commentId);
         }
+
+
+
+
+
+        public async Task DeleteCommentsByUserId(Guid id)
+        {
+            await _commentRepository.DeleteCommentsByUserId(id);
+        }
     }
 }

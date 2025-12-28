@@ -23,22 +23,8 @@ else
 }
 
 
+@await Html.PartialAsync("PartialViews/MessagePartial")
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert success-alert">
-        ✓ @TempData["Message"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert error-alert">
-        ⚠ @TempData["Error"]
-        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-    </div>
-}
 
 
 
@@ -106,16 +92,16 @@ else
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📊 সাপ্তাহিক শীর্ষ" : "📊 Weekly Top")</h4>
-                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 6 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.Week, cnt = 13 })
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📅 মাসিক শীর্ষ" : "📅 Monthly Top")</h4>
-                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 6 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.Month, cnt = 13 })
             </div>
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📅 সর্বকালের শীর্ষ" : "📅 All Time Top")</h4>
-                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 6 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 13 })
             </div>
         </aside>
     </div>
