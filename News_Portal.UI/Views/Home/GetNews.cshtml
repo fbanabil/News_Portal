@@ -1,6 +1,7 @@
 ﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 
@@ -30,13 +31,13 @@
 
 
 <div class="simple-category-header">
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between">
+    <div class="container-fluid">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
             <div class="d-flex align-items-center">
                 <i class="@categoryIcon me-3"></i>
                 <div>
                     <h2 class="category-title mb-1">@title</h2>
-                    <small class="text-muted"> @(isBangla ? "পেজ " + @pageCount.ToString().ToBanglaDigits() + " এর ভেতরে " + @pageNo.ToString().ToBanglaDigits()  : "Page" + @pageNo.ToString() + "of" + @pageCount.ToString()) </small>
+                    <small class="text-muted"> @(isBangla ? "পেজ " + @pageCount.ToString().ToBanglaDigits() + " এর ভেতরে " + @pageNo.ToString().ToBanglaDigits()  : "Page " + @pageNo.ToString() + " of " + @pageCount.ToString()) </small>
                 </div>
             </div>
             <div class="category-stats">
@@ -64,60 +65,61 @@
 </div>
 
 <div class="container-fluid">
-    <div class="news-grid-container">
-        <div class="main-content">
+    <div class="row news-grid-container">
+        <div class="col-12 col-lg-8 col-xl-9 main-content">
             @if (Model == null || Model.Count == 0)
             {
                 <div class="no-news-message">
                     <div class="no-news-icon">
                         <i class="bi bi-newspaper"></i>
                     </div>
-                    <h4 class="text-muted">@(isBangla?"কোন "+ title.ToString() +" সংবাদ নেই":"No"+ title.ToString() +"News Available") </h4>
+                    <h4 class="text-muted">@(isBangla?"কোন "+ title.ToString() +" সংবাদ নেই":"No "+ title.ToString() +" News Available") </h4>
                     <p class="text-muted">@(isBangla?"Check back later for the latest updates in "+ @title.GetDisplayName().ToLower():"Check back later for the latest updates in "+@title.ToString().ToLower())</p>
                 </div>
             }
             else
             {
-                <div class="news-grid">
+                <div class="row news-grid g-2 g-sm-3 g-md-4">
                     @foreach (var news in Model)
                     {
                         var author = news.Author;
-                        <a asp-controller="Home" asp-action="Details" asp-route-newsId="@news.NewsId"
-                        class="news-card-enhanced text-reset text-decoration-none">
-                            <div class="news-card-image">
-                                <img src="@(string.IsNullOrWhiteSpace(news.TitleImageUrl) ? "https://via.placeholder.com/400x200?text=News" : news.TitleImageUrl)"
-                                     alt="@news.NewsTitle"
-                                     loading="lazy" />
-                            </div>
-                            <div class="news-card-body">
-                                <h5 class="news-card-title" title="@news.NewsTitle">@news.NewsTitle</h5>
-                                <div class="news-card-meta">
-                                    <span><i class="bi bi-calendar3 me-1"></i>@(isBangla? news.PublishedDate.GetBengaliDate() : news.PublishedDate.ToString("MMM dd, yyyy"))</span>
-                                    <span><i class="bi bi-person me-1"></i>@author?.PersonName</span>
+                        <div class="col-6 col-sm-6 col-lg-6 col-xl-4">
+                            <a asp-controller="Home" asp-action="Details" asp-route-newsId="@news.NewsId"
+                               class="news-card-enhanced text-reset text-decoration-none d-flex flex-column h-100">
+                                <div class="news-card-image">
+                                    <img src="@(string.IsNullOrWhiteSpace(news.TitleImageUrl) ? "https://via.placeholder.com/400x200?text=News" : news.TitleImageUrl)"
+                                         alt="@news.NewsTitle"
+                                         loading="lazy" />
                                 </div>
-                                <p class="news-card-content">
-                                    @((news.NewsContent ?? string.Empty).Length > 120
-                                                                ? news.NewsContent!.Substring(0, 120) + "..."
-                                                                : news.NewsContent)
-                        </p>
-                        <div class="news-card-footer">
-                            <div class="view-count">
-                                <i class="bi bi-eye"></i>
-                                @(isBangla? news.TotalViews.ToString("N0").ToBanglaDigits() : news.TotalViews.ToString("N0"))
-                                
-                            </div>
-                            <small class="text-primary">@(isBangla?"আরো পড়ি":"Read more") →</small>
+                                <div class="news-card-body flex-grow-1 d-flex flex-column">
+                                    <h5 class="news-card-title" title="@news.NewsTitle">@news.NewsTitle</h5>
+                                    <div class="news-card-meta">
+                                        <span><i class="bi bi-calendar3 me-1"></i>@(isBangla? news.PublishedDate.GetBengaliDate() : news.PublishedDate.ToString("MMM dd, yyyy"))</span>
+                                        <span><i class="bi bi-person me-1"></i>@author?.PersonName</span>
+                                    </div>
+                                    <p class="news-card-content flex-grow-1">
+                                        @((news.NewsContent ?? string.Empty).Length > 120
+                                            ? news.NewsContent!.Substring(0, 120) + "..."
+                                            : news.NewsContent)
+                                    </p>
+                                    <div class="news-card-footer mt-auto">
+                                        <div class="view-count">
+                                            <i class="bi bi-eye"></i>
+                                            @(isBangla? news.TotalViews.ToString("N0").ToBanglaDigits() : news.TotalViews.ToString("N0"))
+                                        </div>
+                                        <small class="text-primary">@(isBangla?"আরো পড়ি":"Read more") →</small>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </div>
-                </a>
-                                }
+                    }
                 </div>
             }
 
             @if (pageCount > 1)
             {
                 <nav class="d-flex justify-content-center mt-4" aria-label="Pagination">
-                    <ul class="pagination pagination-enhanced mb-0">
+                    <ul class="pagination pagination-enhanced mb-0 flex-wrap">
                         @{
                             bool hasPrev = pageNo > 1;
                             bool hasNext = pageNo < pageCount;
@@ -131,7 +133,7 @@
                                asp-route-newsType="@routeType"
                                asp-route-pageNo="@(pageNo - 1)"
                                asp-route-pageSize="@pageSize">
-                                <i class="bi bi-chevron-left"></i> @(isBangla?"পূর্ববর্তী":"Previous") 
+                                <i class="bi bi-chevron-left"></i> <span class="d-none d-sm-inline">@(isBangla?"পূর্ববর্তী":"Previous")</span>
                             </a>
                         </li>
 
@@ -154,7 +156,7 @@
                                asp-route-newsType="@routeType"
                                asp-route-pageNo="@(pageNo + 1)"
                                asp-route-pageSize="@pageSize">
-                                @(isBangla?"পরবর্তী":"Next")  <i class="bi bi-chevron-right"></i>
+                                <span class="d-none d-sm-inline">@(isBangla?"পরবর্তী":"Next")</span> <i class="bi bi-chevron-right"></i>
                             </a>
                         </li>
                     </ul>
@@ -162,7 +164,7 @@
             }
         </div>
 
-        <aside class="sidebar">
+        <aside class="col-12 col-lg-4 col-xl-3 sidebar">
             <div class="sidebar-section">
                 <h4 class="sidebar-title">
                     <i class="bi bi-pin-angle-fill text-primary"></i>
@@ -191,21 +193,20 @@
                 <h4 class="sidebar-title">
                     <i class="bi bi-grid text-info"></i>
                     @(isBangla?"বিভাগসমূহ ব্রাউজ করুন ":"Browse Categories")
-                     
                 </h4>
                 <div class="d-flex flex-wrap gap-2">
                     @{
                         var categories = new[]
                         {
-                                        new { Type = NewsType.Politics, Icon = "bi-bank", Color = "primary" },
-                                        new { Type = NewsType.Sports, Icon = "bi-trophy", Color = "success" },
-                                        new { Type = NewsType.Technology, Icon = "bi-cpu", Color = "info" },
-                                        new { Type = NewsType.Business, Icon = "bi-briefcase", Color = "warning" },
-                                        new { Type = NewsType.Entertainment, Icon = "bi-film", Color = "danger" },
-                                        new { Type = NewsType.Science, Icon = "bi-flask", Color = "secondary" },
-                                        new { Type = NewsType.Health, Icon = "bi-heart-pulse", Color = "success" },
-                                        new { Type = NewsType.World, Icon = "bi-globe", Color = "dark" }
-                                        };
+                            new { Type = NewsType.Politics, Icon = "bi-bank", Color = "primary" },
+                            new { Type = NewsType.Sports, Icon = "bi-trophy", Color = "success" },
+                            new { Type = NewsType.Technology, Icon = "bi-cpu", Color = "info" },
+                            new { Type = NewsType.Business, Icon = "bi-briefcase", Color = "warning" },
+                            new { Type = NewsType.Entertainment, Icon = "bi-film", Color = "danger" },
+                            new { Type = NewsType.Science, Icon = "bi-flask", Color = "secondary" },
+                            new { Type = NewsType.Health, Icon = "bi-heart-pulse", Color = "success" },
+                            new { Type = NewsType.World, Icon = "bi-globe", Color = "dark" }
+                        };
                     }
 
                     @foreach (var category in categories)
@@ -218,7 +219,6 @@
                            class="btn btn-outline-@category.Color btn-sm">
                             <i class="@category.Icon me-1"></i>
                             @(isBangla ? @category.Type.GetDisplayName() : @category.Type)
-                            
                         </a>
                     }
                 </div>

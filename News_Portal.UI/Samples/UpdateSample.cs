@@ -19,6 +19,7 @@ namespace News_Portal.UI.Samples
         private readonly INewsRepository _newsRepository;
         private readonly IImageRepository _imageRepository;
         private readonly ICommentRepository _commentRepository;
+        private readonly IConfiguration _configuration;
 
         public UpdateSample(
             UserManager<ApplicationUser> userManager,
@@ -27,7 +28,8 @@ namespace News_Portal.UI.Samples
             IWebHostEnvironment env,
             INewsRepository newsRepository,
             ICommentRepository commentRepository,
-            IImageRepository imageRepository)
+            IImageRepository imageRepository,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -36,6 +38,7 @@ namespace News_Portal.UI.Samples
             _newsRepository = newsRepository;
             _imageRepository = imageRepository;
             _commentRepository = commentRepository;
+            _configuration = configuration;
         }
 
         public async Task UpdateAsync()
@@ -43,10 +46,10 @@ namespace News_Portal.UI.Samples
 
             List<ApplicationUser> userList = await _userManager.Users.ToListAsync();
 
-            //if (userList.Count > 0)
-            //{
-            //    return;
-            //}
+            if (userList.Count > 0)
+            {
+                return;
+            }
 
 
             // Path: Samples/application_users.json (ensure Copy to Output Directory if needed)
@@ -145,6 +148,8 @@ namespace News_Portal.UI.Samples
             foreach (DemoImage img in imageList)
             {
                 Images imggg = img.ToImage();
+                //string defaultNewsImageUrl = _configuration["DefaultValues:DefaultNewsImageUrl"]!;
+                //imggg.ImageUrl = defaultNewsImageUrl;
                 bool exists = await _imageRepository.ImageExistsById(imggg.ImageId);
 
                 if (exists)  

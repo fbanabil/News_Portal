@@ -2,7 +2,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     SideBarDTO sideBarDTO = new SideBarDTO();
 }
-
+@{
+    var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
 <div class="container-fluid mt-3">
     <div class="row gx-4">
         <main role="main" class="col-12 col-md-8 col-lg-9">

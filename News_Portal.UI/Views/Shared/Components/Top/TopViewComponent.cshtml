@@ -1,9 +1,9 @@
 ﻿@model List<HomePageNewsToShowDTO>
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
-
 
 <div class="row g-2 g-md-3 mt-2">
     @if (Model is { Count: > 0 })

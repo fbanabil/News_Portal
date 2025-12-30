@@ -7,6 +7,7 @@
 }
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 
@@ -187,7 +188,7 @@ else if(ViewBag.Title == "News Details" || ViewBag.Title == "সংবাদ ব
                                         <input type="hidden" name="newsId" value="@dto.NewsId" />
                                         <input type="hidden" name="newStatus" value="@status" />
                                         <button type="submit" class="btn btn-sm btn-outline-secondary" title="@(isBangla ? ("স্ট্যাটাস পরিবর্তন করুন: " + status.GetDisplayName()) : ("Change status to " + status))">
-                                            <span class="badge rounded-pill @badgeClass(status) me-1">@status</span>
+                                            <span class="badge rounded-pill @badgeClass(status) me-1">@(isBangla? status.GetDisplayName() : status)</span>
                                             @(isBangla ? "নির্ধারণ" : "Set")
                                         </button>
                                     </form>

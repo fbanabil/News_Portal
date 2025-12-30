@@ -1,10 +1,11 @@
 ﻿@using News_Portal.Core.Enums
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 <footer class="site-footer border-top text-muted" role="contentinfo">
-    <div class="container py-5">
+    <div class="container-fluid py-5">
         <div class="row gy-4">
             <div class="col-12 col-md-4">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="d-inline-block mb-2 site-brand">

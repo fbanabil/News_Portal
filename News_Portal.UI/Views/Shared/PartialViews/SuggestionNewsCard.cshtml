@@ -1,7 +1,9 @@
 ﻿@model News_Portal.Core.DTO.News.HomePageNewsToShowDTO
 
 @{
+
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 
     var imgSrc = string.IsNullOrWhiteSpace(Model.TitleImageUrl)

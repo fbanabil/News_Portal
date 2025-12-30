@@ -17,27 +17,27 @@
 
 
 @{
-    var cookieLang = Context.Request.Cookies["Language"];
-    if (!string.IsNullOrEmpty(cookieLang))
-    {
-        ViewBag.Language = cookieLang;
-    }
-    else if (ViewBag.Language == null)
-    {
-        ViewBag.Language = Languages.Bangla.ToString();
-    }
+        var cookieLang = Context.Request.Cookies["Language"];
+        if (!string.IsNullOrEmpty(cookieLang))
+        {
+                ViewBag.Language = cookieLang;
+        }
+        else if (ViewBag.Language == null)
+        {
+                ViewBag.Language = Languages.Bangla.ToString();
+        }
 
-    var lang = (string)(ViewBag.Language ?? Languages.Bangla.ToString());
-    var banglaDisplay = Languages.Bangla.GetDisplayName();
-    var englishShort = "EN";
-    var currentLabel = (lang == Languages.Bangla.ToString()) ? banglaDisplay : englishShort;
-    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+        var lang = (string)(ViewBag.Language ?? Languages.Bangla.ToString());
+        var banglaDisplay = Languages.Bangla.GetDisplayName();
+        var englishShort = "EN";
+        var currentLabel = (lang == Languages.Bangla.ToString()) ? banglaDisplay : englishShort;
+        bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 
 
 
 <body>
-    
+
     <header>
         <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
@@ -49,10 +49,10 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    
+
                     @await Html.PartialAsync("PartialViews/_LayoutLinks")
 
-                    
+
 
                     <ul class="navbar-nav ms-auto">
 
@@ -63,7 +63,7 @@
                             </div>
                         </li>
 
-                        @if ((ViewBag.Title == "Login" || ViewBag.Title == "Register")){ }
+                        @if ((ViewBag.Title == "Login" || ViewBag.Title == "Register")) { }
                         else if (!(User?.Identity?.IsAuthenticated ?? false))
                         {
                             <li class="nav-item me-2">
@@ -72,7 +72,7 @@
                                    asp-controller="Account"
                                    asp-action="AuthLogin">
                                     <i class="bi bi-person-plus me-1"></i>
-                                    @if(isBangla)
+                                    @if (isBangla)
                                     {
                                         @:লগ-ইন/রেজিস্টার
                                     }
@@ -80,7 +80,7 @@
                                     {
                                         @:Login/Register
                                     }
-                                    
+
                                 </a>
                             </li>
                         }
@@ -88,7 +88,7 @@
                         {
 
 
-                            
+
 
                             <li class="nav-item">
                                 <div class="user-profile-container">
@@ -96,7 +96,7 @@
                                 </div>
                             </li>
 
-                            
+
 
                             <li class="nav-item">
                                 <div class="logout-btn-container">
@@ -104,7 +104,7 @@
                                         <button type="submit" class="logout-btn" title="Logout">
                                             <i class="bi bi-box-arrow-right"></i>
                                             <span class="d-none d-md-inline">
-                                                @if(isBangla)
+                                                @if (isBangla)
                                                 {
                                                     @: লগ-আউট
                                                 }
@@ -112,8 +112,8 @@
                                                 {
                                                     @:Logout
                                                 }
-                                                
-                                                </span>
+
+                                            </span>
                                         </button>
                                     </form>
                                 </div>
@@ -129,8 +129,9 @@
             @RenderBody()
         </main>
     </div>
-
+    
     @await Html.PartialAsync("PartialViews/_Footer")
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

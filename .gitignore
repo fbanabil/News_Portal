@@ -46,4 +46,4 @@ bld/
 *.local
 
 # Appsettings
-appsettings.Development.json
+# appsettings.Development.json
