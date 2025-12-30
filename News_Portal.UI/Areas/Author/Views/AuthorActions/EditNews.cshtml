@@ -178,7 +178,7 @@
                         </div>
                         <span asp-validation-for="NewImages" class="text-danger"></span>
                         <div class="image-count-display" id="imageCount" style="display: none;">
-                            <small class="text-muted">@(isBangla ? "নির্বাচিত: " : "Selected: ")<span id="selectedCount">0</span>/@(isBangla ? "৪" : "4") @(isBangla ? "ছবি" : "images")</small>
+                            <small class="text-muted">@(isBangla ? "নির্বাচিত: " : "Selected: ")<span id="selectedCount">@(isBangla?"০":"0")</span>/@(isBangla ? "৪" : "4") @(isBangla ? "ছবি" : "images")</small>
                         </div>
                     </div>
 

@@ -92,15 +92,13 @@
                                          loading="lazy" />
                                 </div>
                                 <div class="news-card-body flex-grow-1 d-flex flex-column">
-                                    <h5 class="news-card-title" title="@news.NewsTitle">@news.NewsTitle</h5>
+                                    <h5 class="news-card-title" title="@news.NewsTitle">@Html.Raw(news.NewsTitle?.RemoveClampBreakingElements())</h5>
                                     <div class="news-card-meta">
                                         <span><i class="bi bi-calendar3 me-1"></i>@(isBangla? news.PublishedDate.GetBengaliDate() : news.PublishedDate.ToString("MMM dd, yyyy"))</span>
                                         <span><i class="bi bi-person me-1"></i>@author?.PersonName</span>
                                     </div>
                                     <p class="news-card-content flex-grow-1">
-                                        @((news.NewsContent ?? string.Empty).Length > 120
-                                            ? news.NewsContent!.Substring(0, 120) + "..."
-                                            : news.NewsContent)
+                                        @Html.Raw((news.NewsContent?.RemoveClampBreakingElements() ?? string.Empty))
                                     </p>
                                     <div class="news-card-footer mt-auto">
                                         <div class="view-count">

@@ -7,7 +7,7 @@
 }
 @{
     var content = Model.NewsContent ?? string.Empty;
-    var snippet = content.Length > 1500 ? content.Substring(0, 1500) + "..." : content;
+    var snippet = content;
     var dateText = isBangla ? Model.PublishedDate.GetBengaliDate(): Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = isBangla ? Model.NewsType.GetDisplayName() : Model.NewsType.ToString();
 }
@@ -39,13 +39,13 @@
         </div>
 
         <h6 class="compact-title">
-            @Model.NewsTitle
+                @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
         </h6>
 
         @if (!string.IsNullOrWhiteSpace(snippet))
         {
             <p class="compact-snippet">
-                @snippet
+                    @Html.Raw(snippet?.RemoveClampBreakingElements())
             </p>
         }
 

@@ -27,7 +27,7 @@
 
         <div class="news-body">
             <header class="news-header">
-                <h3 class="news-title">@Model.NewsTitle</h3>
+                <h3 class="news-title">@Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())</h3>
 
                 <div class="news-meta">
 
@@ -48,10 +48,8 @@
                 </div>
             </header>
 
-            <p class="news-excerpt">
-                @(Model.NewsContent?.Length > 170
-                                ? Model.NewsContent.Substring(0, 170) + "..."
-                                : Model.NewsContent)
+            <p class="news-excerpt two-line-clamp">
+                @Html.Raw(Model.NewsContent?.RemoveClampBreakingElements())
             </p>
 
             <div class="news-footer">

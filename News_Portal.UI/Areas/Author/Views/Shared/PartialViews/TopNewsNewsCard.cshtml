@@ -41,7 +41,7 @@
 
         <div class="sidebar-news-info">
             <h6 class="sidebar-news-title" title="@Model.NewsTitle">
-                @Model.NewsTitle
+                @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
             </h6>
 
             <div class="sidebar-news-meta">
@@ -72,9 +72,7 @@
                 </span>
 
                 <span class="sidebar-news-excerpt">
-                    @((Model.NewsContent ?? string.Empty).Length > 60
-                                        ? Model.NewsContent!.Substring(0, 60) + "…"
-                                        : Model.NewsContent)
+                    @Html.Raw((Model.NewsContent?.RemoveClampBreakingElements() ?? string.Empty))
                 </span>
             </div>
         </div>

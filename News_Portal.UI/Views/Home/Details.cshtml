@@ -66,7 +66,7 @@
         </div>
 
         <h1 class="news-title d-flex align-items-center justify-content-between">
-            <span>@Model.NewsTitle</span>
+            <span>@Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())</span>
 
             @* Header action buttons for Admins and Authors *@
             <span class="ms-3">
@@ -242,10 +242,11 @@
                     }
                     else
                     {
-                        foreach (var line in contentLines)
-                        {
-                            <p class="fs-6 lh-base mb-3">@line</p>
-                        }
+                        @Html.Raw(Model.NewsContent)
+                        // foreach (var line in contentLines)
+                        // {
+                        //     <p class="fs-6 lh-base mb-3">@line</p>
+                        // }
                     }
                 </div>
                 

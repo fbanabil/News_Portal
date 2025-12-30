@@ -76,7 +76,7 @@
                                     {
                                         if (newsType.ToString() != "General")
                                         {
-                                            <option value="@newsType">@newsType</option>
+                                            <option value="@newsType">@(isBangla? newsType.GetDisplayName():newsType)</option>
                                         }
                                     }
                                 </select>
@@ -92,7 +92,7 @@
                                     <option value="">@(isBangla ? "প্রাধান্য নির্বাচন করুন..." : "Select priority...")</option>
                                     @foreach (var priority in Enum.GetValues<NewsPriority>())
                                     {
-                                        <option value="@priority">@priority</option>
+                                        <option value="@priority">@(isBangla? priority.GetDisplayName() : priority)</option>
                                     }
                                 </select>
                                 <span asp-validation-for="NewsPriority" class="text-danger"></span>
@@ -108,7 +108,7 @@
                             <input asp-for="VideoUrl"
                                    type="url"
                                    class="form-control"
-                                   placeholder="@(isBangla ? "https://youtube.com/embed/your-video-id" : "https://youtube.com/embed/your-video-id")" />
+                                   placeholder="@(isBangla ? "https://youtube.com/ewatch?v=videoId" : "https://youtube.com/watch?v=videoId")" />
                             <span asp-validation-for="VideoUrl" class="text-danger"></span>
                             <small class="form-text d-block mt-1">@(isBangla ? "ভিডিও যোগ করতে YouTube embed URL দিন" : "Add a YouTube embed URL to include video content")</small>
                         </div>
@@ -542,6 +542,7 @@
             }
         }
     </script>
+    <partial name="_ValidationScriptsPartial" />
 }
 
-<partial name="_ValidationScriptsPartial" />
+

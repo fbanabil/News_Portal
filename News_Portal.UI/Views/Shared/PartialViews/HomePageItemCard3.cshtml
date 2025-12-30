@@ -8,7 +8,7 @@
 }
 @{
     var content = Model.NewsContent ?? string.Empty;
-    var snippet = content.Length > 1200 ? content.Substring(0, 1200) + "..." : content;
+    var snippet = content;
     var dateText = isBangla ? Model.PublishedDate.GetBengaliDate() : Model.PublishedDate.ToString("MMM dd, yyyy");
     var category = isBangla ? Model.NewsType.GetDisplayName() : Model.NewsType.ToString();
 }
@@ -89,14 +89,14 @@
             <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
                class="title-link"
                aria-label="Read full article: @Model.NewsTitle">
-                @Model.NewsTitle
+                    @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
             </a>
         </h3>
 
         @if (!string.IsNullOrWhiteSpace(snippet))
         {
             <p class="card-excerpt">
-                @snippet
+                    @Html.Raw(snippet?.RemoveClampBreakingElements())
             </p>
         }
 

@@ -147,3 +147,21 @@
         -webkit-line-clamp: 4;
     }
 }
+.two-line-clamp {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    position: relative;
+}
+
+    .two-line-clamp::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 30px;
+        height: 1.2em;
+        background: linear-gradient(90deg, transparent, #fafbff);
+        pointer-events: none;
+    }
