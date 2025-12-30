@@ -1,5 +1,4 @@
 ﻿@model List<News_Portal.Core.DTO.News.HomePageNewsToShowDTO>
-
 @if (Model == null || Model.Count == 0)
 {
     <!-- No items to show -->
@@ -7,23 +6,26 @@
 else
 {
     <section class="hero-section">
-        <div class="hero-container">
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
-        </div>
+        <div class="row g-2 g-md-3">
+            <!-- Large card - Full width -->
+            <div class="col-12">
+                <div class="hero-container">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
+                </div>
+            </div>
 
-        @if (Model.Count > 1)
-        {
-            <div class="compact-grid">
+            <!-- Small cards - 2 per row on mobile, stacked vertically on desktop -->
+            @if (Model.Count > 1)
+            {
                 @for (int i = 1; i <= 4 && i < Model.Count; i++)
                 {
-                    <article class="compact-item" data-index="@i">
-                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[i])
-                    </article>
+                    <div class="col-6 col-md-12">
+                        <article class="compact-item" data-index="@i">
+                            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard3.cshtml", Model[i])
+                        </article>
+                    </div>
                 }
-            </div>
-        }
+            }
+        </div>
     </section>
 }
-
-
-

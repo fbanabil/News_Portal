@@ -1,8 +1,10 @@
 ﻿@using News_Portal.Core.DTO.Comment
 @using System.Security.Claims
 @model News_Portal.Core.DTO.News.DetailedNewsToShowDTO
+
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 @{

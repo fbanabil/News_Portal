@@ -1,7 +1,9 @@
 ﻿@model AuthorNewsAllFiltersDTO
 @using News_Portal.Core.Enums
+
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 @{
@@ -222,7 +224,7 @@
 
                 <div class="articles-section">
                     <div class="articles-header">
-                        <h3>📰 Your Articles</h3>
+                        <h3>📰 @(isBangla ? "আপনার সংবাদ" : "Your Articles")</h3>
                         <div class="articles-summary">
                             <span class="current-filters">
 
@@ -415,7 +417,19 @@
 
 @section Scripts {
     <script>
-        
+        // Localized UI texts for pagination and loading
+        const texts = {
+            first: '@(isBangla ? "প্রথম" : "First")',
+            last: '@(isBangla ? "শেষ" : "Last")',
+            previous: '@(isBangla ? "পূর্ববর্তী" : "Previous")',
+            next: '@(isBangla ? "পরবর্তী" : "Next")',
+            firstPageTitle: '@(isBangla ? "প্রথম পাতা" : "First Page")',
+            lastPageTitle: '@(isBangla ? "শেষ পাতা" : "Last Page")',
+            previousPageTitle: '@(isBangla ? "পূর্ববর্তী পৃষ্ঠা" : "Previous Page")',
+            nextPageTitle: '@(isBangla ? "পরবর্তী পৃষ্ঠা" : "Next Page")',
+            loading: '@(isBangla ? "লোড হচ্ছে..." : "Loading...")'
+        };
+
         async function goToPageWithScroll(pageNo) {
             showLoadingIndicator();
             

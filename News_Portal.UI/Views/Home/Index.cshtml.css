@@ -12,12 +12,6 @@ body {
     max-width: none;
 }
 
-.container, .container-fluid {
-    max-width: 1400px;
-    width: 100%;
-    padding: 0 15px;
-}
-
 .newspaper-header {
     text-align: center;
     padding: 20px 0;
@@ -80,19 +74,12 @@ body {
 .newspaper-main {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 15px;
 }
 
 .top-banner {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 2px solid #000;
-}
-
-.newspaper-content {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 30px;
 }
 
 .main-column {
@@ -120,6 +107,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .see-more {
@@ -129,10 +117,10 @@ body {
     font-weight: normal;
 }
 
-.see-more:hover {
-    color: #000;
-    text-decoration: underline;
-}
+    .see-more:hover {
+        color: #000;
+        text-decoration: underline;
+    }
 
 .news-section {
     margin-bottom: 35px;
@@ -140,31 +128,52 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-.news-section:last-child {
-    border-bottom: none;
-}
+    .news-section:last-child {
+        border-bottom: none;
+    }
 
 .two-column-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
     margin-bottom: 35px;
 }
 
-.politics .category-title { border-color: #dc3545; }
-.sports .category-title { border-color: #28a745; }
-.technology .category-title { border-color: #007bff; }
-.entertainment .category-title { border-color: #ffc107; }
-.business .category-title { border-color: #6f42c1; }
-.health .category-title { border-color: #20c997; }
-.science .category-title { border-color: #fd7e14; }
-.world .category-title { border-color: #17a2b8; }
+.politics .category-title {
+    border-color: #dc3545;
+}
+
+.sports .category-title {
+    border-color: #28a745;
+}
+
+.technology .category-title {
+    border-color: #007bff;
+}
+
+.entertainment .category-title {
+    border-color: #ffc107;
+}
+
+.business .category-title {
+    border-color: #6f42c1;
+}
+
+.health .category-title {
+    border-color: #20c997;
+}
+
+.science .category-title {
+    border-color: #fd7e14;
+}
+
+.world .category-title {
+    border-color: #17a2b8;
+}
 
 .sidebar {
     background: #f8f9fa;
     padding: 20px;
     border: 1px solid #ddd;
     height: fit-content;
+    margin-bottom: 20px;
 }
 
 .sidebar-section {
@@ -173,10 +182,10 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-.sidebar-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
+    .sidebar-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
 
 .sidebar-title {
     font-size: 1.1rem;
@@ -204,68 +213,46 @@ body {
     margin-bottom: 10px;
 }
 
-.tc-side:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
+    .tc-side:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
 
-@media (max-width: 992px) {
-    .newspaper-content {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .sidebar {
-        order: -1;
-        margin-bottom: 20px;
-    }
-    
-    .two-column-section {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .newspaper-title {
-        font-size: 2.5rem;
-    }
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .two-col-featured {
         grid-template-columns: 1fr;
     }
-    
+
     .tc-main {
         grid-row: auto;
     }
-    
+
     .newspaper-title {
         font-size: 2rem;
     }
-    
+
     .section-title {
-        font-size: 1.8rem;
+        font-size: 1.3rem;
     }
-    
+
     .category-title {
         font-size: 1.2rem;
     }
 }
 
-@media (max-width: 480px) {
-    .newspaper-main {
-        padding: 0 10px;
-    }
-    
+@media (max-width: 576px) {
     .newspaper-title {
         font-size: 1.5rem;
         letter-spacing: 1px;
     }
-    
+
     .category-title {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
     }
 }
 
@@ -273,11 +260,7 @@ body {
     .sidebar {
         display: none;
     }
-    
-    .newspaper-content {
-        grid-template-columns: 1fr;
-    }
-    
+
     .alert {
         display: none;
     }

@@ -1,7 +1,9 @@
 ﻿@using News_Portal.Core.DTO.Profile
 @model ProfileToShowDTO
+
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
 @{

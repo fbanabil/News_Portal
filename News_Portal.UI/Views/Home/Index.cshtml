@@ -1,17 +1,20 @@
 ﻿@{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
     ViewBag.Title = isBangla ? "সাধারণ" : "General";
 }
 
 
-@if(isBangla)
+@if (isBangla)
 {
-   <header class="newspaper-header">
+    <header class="newspaper-header">
         <h1 class="newspaper-title">ডেইলি নিউজ পোর্টাল</h1>
         <div class="newspaper-date">@DateTime.Now.GetBengaliDate()</div>
         <div class="newspaper-line"></div>
-   </header>
+    </header>
 }
 else
 {
@@ -28,54 +31,66 @@ else
 
 
 
-<main class="newspaper-main">
+<main class="newspaper-main container-fluid">
     <section class="top-banner">
         <h2 class="section-title">@(isBangla ? "সর্বাধিক জনপ্রিয় সংবাদ" : "Most Favourite News")</h2>
         @await Component.InvokeAsync("Carousel")
     </section>
 
-    <div class="newspaper-content">
-        <div class="main-column">
+    <div class="row newspaper-content">
+        <div class="col-12 col-lg-8 col-xl-9 main-column">
             <article class="news-section politics">
                 <h3 class="category-title">@(isBangla ? "রাজনীতি" : "Politics") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Politics, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
                 @await Component.InvokeAsync("OtherNews", NewsType.Politics)
             </article>
 
-            <div class="two-column-section">
-                <article class="news-section technology">
-                    <h3 class="category-title">@(isBangla?"প্রযুক্তি":"Technology") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Technology, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
-                    @await Component.InvokeAsync("OtherNews", NewsType.Technology)
-                </article>
+            <div class="row two-column-section">
+                <div class="col-12 col-md-6">
+                    <article class="news-section technology">
+                        <h3 class="category-title">@(isBangla ? "প্রযুক্তি" : "Technology") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Technology, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
+                        @await Component.InvokeAsync("OtherNews", NewsType.Technology)
+                    </article>
+                </div>
 
-                <article class="news-section sports">
-                    <h3 class="category-title">@(isBangla ? "খেলাধুলা" : "Sports") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Sports, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
-                    @await Component.InvokeAsync("OtherNews", NewsType.Sports)
-                </article>
+                <div class="col-12 col-md-6">
+                    <article class="news-section sports">
+                        <h3 class="category-title">@(isBangla ? "খেলাধুলা" : "Sports") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Sports, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
+                        @await Component.InvokeAsync("OtherNews", NewsType.Sports)
+                    </article>
+                </div>
             </div>
 
 
-            <div class="two-column-section">
-                <article class="news-section business">
-                    <h3 class="category-title">@(isBangla ? "ব্যবসা-বাণিজ্য" : "Business") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Business, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
-                    @await Component.InvokeAsync("OtherNews", NewsType.Business)
-                </article>
+            <div class="row two-column-section">
+                <div class="col-12 col-md-6">
+                    <article class="news-section business">
+                        <h3 class="category-title">@(isBangla ? "ব্যবসা-বাণিজ্য" : "Business") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Business, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
+                        @await Component.InvokeAsync("OtherNews", NewsType.Business)
+                    </article>
+                </div>
 
-                <article class="news-section entertainment">
-                    <h3 class="category-title">@(isBangla ? "বিনোদন" : "Entertainment") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Entertainment, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
-                    @await Component.InvokeAsync("OtherNews", NewsType.Entertainment)
-                </article>
+                <div class="col-12 col-md-6">
+                    <article class="news-section entertainment">
+                        <h3 class="category-title">@(isBangla ? "বিনোদন" : "Entertainment") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Entertainment, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
+                        @await Component.InvokeAsync("OtherNews", NewsType.Entertainment)
+                    </article>
+                </div>
             </div>
 
-            <div class="two-column-section">
-                <article class="news-section science">
-                    <h3 class="category-title">@(isBangla ? "বিজ্ঞান" : "Science") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Science, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
-                    @await Component.InvokeAsync("OtherNews", NewsType.Science)
-                </article>
+            <div class="row two-column-section">
+                <div class="col-12 col-md-6">
+                    <article class="news-section science">
+                        <h3 class="category-title">@(isBangla ? "বিজ্ঞান" : "Science") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Science, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
+                        @await Component.InvokeAsync("OtherNews", NewsType.Science)
+                    </article>
+                </div>
 
-                <article class="news-section health">
-                    <h3 class="category-title">@(isBangla ? "স্বাস্থ্য" : "Health") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Health, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
-                    @await Component.InvokeAsync("OtherNews", NewsType.Health)
-                </article>
+                <div class="col-12 col-md-6">
+                    <article class="news-section health">
+                        <h3 class="category-title">@(isBangla ? "স্বাস্থ্য" : "Health") <a href="@Url.Action("GetNews", "Home", new { newsType = NewsType.Health, pageNo = 1, pageSize = 18 })" class="see-more">@(isBangla ? "সব দেখুন" : "See all") →</a></h3>
+                        @await Component.InvokeAsync("OtherNews", NewsType.Health)
+                    </article>
+                </div>
             </div>
 
             <article class="news-section world">
@@ -84,7 +99,7 @@ else
             </article>
         </div>
 
-        <aside class="sidebar">
+        <aside class="col-12 col-lg-4 col-xl-3 sidebar">
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📌 পিন করা" : "📌 Pinned")</h4>
                 @await Component.InvokeAsync("Top", new { type = TopOfXType.Pinned, cnt = 1 })

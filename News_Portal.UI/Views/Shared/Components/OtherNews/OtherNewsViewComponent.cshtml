@@ -1,11 +1,12 @@
 ﻿@model List<HomePageNewsToShowDTO>
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
-
-<div class="two-col-featured">
-    <div class="tc-main">
+<div class="row g-2 g-md-3 two-col-featured">
+    <!-- Large card - Hidden on mobile, shown on desktop -->
+    <div class="col-12 col-md-8 tc-main d-none d-md-flex">
         @if (Model != null && Model.Count > 0)
         {
             @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
@@ -18,42 +19,61 @@
         }
     </div>
 
-    <div class="tc-side tc-side-top">
-        @if (Model != null && Model.Count > 1)
-        {
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
-        }
-        else
-        {
-            <div class="placeholder-content">
-                <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+    <!-- Small cards wrapper -->
+    <div class="col-12 col-md-4">
+        <div class="row g-2 g-md-3">
+            <div class="col-6 col-md-12 tc-side tc-side-top">
+                @if (Model != null && Model.Count > 1)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+                }
+                else
+                {
+                    <div class="placeholder-content">
+                        <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                    </div>
+                }
             </div>
-        }
-    </div>
 
-    <div class="tc-side tc-side-middle">
-        @if (Model != null && Model.Count > 2)
-        {
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
-        }
-        else
-        {
-            <div class="placeholder-content">
-                <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+            <div class="col-6 col-md-12 tc-side tc-side-middle">
+                @if (Model != null && Model.Count > 2)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+                }
+                else
+                {
+                    <div class="placeholder-content">
+                        <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                    </div>
+                }
             </div>
-        }
-    </div>
 
-    <div class="tc-side tc-side-bottom">
-        @if (Model != null && Model.Count > 3)
-        {
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
-        }
-        else
-        {
-            <div class="placeholder-content">
-                <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+            <div class="col-6 col-md-12 tc-side tc-side-bottom">
+                @if (Model != null && Model.Count > 3)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
+                }
+                else
+                {
+                    <div class="placeholder-content">
+                        <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                    </div>
+                }
             </div>
-        }
+
+            <!-- Fourth card - shows large card content on mobile -->
+            <div class="col-6 d-md-none tc-side">
+                @if (Model != null && Model.Count > 0)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[0])
+                }
+                else
+                {
+                    <div class="placeholder-content">
+                        <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>

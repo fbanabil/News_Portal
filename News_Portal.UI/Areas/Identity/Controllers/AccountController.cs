@@ -139,6 +139,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
 
             _logger.LogInformation("Email confirmation link: {ConfirmationLink}", confirmationLink);
 
+            _emailService.SendEmailAsync(registerDTO.Email, "Email Confirmation", $"Please confirm your account by <a href='{System.Net.WebUtility.HtmlEncode(confirmationLink)}'>clicking here</a>.");
+
             TempData["Message"] = "Registration successful! Please check your email to confirm your account.";
             TempData["MessageBangla"] = "নিবন্ধন সফল! আপনার অ্যাকাউন্ট নিশ্চিত করতে অনুগ্রহ করে আপনার ইমেইল চেক করুন।";
 
@@ -329,6 +331,10 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             }
 
             var user = await _userManager.FindByEmailAsync(email);
+            string randomPassword = new string(Enumerable.Range(0, 10)
+                    .Select(_ => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"[Random.Shared.Next(68)])
+                    .ToArray());
+
             if (user == null)
             {
                 user = new ApplicationUser
@@ -339,9 +345,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                     EmailConfirmed = true,
                     PersonImageUrl = await _imageService.GetDefaultProfileImageUrl()
                 };
-                string randomPassword = new string(Enumerable.Range(0, 10)
-                    .Select(_ => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"[Random.Shared.Next(68)])
-                    .ToArray());
+                
                 _logger.LogInformation(randomPassword);
                 IdentityResult res = await _userManager.CreateAsync(user, randomPassword);
 
@@ -361,6 +365,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             }
             if (user.EmailConfirmed == false)
             {
+                string emailToSend = $"Your account has been verified. Your temporary password is {randomPassword}. Please reset your password after logging in.";
+                await _emailService.SendEmailAsync(email, "Account Created", emailToSend);
                 user.EmailConfirmed = true;
                 await _userManager.UpdateAsync(user);
             }

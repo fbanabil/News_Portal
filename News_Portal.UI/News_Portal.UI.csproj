@@ -16,6 +16,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Samples\bangla_news_seed_1000.zip" />
+    <Content Include="Samples\DemoClasses.cs" />
+    <Content Include="Samples\IUpdateSample.cs" />
+    <Content Include="Samples\news_portal_seed_jsons.zip" />
+    <Content Include="Samples\UpdateSample.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Samples\application_roles.json" />
     <None Include="Samples\application_users.json" />
     <None Include="Samples\comments.json" />

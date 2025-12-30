@@ -1,9 +1,12 @@
 ﻿@model UserFilterParameterDTO
 @using News_Portal.Core.Enums
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var lang = Context.Request.Cookies["Language"];
-    bool isBangla = (lang == Languages.Bangla.ToString());
+    if (lang == null) lang = Languages.Bangla.ToString();
+    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+}
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 
     ViewBag.Title = isBangla ? "ব্যবহারকারী পরিচালনা করুন" : "Manage Users";
 

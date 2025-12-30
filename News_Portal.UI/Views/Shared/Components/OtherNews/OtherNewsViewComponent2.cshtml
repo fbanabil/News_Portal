@@ -1,45 +1,52 @@
 ﻿@model List<HomePageNewsToShowDTO>
 @{
     var lang = Context.Request.Cookies["Language"];
+    if (lang == null) lang = Languages.Bangla.ToString();
     bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
 }
-
 @if (Model == null || Model.Count == 0)
 {
-    
+
 }
 else
 {
     <div class="container-fluid px-0">
-        <div class="split-featured-grid">
-            @if (Model.Count > 1)
-            {
-                <div class="sf-item sf-left-top">
-                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+        <div class="row g-2 g-md-3 split-featured-grid">
+            <!-- Large card ONLY - Full width on mobile, right side on desktop -->
+            <div class="col-12 col-md-7 col-lg-8 order-1 order-md-2">
+                <div class="sf-item sf-right-main">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
                 </div>
-            }
+            </div>
 
-            @if (Model.Count > 2)
-            {
-                <div class="sf-item sf-left-middle">
-                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+            <!-- First 2 small cards - Left side on desktop -->
+            <div class="col-12 col-md-5 col-lg-4 order-2 order-md-1">
+                <div class="row g-2 g-md-3 h-100">
+                    @if (Model.Count > 1)
+                    {
+                        <div class="col-6 col-md-12 sf-item sf-item-small">
+                            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+                        </div>
+                    }
+                    @if (Model.Count > 2)
+                    {
+                        <div class="col-6 col-md-12 sf-item sf-item-small">
+                            @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+                        </div>
+                    }
                 </div>
-            }
+            </div>
 
+            <!-- Bottom 2 small cards - Full width row, 2 cards side by side -->
             @if (Model.Count > 3)
             {
-                <div class="sf-item sf-left-bottom">
+                <div class="col-6 col-md-6 order-3 sf-item sf-item-small">
                     @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
                 </div>
             }
-
-            <div class="sf-item sf-right-main">
-                @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
-            </div>
-
             @if (Model.Count > 4)
             {
-                <div class="sf-item sf-right-bottom">
+                <div class="col-6 col-md-6 order-3 sf-item sf-item-small">
                     @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[4])
                 </div>
             }

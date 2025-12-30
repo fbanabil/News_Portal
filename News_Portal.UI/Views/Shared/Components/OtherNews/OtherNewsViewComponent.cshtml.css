@@ -1,42 +1,23 @@
 ﻿.two-col-featured {
-    display: grid;
-    grid-template-columns: 2fr 1fr; 
-    grid-template-rows: repeat(3, 1fr); 
-    gap: 0.75rem;
     width: 100%;
     min-height: 360px;
 }
 
 .tc-main {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
     display: flex;
 }
 
 .tc-side {
-    grid-column: 2 / 3;
     display: flex;
 }
 
-.tc-side-top {
-    grid-row: 1 / 2;
-}
-
-.tc-side-middle {
-    grid-row: 2 / 3;
-}
-
-.tc-side-bottom {
-    grid-row: 3 / 4;
-}
-
-.tc-main > *,
-.tc-side > * {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
+    .tc-main > *,
+    .tc-side > * {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
 .placeholder-content {
     border-radius: 0.9rem;
@@ -50,18 +31,27 @@
     font-size: 0.9rem;
     color: #6b7280;
     text-align: center;
+    padding: 1rem;
 }
 
-@media (max-width: 768px) {
-    .two-col-featured {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
+/* Ensure consistent height for side cards on mobile */
+@media (max-width: 767px) {
+    .tc-main {
+        min-height: 280px;
     }
 
-    .tc-main,
     .tc-side {
-        grid-column: 1 / -1;
-        grid-row: auto;
-        min-height: 220px;
+        min-height: 180px;
+    }
+}
+
+/* Ensure consistent height for side cards on desktop */
+@media (min-width: 768px) {
+    .tc-main {
+        min-height: 360px;
+    }
+
+    .tc-side {
+        height: 100%;
     }
 }

@@ -7,10 +7,10 @@ using News_Portal.Core.DTO.News;
 using News_Portal.Core.Enums;
 using News_Portal.Core.ServiceContracts;
 using News_Portal.UI.Filters;
-using News_Portal.UI.Samples;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Diagnostics;
+using News_Portal.UI.Samples;
 
 
 namespace News_Portal.UI.Controllers
@@ -39,7 +39,7 @@ namespace News_Portal.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            await _updateSample.UpdateAsync();
+            //await _updateSample.UpdateAsync();
             return View();
         }
 

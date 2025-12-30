@@ -13,10 +13,10 @@ using News_Portal.Core.ServiceContracts;
 using News_Portal.Core.Services;
 using News_Portal.Infrastructure.DbContext;
 using News_Portal.Infrastructure.Repositories;
-using News_Portal.UI.Samples;
 using NuGet.Protocol;
 using System.Runtime.CompilerServices;
 using News_Portal.Core.Services.POCO;
+using News_Portal.UI.Samples;
 
 namespace News_Portal.UI.StartupExtensions
 {
