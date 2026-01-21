@@ -24,7 +24,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    //app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 }
 
 

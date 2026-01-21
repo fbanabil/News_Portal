@@ -417,7 +417,6 @@
 
 @section Scripts {
     <script>
-        // Localized UI texts for pagination and loading
         const texts = {
             first: '@(isBangla ? "প্রথম" : "First")',
             last: '@(isBangla ? "শেষ" : "Last")',
@@ -575,7 +574,7 @@
             const pageSize = document.getElementById('pageSizeSelect').value;
             const params = new URLSearchParams(window.location.search);
             params.set('pageSize', pageSize);
-            params.set('pageNo', '1'); // Reset to first page
+            params.set('pageNo', '1'); 
             
             window.location.href = window.location.pathname + '?' + params.toString();
         }

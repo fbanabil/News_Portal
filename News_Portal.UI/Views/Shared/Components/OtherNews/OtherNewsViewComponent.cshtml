@@ -2,10 +2,19 @@
 @{
     var lang = Context.Request.Cookies["Language"];
     if (lang == null) lang = Languages.Bangla.ToString();
-    bool isBangla = (lang == Languages.Bangla.ToString()) ? true : false;
+    bool isBangla = (lang == Languages.Bangla.ToString());
+
+    bool showFourth =
+        Model != null &&
+        Model.Count > 3 &&
+        Model[3] != null &&
+        Model[3].NewsType != NewsType.Business &&
+        Model[3].NewsType != NewsType.Entertainment;
 }
+
 <div class="row g-2 g-md-3 two-col-featured">
-    <!-- Large card - Hidden on mobile, shown on desktop -->
+
+    <!-- Desktop: Large card (left) -->
     <div class="col-12 col-md-8 tc-main d-none d-md-flex">
         @if (Model != null && Model.Count > 0)
         {
@@ -19,10 +28,10 @@
         }
     </div>
 
-    <!-- Small cards wrapper -->
-    <div class="col-12 col-md-4">
+    <!-- Desktop: Right column (stacked) -->
+    <div class="col-12 col-md-4 d-none d-md-block">
         <div class="row g-2 g-md-3">
-            <div class="col-6 col-md-12 tc-side tc-side-top">
+            <div class="col-12 tc-side tc-side-top">
                 @if (Model != null && Model.Count > 1)
                 {
                     @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
@@ -35,7 +44,7 @@
                 }
             </div>
 
-            <div class="col-6 col-md-12 tc-side tc-side-middle">
+            <div class="col-12 tc-side tc-side-middle">
                 @if (Model != null && Model.Count > 2)
                 {
                     @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
@@ -48,32 +57,109 @@
                 }
             </div>
 
-            <div class="col-6 col-md-12 tc-side tc-side-bottom">
-                @if (Model != null && Model.Count > 3)
-                {
+            @if (showFourth)
+            {
+                <div class="col-12 tc-side tc-side-bottom">
                     @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[3])
-                }
-                else
-                {
-                    <div class="placeholder-content">
-                        <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
-                    </div>
-                }
-            </div>
-
-            <!-- Fourth card - shows large card content on mobile -->
-            <div class="col-6 d-md-none tc-side">
-                @if (Model != null && Model.Count > 0)
-                {
-                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[0])
-                }
-                else
-                {
-                    <div class="placeholder-content">
-                        <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
-                    </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
+
+    <!-- Mobile layout -->
+    <div class="col-12 d-md-none">
+        <div class="row g-2">
+
+            @* If 4th is NOT shown => 3 items => 1 full row + 2 half row *@
+            @if (!showFourth)
+            {
+                <div class="col-12 tc-side">
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[0])
+                    }
+                    else
+                    {
+                        <div class="placeholder-content">
+                            <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-6 tc-side">
+                    @if (Model != null && Model.Count > 1)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+                    }
+                    else
+                    {
+                        <div class="placeholder-content">
+                            <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-6 tc-side">
+                    @if (Model != null && Model.Count > 2)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+                    }
+                    else
+                    {
+                        <div class="placeholder-content">
+                            <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                @* If 4th IS shown => keep your 2x2 mobile grid *@
+
+                <div class="col-6 tc-side">
+                    @if (Model != null && Model.Count > 1)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[1])
+                    }
+                    else
+                    {
+                        <div class="placeholder-content">
+                            <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-6 tc-side">
+                    @if (Model != null && Model.Count > 2)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[2])
+                    }
+                    else
+                    {
+                        <div class="placeholder-content">
+                            <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-6 tc-side">
+                    @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model?[3])
+                </div>
+
+                <div class="col-6 tc-side">
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/PartialViews/HomePageItemCard2.cshtml", Model[0])
+                    }
+                    else
+                    {
+                        <div class="placeholder-content">
+                            <span>@(isBangla ? "কোনো সংবাদ উপলব্ধ নেই।" : "No news available")</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
 </div>

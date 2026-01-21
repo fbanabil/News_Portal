@@ -302,7 +302,6 @@
 
 @section Scripts {
     <script>
-        // Client-side localization & settings
         const isBangla = @(isBangla.ToString().ToLower());
         const texts = {
             maxImages: '@(isBangla ? "৪" : "4")',
@@ -364,7 +363,6 @@
                 function updateCharCount() {
                     const remaining = maxLength - titleInput.value.length;
                     if (isBangla) {
-                        // Use server-side converter for digits if required
                         const rem = remaining.toString();
                         charCountElement.textContent = `${rem.ToBanglaDigits ? rem.ToBanglaDigits() : rem} ${remaining === 1 ? 'অক্ষর বাকি' : 'অক্ষর বাকি'}`;
                         charCountElement.className = remaining < 20 ? 'char-count text-warning' : 'char-count text-muted';

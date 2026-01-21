@@ -55,7 +55,6 @@ else
 
     <script>
         (function () {
-            // build route server-side to avoid hard-coded paths
             const endpoint = '@Url.Action("DeleteUser", "Account", new { area = "Identity" })';
 
             function showLocalAlert(container, type, message) {
@@ -110,7 +109,6 @@ else
                         headers: headers
                     });
 
-                    // parse response if possible
                     let data = null;
                     try {
                         data = await res.json();
@@ -155,10 +153,8 @@ else
                 }
             }
 
-            // Attach handlers immediately (view components can be rendered after DOMContentLoaded)
             function attachHandlers() {
                 document.querySelectorAll('.delete-user-btn').forEach(b => {
-                    // avoid double-binding
                     if (!b.__deleteHandlerBound) {
                         b.addEventListener('click', handleDeleteClick);
                         b.__deleteHandlerBound = true;
@@ -167,7 +163,6 @@ else
             }
 
             attachHandlers();
-            // Fallback if script loaded before elements exist or to catch dynamic content
             document.addEventListener('DOMContentLoaded', attachHandlers);
         })();
     </script>

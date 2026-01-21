@@ -389,7 +389,6 @@
                 : '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
             confirmBtn.disabled = true;
 
-            // pull antiforgery token from the hidden form
             const tokenEl = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]');
             const token = tokenEl ? tokenEl.value : '';
 
@@ -399,7 +398,6 @@
                     'Content-Type': 'application/json',
                     'RequestVerificationToken': token
                 },
-                // no body required for this action; included for clarity
                 body: JSON.stringify({})
             })
                 .then(async response => {
@@ -407,7 +405,6 @@
                     try {
                         data = await response.json();
                     } catch (err) {
-                        // non-JSON response: read as text
                         const text = await response.text();
                         data = { success: response.ok, message: text || 'Unexpected server response.' };
                     }
@@ -423,7 +420,6 @@
                                     : 'Account deleted successfully. Redirecting...', false);
 
                                 setTimeout(() => {
-                                    // redirect after short delay to let user read the message
                                     window.location.href = '@Url.Action("Index", "Home", new { area = "" })';
                                 }, 1500);
                             }, 100);
@@ -435,7 +431,6 @@
                         confirmBtn.innerHTML = originalText;
                         confirmBtn.disabled = false;
 
-                        // If server suggested redirect (e.g., not authenticated), handle it
                         if (data?.redirect) {
                             setTimeout(() => window.location.href = data.redirect, 300);
                         }

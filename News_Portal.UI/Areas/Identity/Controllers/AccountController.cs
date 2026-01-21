@@ -130,7 +130,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             // Handling Profile Image Upload
             if (registerDTO.ProfileImage != null && registerDTO.ProfileImage.Length > 0)
             {
-                newUser.PersonImageUrl = await _imageService.UploadToCloudinary(registerDTO.ProfileImage);
+                newUser.PersonImageUrl = await _imageService.SaveProfileImage(registerDTO.ProfileImage);
                 await _userManager.UpdateAsync(newUser);
             }
 
@@ -479,7 +479,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         {
             ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
-            await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
+            await _imageService.RemoveImage(user.PersonImageUrl);
 
             var roles = await _userManager.GetRolesAsync(user);
 

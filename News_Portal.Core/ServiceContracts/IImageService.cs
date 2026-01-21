@@ -10,12 +10,24 @@ namespace News_Portal.Core.ServiceContracts
 {
     public interface IImageService
     {
-        Task<string> UploadToCloudinary(IFormFile profileImage);
-        Task<bool> DeleteFromCloudinary(string imageUrl);
-        Task<bool> DeleteFromCloudinaryByPublicId(string publicId);
+        #region Cloudinary Methods
+        //Task<string> UploadToCloudinary(IFormFile profileImage);
+        //Task<bool> DeleteFromCloudinary(string imageUrl);
+        //Task<bool> DeleteFromCloudinaryByPublicId(string publicId);
+        //Task<string> UploadNewsImageToCloudinary(IFormFile profileImage);
+        #endregion
+
+
+
         Task<string> GetDefaultProfileImageUrl();
-        Task<string> UploadNewsImageToCloudinary(IFormFile profileImage);
+        Task<string> GetDefaultNewsImageUrl();
+
         Task AddImage(Images image);
         Task DeleteImageById(Guid imageId);
+
+        Task<string> SaveProfileImage(IFormFile image);
+        Task<string> SaveNewsImage(IFormFile image);
+        Task<bool> RemoveImage(string relativePath);
+
     }
 }

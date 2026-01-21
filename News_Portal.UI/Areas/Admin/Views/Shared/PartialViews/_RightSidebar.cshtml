@@ -394,12 +394,10 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
 
              <script>
                 (function () {
-                    // Serialized enum values for rebuilding controls client-side
                     const NEWS_STATUSES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsStatus))));
                     const NEWS_PRIORITIES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsPriority))));
                     const NEWS_TYPES = @Html.Raw(JsonSerializer.Serialize(Enum.GetNames(typeof(NewsType))));
 
-                    // Localized messages for client-side usage
                     const I18N = @Html.Raw(JsonSerializer.Serialize(new {
                         RequestFailed = isBangla ? "অনুরোধ ব্যর্থ" : "Request failed",
                         Updated = isBangla ? "আপডেট হয়েছে" : "Updated",
@@ -421,7 +419,6 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                     }
 
                     function showToast(message, isError) {
-                        // Minimal inline toast: you can replace with site's notification system
                         const el = document.createElement('div');
                         el.className = 'toast-notification ' + (isError ? 'toast-error' : 'toast-success');
                         el.style.cssText = 'position:fixed;right:20px;top:20px;z-index:2000;padding:8px 12px;border-radius:6px;background:' + (isError ? '#f8d7da' : '#d1e7dd') + ';color:#000;border:1px solid rgba(0,0,0,0.05);';
@@ -433,11 +430,9 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                     async function postForm(form) {
                         const url = form.action;
                         const formData = new FormData(form);
-                        // include anti-forgery token already present in the form via @Html.AntiForgeryToken()
                         const headers = { 'X-Requested-With': 'XMLHttpRequest' };
                         try {
                             const resp = await fetch(url, { method: 'POST', body: formData, headers: headers, credentials: 'same-origin' });
-                            // Try JSON
                             const text = await resp.text();
                             try {
                                 const json = JSON.parse(text);
@@ -458,9 +453,8 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                             if (s === currentStatus) return;
                             const form = document.createElement('form');
                             form.method = 'post';
-                            form.action = '@Url.Action("ChangeNewsStatus", "AdminActions", "Admin")'.replace('/AdminActions/ChangeNewsStatus', '/AdminActions/ChangeNewsStatus'); // keep shape; will work with relative route
+                            form.action = '@Url.Action("ChangeNewsStatus", "AdminActions", "Admin")'.replace('/AdminActions/ChangeNewsStatus', '/AdminActions/ChangeNewsStatus'); 
                             form.className = 'd-inline ajax-change-status';
-                            // anti forgery token - clone from existing form if present
                             const existingToken = document.querySelector('.ajax-change-status input[name="__RequestVerificationToken"], form input[name="__RequestVerificationToken"]');
                             if (existingToken) {
                                 const tokenInput = existingToken.cloneNode(true);
@@ -490,7 +484,6 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                         });
                     }
 
-                    // Delegated submit handling
                     document.addEventListener('submit', function (e) {
                         const form = e.target;
                         if (!form) return;
@@ -509,7 +502,6 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                                 if (result.json) {
                                     const payload = result.json;
                                     if (payload.success) {
-                                        // Update badges if present in payload, else try to infer from form fields
                                         const newStatus = payload.newsStatus ?? form.querySelector('input[name="newStatus"]')?.value;
                                         const newPriority = payload.newsPriority ?? form.querySelector('select[name="newPriority"]')?.value;
                                         const newType = payload.newsType ?? form.querySelector('select[name="newType"]')?.value;
@@ -520,7 +512,6 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                                                 statusBadge.textContent = newStatus;
                                                 statusBadge.className = 'badge ' + getBadgeClass(newStatus);
                                             }
-                                            // rebuild status buttons
                                             const newsId = form.querySelector('input[name="newsId"]')?.value;
                                             rebuildStatusControls(newStatus, newsId);
                                         }
@@ -529,7 +520,6 @@ else if(ViewBag.Title == "ব্যবহারকারী পরিচাল�
                                             if (priorityBadge) {
                                                 priorityBadge.textContent = newPriority;
                                             }
-                                            // update select values
                                             document.querySelectorAll('.ajax-change-priority select[name="newPriority"]').forEach(sel => sel.value = newPriority);
                                         }
                                         if (newType) {
