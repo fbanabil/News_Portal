@@ -39,7 +39,11 @@ namespace News_Portal.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //await _updateSample.UpdateAsync();
+            int totalUsers = _userManager.Users.Count();
+            if (totalUsers == 0)
+            {
+                await _updateSample.UpdateAsync();
+            }
             return View();
         }
 
@@ -107,11 +111,9 @@ namespace News_Portal.UI.Controllers
             return PartialView("~/Views/Shared/PartialViews/_Comment.cshtml",commentToShowDTO);
         }
 
-        //[Route("Home/Error")]
         [HttpGet]
         public IActionResult Error()
         {
-            // Try to read the exception (may be null when middleware redirected)
             var exFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
             var errorMessage = exFeature?.Error?.Message;
             var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;

@@ -59,7 +59,7 @@ namespace News_Portal.Core.Services
             {
                 foreach (var img in newsToAddDTO.Images)
                 {
-                    string uploadPath = await _imageService.UploadNewsImageToCloudinary(img);
+                    string uploadPath = await _imageService.SaveNewsImage(img);
                     Images image = new Images();
                     image.ImageUrl = uploadPath;
                     image.ImageId = Guid.NewGuid();
@@ -472,7 +472,7 @@ namespace News_Portal.Core.Services
             {
                 foreach (var img in newsToEditDTO.NewImages)
                 {
-                    string uploadPath = await _imageService.UploadNewsImageToCloudinary(img);
+                    string uploadPath = await _imageService.SaveNewsImage(img);
                     Images image = new Images();
                     image.ImageUrl = uploadPath;
                     image.ImageId = Guid.NewGuid();

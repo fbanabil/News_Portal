@@ -11,7 +11,6 @@
     int pageNo = ViewBag.PageNo is int p ? p : 1;
     int pageSize = ViewBag.PageSize is int ps ? ps : 12;
     int pageCount = ViewBag.PageCount is int pc ? pc : 1;
-    // Get category icon
     var categoryIcon = ViewBag.NewsType?.ToString().ToLowerInvariant() switch
     {
         "politics" => "bi bi-bank",
@@ -242,4 +241,6 @@
             });
         });
     </script>
+        <partial name="_ValidationScriptsPartial" />
+
 }

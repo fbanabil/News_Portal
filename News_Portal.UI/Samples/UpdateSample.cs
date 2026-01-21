@@ -5,6 +5,7 @@ using News_Portal.Core.Domain.Entities;
 using News_Portal.Core.Domain.IdentityEntities;
 using News_Portal.Core.Domain.RepositoryContracts;
 using News_Portal.Core.Enums;
+using News_Portal.Core.ServiceContracts;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,6 +21,7 @@ namespace News_Portal.UI.Samples
         private readonly IImageRepository _imageRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IConfiguration _configuration;
+        private readonly IImageService _imageService;
 
         public UpdateSample(
             UserManager<ApplicationUser> userManager,
@@ -29,7 +31,8 @@ namespace News_Portal.UI.Samples
             INewsRepository newsRepository,
             ICommentRepository commentRepository,
             IImageRepository imageRepository,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IImageService imageService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -39,6 +42,7 @@ namespace News_Portal.UI.Samples
             _imageRepository = imageRepository;
             _commentRepository = commentRepository;
             _configuration = configuration;
+            _imageService = imageService;
         }
 
         public async Task UpdateAsync()
@@ -88,6 +92,7 @@ namespace News_Portal.UI.Samples
                 ApplicationUser? applicationUser = await _userManager.FindByNameAsync(appUs.UserName);
                 if (applicationUser == null)
                 {
+                    appUs.PersonImageUrl = await _imageService.GetDefaultProfileImageUrl();
                     await _userManager.CreateAsync(appUs,"11111111");
                     foreach(DemoRoles r in thisUser)
                     {
@@ -161,6 +166,7 @@ namespace News_Portal.UI.Samples
 
                 if (nws)
                 {
+                    imggg.ImageUrl = await _imageService.GetDefaultNewsImageUrl();
                     await _imageRepository.AddImage(imggg);
                 }
             }

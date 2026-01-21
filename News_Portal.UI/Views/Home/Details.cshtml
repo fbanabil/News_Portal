@@ -34,7 +34,6 @@
         youtubeVideoId = parts.LastOrDefault()?.Split('?').FirstOrDefault();
     }
 
-    // current user info for header action buttons
     var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
     var isAdminUser = User.Identity?.IsAuthenticated == true && User.IsInRole(UserTypes.Admin.ToString());
     bool isAuthorOfNews = User.Identity?.IsAuthenticated == true && Model?.Author?.Id == ViewBag.CurrentUserId && User.IsInRole(UserTypes.Author.ToString()); 
@@ -404,7 +403,6 @@
             const submitBtn = document.getElementById("submit-btn");
             const commentsModal = document.getElementById("commentsModal");
 
-            // localized texts (rendered server-side)
             const texts = {
                 resumeAuto: '@(isBangla ? "স্বয়ংক্রিয় স্লাইড চালু করুন" : "Resume auto-slide")',
                 pauseAuto: '@(isBangla ? "স্বয়ংক্রিয় স্লাইড বিরত করুন" : "Pause auto-slide")',
@@ -665,6 +663,6 @@
             }
         })();
     </script>
+    <partial name="_ValidationScriptsPartial" />
     
  }
-    <partial name="_ValidationScriptsPartial" />

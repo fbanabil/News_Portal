@@ -84,9 +84,9 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             user.PersonName = profileToUpdate.PersonName;
             user.PhoneNumber = profileToUpdate.PhoneNumber;
 
-            if(user.PersonImageUrl!=null) await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
+            if(user.PersonImageUrl!=null) await _imageService.RemoveImage(user.PersonImageUrl);
 
-            if(profileToUpdate.ProfileImage!=null) user.PersonImageUrl = await _imageService.UploadToCloudinary(profileToUpdate.ProfileImage);
+            if(profileToUpdate.ProfileImage!=null) user.PersonImageUrl = await _imageService.SaveProfileImage(profileToUpdate.ProfileImage);
 
             IdentityResult result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
@@ -245,7 +245,7 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 return BadRequest(new { success = false, message = "User not authenticated.", redirect = Url.Action("AuthLogin", "Account", new { area = "Identity" }) });
             }
 
-            await _imageService.DeleteFromCloudinary(user.PersonImageUrl);
+            await _imageService.RemoveImage(user.PersonImageUrl);
 
             var roles = await _userManager.GetRolesAsync(user);
 

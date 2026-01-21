@@ -268,7 +268,6 @@
         const maxImages = 4;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-resize textarea
             const textarea = document.querySelector('.content-textarea');
             if (textarea) {
                 textarea.addEventListener('input', function() {
@@ -280,7 +279,6 @@
                 textarea.style.height = Math.min(textarea.scrollHeight, 400) + 'px';
             }
 
-            // Form submission handler
             const form = document.querySelector('.add-news-form');
             const submitBtn = document.querySelector('.btn-submit');
 
@@ -297,7 +295,6 @@
                 });
             }
 
-            // Character counter for title
             const titleInput = document.querySelector('input[name="NewsTitle"]');
             if (titleInput) {
                 const maxLength = titleInput.getAttribute('maxlength');
@@ -315,10 +312,8 @@
                 updateCharCount();
             }
 
-            // Initialize image upload
             initializeImageUpload();
 
-            // Auto-dismiss alerts
             setTimeout(() => {
                 document.querySelectorAll('.alert').forEach(alert => {
                     alert.style.opacity = '0';
@@ -341,7 +336,6 @@
                 handleFiles(Array.from(e.target.files));
             });
 
-            // Drag and drop handlers
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 wrapper.addEventListener(eventName, preventDefaults, false);
                 document.body.addEventListener(eventName, preventDefaults, false);
