@@ -153,6 +153,9 @@ The app reads configuration from:
     "UseSsl": true,
     "FromEmail": "no-reply@example.com",
     "FromName": "News Portal"
+  },
+  "AdminCredentials": {
+    "AdminEmail": "fahadbinaziznabil@gmail.com"
   }
 }
 ```
@@ -179,14 +182,8 @@ dotnet ef database update --project News_Portal.Infrastructure/News_Portal.Infra
 
 On first load of the home page, **if there are no users**, the app seeds sample data from:
 
-- `News_Portal.UI/Samples/*.json` via `UpdateSample`
-
-Sample users:
-
-- Default password: `11111111`
-- Emails are confirmed for convenience
-
-⚠️ **Production Warning:** Disable/remove seeding logic before deploying to production.
+- Sample data available for developement, can use through HomeController/Index method. Can modify it.
+- Add the AdminCredential in appsettings.json and login with google using admin email. It will autometically give this user Admin permission.
 
 ---
 
