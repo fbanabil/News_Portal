@@ -26,7 +26,9 @@ namespace News_Portal.UI.Areas.Identity.Controllers
         private readonly IEmailService _emailService;
         private readonly INewsService _newsService;
         private readonly ICommentService _commentService;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService, IEmailService emailService, INewsService newsService, ICommentService commentService)
+        private readonly IConfiguration _configuration;
+        private readonly string? _adminEmail;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, ILogger<AccountController> logger, IImageService imageService, IEmailService emailService, INewsService newsService, ICommentService commentService, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -36,6 +38,8 @@ namespace News_Portal.UI.Areas.Identity.Controllers
             _emailService = emailService;
             _newsService = newsService;
             _commentService = commentService;
+            _configuration = configuration;
+            _adminEmail = _configuration.GetValue<string>("AdminCredentials:AdminEmail");
         }
 
 
@@ -362,6 +366,12 @@ namespace News_Portal.UI.Areas.Identity.Controllers
                 TempData["Message"] = "Account created successfully . Password sent you email";
                 TempData["MessageBangla"] = "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। পাসওয়ার্ড আপনার ইমেইলে পাঠানো হয়েছে।";
                 await _userManager.AddToRoleAsync(user, UserTypes.User.ToString());
+                if(_adminEmail != null && email.ToLower() == _adminEmail.ToLower())
+                {
+                    await _userManager.AddToRoleAsync(user, UserTypes.Author.ToString());
+                    await _userManager.AddToRoleAsync(user, UserTypes.Admin.ToString());
+                }
+
             }
             if (user.EmailConfirmed == false)
             {
