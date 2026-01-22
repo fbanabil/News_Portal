@@ -7,7 +7,9 @@
 
 @{
     ViewBag.Title = ViewBag.NewsType?.ToString() ?? "News";
-    NewsType title = Model[0].NewsType;
+    NewsType type = (NewsType)ViewBag.NewsType;
+    NewsType title = Model != null && Model.Count > 0  ? Model[0].NewsType : type; 
+
     int pageNo = ViewBag.PageNo is int p ? p : 1;
     int pageSize = ViewBag.PageSize is int ps ? ps : 12;
     int pageCount = ViewBag.PageCount is int pc ? pc : 1;

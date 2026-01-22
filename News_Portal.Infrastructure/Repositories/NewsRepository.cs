@@ -164,7 +164,7 @@ namespace News_Portal.Infrastructure.Repositories
 
         public async Task<List<News>> GetNewsByTypeAsync(NewsType newsType, int pageNo, int pageSize)
         {
-            return await _dbContext.News.Include(i=>i.Images).Include(a=>a.Author).Where(n => n.NewsType == newsType).
+            return await _dbContext.News.Include(i=>i.Images).Include(a=>a.Author).Where(n => n.NewsType == newsType && n.NewsStatus == NewsStatus.Published).
                 OrderByDescending(p=>p.PublishedDate).Skip((pageNo-1) * pageSize).Take(pageSize).ToListAsync();
         }
 
@@ -185,9 +185,10 @@ namespace News_Portal.Infrastructure.Repositories
 
         public async Task<List<HomePageNewsToShowDTO>> GetOtherNewsByTypeAsync(NewsType newsType)
         {
+            int take = await _dbContext.News.AsNoTracking().CountAsync(n => n.NewsType == newsType);
             return await _dbContext.News.Include(i => i.Images).Where(n => n.NewsType == newsType && n.NewsStatus == NewsStatus.Published)
                 .OrderByDescending(n => n.PublishedDate)
-                .Take(6)
+                .Take(take<6?take:6)
                 .Select(n => n.ToHomePageNewsToShowDTO())
                 .ToListAsync();
         }
@@ -201,7 +202,7 @@ namespace News_Portal.Infrastructure.Repositories
             {
                 var pinnedNewsIds = _dbContext.PinnedNews.Select(p => p.NewsId).ToList();
                 return _dbContext.News.Include(i => i.Images)
-                    .Where(n => pinnedNewsIds.Contains(n.NewsId))
+                    .Where(n => pinnedNewsIds.Contains(n.NewsId) && n.NewsStatus==NewsStatus.Published)
                     .OrderByDescending(n => n.TotalViews)
                     .Take(1)
                     .Select(n => n.ToHomePageNewsToShowDTO())
@@ -210,7 +211,7 @@ namespace News_Portal.Infrastructure.Repositories
             else if(type == TopOfXType.Week)
             {
                 return _dbContext.News.Include(i => i.Images)
-                    .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-30))
+                    .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-30) && n.NewsStatus == NewsStatus.Published)
                     .OrderByDescending(n => n.TotalViews)
                     .Take(cnt)
                     .Select(n => n.ToHomePageNewsToShowDTO())
@@ -219,7 +220,7 @@ namespace News_Portal.Infrastructure.Repositories
             else if(type == TopOfXType.Month)
             {
                 return _dbContext.News.Include(i => i.Images)
-                    .Where(n => n.PublishedDate >= DateTime.Now.AddMonths(-1))
+                    .Where(n => n.PublishedDate >= DateTime.Now.AddMonths(-1) && n.NewsStatus == NewsStatus.Published)
                     .OrderByDescending(n => n.TotalViews)
                     .Take(cnt)
                     .Select(n => n.ToHomePageNewsToShowDTO())
@@ -228,6 +229,7 @@ namespace News_Portal.Infrastructure.Repositories
             else 
             {
                 return _dbContext.News.Include(i => i.Images)
+                    .Where(n => n.NewsStatus == NewsStatus.Published)
                     .OrderByDescending(n => n.TotalViews)
                     .Take(cnt)
                     .Select(n => n.ToHomePageNewsToShowDTO())
@@ -241,7 +243,7 @@ namespace News_Portal.Infrastructure.Repositories
         public async Task<List<News>> GetTopOfWeekNewsAsync()
         {
             return await _dbContext.News.Include(i => i.Images)
-                .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-100))
+                .Where(n => n.PublishedDate >= DateTime.Now.AddDays(-100) && n.NewsStatus == NewsStatus.Published)
                 .OrderByDescending(n => n.TotalViews)
                 .Take(5)
                 .ToListAsync();
