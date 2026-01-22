@@ -2,6 +2,7 @@
 {
     public interface IUpdateSample
     {
+        Task CreateRoles();
         public Task UpdateAsync();
     }
 }

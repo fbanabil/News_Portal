@@ -39,11 +39,10 @@ namespace News_Portal.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            int totalUsers = _userManager.Users.Count();
-            if (totalUsers == 0)
-            {
-                await _updateSample.UpdateAsync();
-            }
+
+            //await _updateSample.UpdateAsync();
+            await _updateSample.CreateRoles();
+
             return View();
         }
 
