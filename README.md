@@ -155,7 +155,7 @@ The app reads configuration from:
     "FromName": "News Portal"
   },
   "AdminCredentials": {
-    "AdminEmail": "fahadbinaziznabil@gmail.com"
+    "AdminEmail": ""  
   }
 }
 ```
@@ -201,7 +201,7 @@ On first load of the home page, **if there are no users**, the app seeds sample 
 ## 📝 Notes
 
 - Comments require authentication
-- The UI includes Bangla display labels and messages in several places
+- The UI includes Bangla display 
 - Cloudinary support is optional (local storage works by default)
 
 ---
