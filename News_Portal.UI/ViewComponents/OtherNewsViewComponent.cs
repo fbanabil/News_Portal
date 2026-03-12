@@ -29,6 +29,10 @@ namespace News_Portal.UI.ViewComponents
 
 
             homePageNewsToShowDTOs = homePageNewsToShowDTOs.Take(4).ToList();
+            if(newsType == NewsType.Politics || newsType == NewsType.World)
+            {
+                return View("OtherNewsViewComponent4", homePageNewsToShowDTOs);
+            }
 
             return View("OtherNewsViewComponent", homePageNewsToShowDTOs);
         }

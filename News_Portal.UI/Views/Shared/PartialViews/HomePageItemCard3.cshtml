@@ -89,14 +89,14 @@
             <a href="@Url.Action("Details", "News", new { id = Model.NewsId })"
                class="title-link"
                aria-label="Read full article: @Model.NewsTitle">
-                    @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
+                    @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements().StripHtmlTags())
             </a>
         </h3>
 
         @if (!string.IsNullOrWhiteSpace(snippet))
         {
             <p class="card-excerpt">
-                    @Html.Raw(snippet?.RemoveClampBreakingElements())
+                    @Html.Raw(snippet?.RemoveClampBreakingElements().StripHtmlTags())
             </p>
         }
 

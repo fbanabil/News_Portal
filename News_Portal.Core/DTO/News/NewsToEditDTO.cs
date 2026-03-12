@@ -19,11 +19,11 @@ namespace News_Portal.Core.DTO.News
     {
         public Guid NewsId { get; set; }
 
-        [Required(ErrorMessage = "News title cant't be empty")]
-        [MaxLength(100, ErrorMessage = "News title can't exceed 100 characters")]
+        [Required(ErrorMessage = "News title can't be empty | সংবাদের শিরোনাম খালি রাখা যাবে না")]
+        [MaxLength(100, ErrorMessage = "News title can't exceed 100 characters | সংবাদের শিরোনাম ১০০ অক্ষরের বেশি হতে পারবে না")]
         public string? NewsTitle { get; set; }
 
-        [Required(ErrorMessage = "News content cant't be empty")]
+        [Required(ErrorMessage = "News content can't be empty | সংবাদের বিষয়বস্তু খালি রাখা যাবে না")]
         public string? NewsContent { get; set; }
 
         [Required]

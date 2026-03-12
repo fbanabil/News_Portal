@@ -41,8 +41,8 @@ namespace News_Portal.UI.Controllers
         {
 
             //await _updateSample.UpdateAsync();
-            await _updateSample.CreateRoles();
-
+            //await _updateSample.Create
+            await _updateSample.CreateTesters();
             return View();
         }
 

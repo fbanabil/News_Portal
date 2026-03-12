@@ -21,7 +21,7 @@
 
     <div class="card-body">
         <h6 class="card-title" title="@Model.NewsTitle">
-            @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
+            @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements().StripHtmlTags())
         </h6>
 
         <div class="card-meta d-flex justify-content-between align-items-center">
@@ -29,7 +29,7 @@
         </div>
 
         <p class="card-text">
-            @Html.Raw((Model.NewsContent?.RemoveClampBreakingElements() ?? string.Empty))
+            @Html.Raw((Model.NewsContent?.RemoveClampBreakingElements().StripHtmlTags() ?? string.Empty))
         </p>
 
         <div class="card-footer-info d-flex justify-content-between align-items-center">

@@ -45,6 +45,52 @@ namespace News_Portal.UI.Samples
             _imageService = imageService;
         }
 
+        public async Task CreateTesters()
+        {
+            await _roleManager.CreateAsync(new ApplicationRole() { Name = UserTypes.Admin.ToString(), Id = Guid.NewGuid() });
+            await _roleManager.CreateAsync(new ApplicationRole() { Name = UserTypes.Author.ToString(), Id = Guid.NewGuid() });
+            await _roleManager.CreateAsync(new ApplicationRole() { Name = UserTypes.User.ToString(), Id = Guid.NewGuid() });
+
+            // Admin
+            ApplicationUser user = new ApplicationUser();
+            user.Id = Guid.NewGuid();
+            user.Email = "TesterAdmin@gmail.com";
+            user.UserName = "TesterAdmin";
+            user.EmailConfirmed = true;
+            user.PersonImageUrl = "/User.jpg";
+            user.PersonName = "TesterAdmin";
+
+            await _userManager.CreateAsync(user, "TesterAdmin");
+            await _userManager.AddToRoleAsync(user, UserTypes.Admin.ToString());
+            await _userManager.AddToRoleAsync(user, UserTypes.Author.ToString());
+            await _userManager.AddToRoleAsync(user, UserTypes.User.ToString());
+
+
+            //Author1
+            ApplicationUser user2 = new ApplicationUser();
+            user2.Id = Guid.NewGuid();
+            user2.PersonName = "TesterAuthor1";
+            user2.Email = "TesterAuthor1@gmail.com";
+            user2.UserName = "TesterAuthor";
+            user2.EmailConfirmed = true;
+            user2.PersonImageUrl = "/User.jpg";
+            await _userManager.CreateAsync(user2, "TesterAuthor1");
+            await _userManager.AddToRoleAsync(user2, UserTypes.Author.ToString());
+            await _userManager.AddToRoleAsync(user2, UserTypes.User.ToString());
+
+            //Author2
+            ApplicationUser user3 = new ApplicationUser();
+            user3.Id = Guid.NewGuid();
+            user3.PersonName = "TesterAuthor2";
+            user3.Email = "TesterAuthor2@gmail.com";
+            user3.UserName = "TesterAuthor2";
+            user3.EmailConfirmed = true;
+            user3.PersonImageUrl = "/User.jpg";
+            await _userManager.CreateAsync(user3, "TesterAuthor2");
+            await _userManager.AddToRoleAsync(user3, UserTypes.Author.ToString());
+            await _userManager.AddToRoleAsync(user3, UserTypes.User.ToString());
+        }
+
         public async Task CreateRoles()
         {
             List<UserTypes> roles = new List<UserTypes>()

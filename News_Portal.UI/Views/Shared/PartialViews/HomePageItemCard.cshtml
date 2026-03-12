@@ -40,13 +40,13 @@
         </div>
 
         <h6 class="compact-title">
-                @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
+                @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements().StripHtmlTags())
         </h6>
 
         @if (!string.IsNullOrWhiteSpace(snippet))
         {
             <p class="compact-snippet">
-                    @Html.Raw(snippet?.RemoveClampBreakingElements())
+                    @Html.Raw(snippet?.RemoveClampBreakingElements().StripHtmlTags())
             </p>
         }
 

@@ -19,7 +19,6 @@
     }
 
     .suggestion-card::before {
-        content: '';
         position: absolute;
         top: 0;
         left: 0;
@@ -44,7 +43,6 @@
 }
 
     .suggestion-thumb::after {
-        content: '';
         position: absolute;
         inset: 0;
         background: linear-gradient( 45deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 25%, rgba(236, 72, 153, 0.1) 50%, rgba(245, 158, 11, 0.1) 75%, rgba(16, 185, 129, 0.1) 100% );
@@ -94,7 +92,7 @@
     font-weight: 600;
     letter-spacing: 0.025em;
     text-transform: uppercase;
-    font-size: 0.4875rem;
+    font-size: 0.5875rem;
     padding: 0.25rem 0.6rem;
     border-radius: 1rem;
     transition: all 0.3s ease;
@@ -110,7 +108,6 @@
 }
 
     .badge-politics::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -121,7 +118,6 @@
 }
 
     .badge-sports::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -132,7 +128,6 @@
 }
 
     .badge-technology::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -143,7 +138,6 @@
 }
 
     .badge-business::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -154,7 +148,6 @@
 }
 
     .badge-entertainment::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -165,7 +158,6 @@
 }
 
     .badge-science::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -176,7 +168,6 @@
 }
 
     .badge-health::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -187,7 +178,6 @@
 }
 
     .badge-world::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -198,7 +188,6 @@
 }
 
     .badge-general::before {
-        content: '';
         margin-right: 4px;
     }
 
@@ -320,7 +309,7 @@
 .suggestion-card .text-muted {
     color: #64748b !important;
     transition: color 0.3s ease;
-    font-size:10px;
+    font-size: 10px;
 }
 
 .suggestion-card:hover .text-muted {
@@ -347,7 +336,6 @@
 }
 
     .two-line-clamp::after {
-        content: '';
         position: absolute;
         bottom: 0;
         right: 0;

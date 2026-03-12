@@ -12,14 +12,12 @@ else
 {
     <div class="container-fluid px-0">
         <div class="row g-2 g-md-3 split-featured-grid">
-            <!-- Large card ONLY - Full width on mobile, right side on desktop -->
             <div class="col-12 col-md-7 col-lg-8 order-1 order-md-2">
                 <div class="sf-item sf-right-main">
                     @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
                 </div>
             </div>
 
-            <!-- First 2 small cards - Left side on desktop -->
             <div class="col-12 col-md-5 col-lg-4 order-2 order-md-1">
                 <div class="row g-2 g-md-3 h-100">
                     @if (Model.Count > 1)
@@ -37,7 +35,6 @@ else
                 </div>
             </div>
 
-            <!-- Bottom 2 small cards - Full width row, 2 cards side by side -->
             @if (Model.Count > 3)
             {
                 <div class="col-6 col-md-6 order-3 sf-item sf-item-small">
