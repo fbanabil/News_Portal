@@ -10,8 +10,8 @@ namespace News_Portal.Core.DTO.Account
 {
     public class ForgotPasswordDTO
     {
-        [Required]
-        [Remote(action: "IsEmailRegistered",controller:"Account",areaName:"Identity", ErrorMessage = "Email Not Registered")]
+        [Required(ErrorMessage = "Email is required | ইমেইল প্রয়োজন")]
+        [Remote(action: "IsEmailRegistered", controller: "Account", areaName: "Identity", ErrorMessage = "Email not registered | ইমেইল নিবন্ধিত নয়")]
         public string? Email { get; set; }
 
     }

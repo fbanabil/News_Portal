@@ -66,7 +66,8 @@ namespace News_Portal.UI.Areas.Admin.Controllers
 
 
             IList<ApplicationUser>? authors = await _userManager.GetUsersInRoleAsync(UserTypes.Author.ToString());
-            List<AuthorsToShowDTO> allAuthors = authors.Select(u => u.ToAuthorsToShowDTO()).OrderBy(x => x.AuthorName).ToList();
+            ApplicationUser? presentUser = await _userManager.GetUserAsync(User);
+            List<AuthorsToShowDTO> allAuthors = authors.Where(u=>u.Id!=presentUser!.Id).Select(u => u.ToAuthorsToShowDTO()).OrderBy(x => x.AuthorName).ToList();
             ViewBag.AuthorsList = new SelectList(allAuthors, "AuthorEmail", "AuthorName", AuthorEmail);
 
             return View(adminNewsAllFiltersDTO);

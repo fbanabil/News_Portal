@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+
   <ItemGroup>
     <Content Remove="Samples\application_roles.json" />
     <Content Remove="Samples\application_users.json" />

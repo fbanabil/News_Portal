@@ -14,10 +14,11 @@
 
 <div class="row g-2 g-md-3 two-col-featured">
 
+
     <div class="col-12 col-md-8 tc-main d-none d-md-flex">
         @if (Model != null && Model.Count > 0)
         {
-            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard.cshtml", Model[0])
+            @await Html.PartialAsync("~/Views/Shared/PartialViews/LargeNewsCard2.cshtml", Model[0])
         }
         else
         {

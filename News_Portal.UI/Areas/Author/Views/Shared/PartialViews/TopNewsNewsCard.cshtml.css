@@ -29,8 +29,8 @@
 .sidebar-news-content {
     display: flex;
     align-items: flex-start;
-    padding: 12px;
-    gap: 12px;
+    padding: 6px;
+    gap: 8px;
     min-height: 90px;
 }
 

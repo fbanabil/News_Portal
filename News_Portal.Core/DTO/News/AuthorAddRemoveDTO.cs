@@ -11,15 +11,15 @@ namespace News_Portal.Core.DTO.News
 {
     public class AuthorAddRemoveDTO
     {
-        [DataType(DataType.EmailAddress,ErrorMessage = "Must be an email address")]
-        [Remote(action: "ValidAuthorEmailToAdd", controller: "Account", areaName: "Identity", ErrorMessage = "Not a valid User To Add")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Must be an email address | একটি ইমেইল ঠিকানা হতে হবে")]
+        [Remote(action: "ValidAuthorEmailToAdd", controller: "Account", areaName: "Identity", ErrorMessage = "Not a valid user to add | যোগ করার জন্য বৈধ ব্যবহারকারী নয়")]
         public string? AddEmail { get; set; }
 
 
 
 
-        [DataType(DataType.EmailAddress, ErrorMessage = "Must be an email address")]
-        [Remote(action: "IsAnAuthor", controller: "Account", areaName: "Identity", ErrorMessage = "Not a valid User To Add")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Must be an email address | একটি ইমেইল ঠিকানা হতে হবে")]
+        [Remote(action: "IsAnAuthor", controller: "Account", areaName: "Identity", ErrorMessage = "Not a valid user to remove | সরানোর জন্য বৈধ ব্যবহারকারী নয়")]
         public string? RemoveEmail { get; set; }
     }
 }

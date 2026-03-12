@@ -107,16 +107,16 @@ else
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📊 সাপ্তাহিক শীর্ষ" : "📊 Weekly Top")</h4>
-                @await Component.InvokeAsync("Top", new { type = TopOfXType.Week, cnt = 13 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.Week, cnt = 7 })
             </div>
 
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📅 মাসিক শীর্ষ" : "📅 Monthly Top")</h4>
-                @await Component.InvokeAsync("Top", new { type = TopOfXType.Month, cnt = 13 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.Month, cnt = 14 })
             </div>
             <div class="sidebar-section">
                 <h4 class="sidebar-title">@(isBangla ? "📅 সর্বকালের শীর্ষ" : "📅 All Time Top")</h4>
-                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 13 })
+                @await Component.InvokeAsync("Top", new { type = TopOfXType.AllTime, cnt = 16 })
             </div>
         </aside>
     </div>

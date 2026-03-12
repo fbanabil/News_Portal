@@ -44,7 +44,7 @@
         @if (!string.IsNullOrWhiteSpace(snippet))
         {
             <p class="compact-snippet mb-0">
-                    @Html.Raw(snippet?.RemoveClampBreakingElements())
+                    @Html.Raw(snippet?.RemoveClampBreakingElements().StripHtmlTags())
             </p>
         }
 

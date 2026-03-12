@@ -42,7 +42,7 @@
         <div class="col-8 col-md-9">
             <div class="card-body py-2 py-md-3">
                 <h6 class="card-title mb-1 text-truncate" title="@Model.NewsTitle">
-                    @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements())
+                    @Html.Raw(Model.NewsTitle?.RemoveClampBreakingElements().StripHtmlTags())
                 </h6>
                 <p class="small text-muted mb-1">
                     <span class="me-2"> @(isBangla? @Model.PublishedDate.GetBengaliDate() : @Model.PublishedDate.ToString("MMM dd, yyyy"))</span>
@@ -51,7 +51,7 @@
                     </span>
                 </p>
                 <p class="card-text small text-muted mb-0 two-line-clamp d-none d-sm-block">
-                    @Html.Raw(Model.NewsContent?.RemoveClampBreakingElements() ?? string.Empty)
+                    @Html.Raw(Model.NewsContent?.RemoveClampBreakingElements().StripHtmlTags() ?? string.Empty)
                 </p>
             </div>
         </div>

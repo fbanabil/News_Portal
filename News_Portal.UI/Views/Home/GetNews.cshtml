@@ -37,7 +37,7 @@
             <div class="d-flex align-items-center">
                 <i class="@categoryIcon me-3"></i>
                 <div>
-                    <h2 class="category-title mb-1">@title</h2>
+                    <h2 class="category-title mb-1">@(isBangla?title.GetDisplayName():title)</h2>
                     <small class="text-muted"> @(isBangla ? "পেজ " + @pageCount.ToString().ToBanglaDigits() + " এর ভেতরে " + @pageNo.ToString().ToBanglaDigits()  : "Page " + @pageNo.ToString() + " of " + @pageCount.ToString()) </small>
                 </div>
             </div>
@@ -93,13 +93,13 @@
                                          loading="lazy" />
                                 </div>
                                 <div class="news-card-body flex-grow-1 d-flex flex-column">
-                                    <h5 class="news-card-title" title="@news.NewsTitle">@Html.Raw(news.NewsTitle?.RemoveClampBreakingElements())</h5>
+                                    <h5 class="news-card-title" title="@news.NewsTitle">@Html.Raw(news.NewsTitle?.RemoveClampBreakingElements().StripHtmlTags())</h5>
                                     <div class="news-card-meta">
                                         <span><i class="bi bi-calendar3 me-1"></i>@(isBangla? news.PublishedDate.GetBengaliDate() : news.PublishedDate.ToString("MMM dd, yyyy"))</span>
                                         <span><i class="bi bi-person me-1"></i>@author?.PersonName</span>
                                     </div>
                                     <p class="news-card-content flex-grow-1">
-                                        @Html.Raw((news.NewsContent?.RemoveClampBreakingElements() ?? string.Empty))
+                                        @Html.Raw((news.NewsContent?.RemoveClampBreakingElements().StripHtmlTags() ?? string.Empty))
                                     </p>
                                     <div class="news-card-footer mt-auto">
                                         <div class="view-count">
