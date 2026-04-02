@@ -6,6 +6,22 @@ News Portal is a **multi-role ASP.NET Core MVC application** for publishing and 
 
 ---
 
+## 🚀 Live Demo
+
+> **Demo URL**: [newsportal.runasp.net/](newsportal.runasp.net/)
+
+### 🔑 Demo Credentials
+
+| Role | Email | Password | 
+|------|-------|----------|
+| 👑 **Admin** | `TesterAdmin@gmail.com` | `TesterAdmin` | 
+| ✍️ **Author** | `TesterAuthor1@gmail.com` | `TesterAuthor1` |
+| 👤 **User** | `Register To Check` |
+
+
+
+---
+
 ## ✨ Features
 
 ### 🔐 Role-Based Access & Security
@@ -103,141 +119,3 @@ The solution is organized into three main projects:
 ```powershell
 dotnet restore
 dotnet run --project News_Portal.UI/News_Portal.UI.csproj
-```
-
-3. Browse:
-
-- `https://localhost:7125`
-- `http://localhost:5159`
-
-> Ports are defined in:
-> `News_Portal.UI/Properties/launchSettings.json`
-
-You can also open `News_Portal.UI/News_Portal.UI.sln` in Visual Studio and run the `News_Portal.UI` project.
-
----
-
-## ⚙️ Configuration
-
-The app reads configuration from:
-
-- `News_Portal.UI/appsettings.json`
-- Environment variables
-- User secrets
-
-### Example `appsettings.json`
-
-> Use your own values:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": ""
-  },
-  "Cloudinary": {
-    "CloudName": "...",
-    "ApiKey": "...",
-    "ApiSecret": "..."
-  },
-  "Authentication": {
-    "Google": {
-      "ClientId": "...",
-      "ClientSecret": "..."
-    }
-  },
-  "Smtp": {
-    "Host": "smtp.example.com",
-    "Port": 465,
-    "UserName": "...",
-    "Password": "...",
-    "UseSsl": true,
-    "FromEmail": "no-reply@example.com",
-    "FromName": "News Portal"
-  },
-  "AdminCredentials": {
-    "AdminEmail": ""  
-  }
-}
-```
-
----
-
-## 🗄️ Database and Migrations
-
-- MSSQL is used in this project
-- Migrations are in:
-  - `News_Portal.Infrastructure/Migrations`
-- The application automatically applies migrations on startup using:
-  - `Database.Migrate()`
-
-### Manual Migration (Optional)
-
-```powershell
-dotnet ef database update --project News_Portal.Infrastructure/News_Portal.Infrastructure.csproj --startup-project News_Portal.UI/News_Portal.UI.csproj
-```
-
----
-
-## 🌱 Seed Data
-
-On first load of the home page, **if there are no users**, the app seeds sample data from:
-
-- Sample data available for developement, can use through HomeController/Index method. Can modify it.
-- Add the AdminCredential in appsettings.json and login with google using admin email. It will autometically give this user Admin permission.
-
----
-
-## 📁 File Storage
-
-- Profile images:`News_Portal.UI/wwwroot/images/profiles`
-- News images:`News_Portal.UI/wwwroot/images/news`
-- Default images:
-  `News_Portal.UI/wwwroot/images/defaults`
-
-✅ Ensure the deployment environment has **write access** to `wwwroot`.
-
----
-
-## 📝 Notes
-
-- Comments require authentication
-- The UI includes Bangla display 
-- Cloudinary support is optional (local storage works by default)
-
----
-
-## 📌 Quick Folder Map
-
-```text
-News_Portal.UI/
-  wwwroot/
-    images/
-      profiles/
-      news/
-      defaults/
-
-News_Portal.Core/
-News_Portal.Infrastructure/
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome:
-
-- Bug fixes
-- UI improvements
-- Feature additions
-- Refactoring & performance enhancements
-
----
-
-## 📄 License
-
-This project is intended for educational/portfolio usage.
-Add a license file if you plan to open-source it officially.
-
----
-
-⭐ If you like this project, consider starring the repository!
