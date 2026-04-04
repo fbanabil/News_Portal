@@ -8,7 +8,7 @@ News Portal is a **multi-role ASP.NET Core MVC application** for publishing and 
 
 ## 🚀 Live Demo
 
-> **Demo URL**: [newsportal.runasp.net/](newsportal.runasp.net/)
+> **Demo URL**: [https://newsportal.runasp.net/](https://newsportal.runasp.net/)
 
 ### 🔑 Demo Credentials
 
